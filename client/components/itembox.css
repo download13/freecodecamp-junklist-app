@@ -1,0 +1,26 @@
+:local .itembox {
+    width: 240px;
+    border: 1px solid #888;
+    box-sizing: border-box;
+    cursor: pointer;
+    margin: 15px;
+}
+
+:local .itembox > img {
+    width: 100%;
+    max-height: 240px;
+}
+
+:local .desc {
+    color: #00e;
+    font-size: 1.1rem;
+    text-align: center;
+    padding: 10px;
+}
+
+:local .city {
+    color: #aaa;
+    font-size: 0.9rem;
+    padding-bottom: 6px;
+    text-align: center;
+}

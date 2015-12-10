@@ -1,0 +1,45 @@
+:local .item {
+    text-align: center;
+    padding: 20px 0;
+}
+
+:local .desc {
+    font-size: 1.4rem;
+    color: #00e;
+    margin: 0;
+    padding: 10px 0;
+}
+
+:local .imageHolder {
+    display: inline-block;
+    margin: 0 auto;
+    max-width: 400px;
+}
+
+:local .image {
+    display: block;
+    max-width: 100%;
+}
+
+:local .city {
+    color: #aaa;
+    font-size: 0.9rem;
+    padding-bottom: 4px 0;
+    text-align: left;
+}
+
+:local .text {
+    font-size: 1rem;
+    font-family: Arial, sans-serif;
+    color: black;
+    max-width: 600px;
+    padding: 30px 10px 30px 10px;
+    margin: 0 auto;
+    text-align: start;
+}
+
+:local .ownerInfo {
+    color: #d0d0d0;
+    font-size: 0.8rem;
+    margin-top: 5px;
+}

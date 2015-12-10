@@ -1,0 +1,33 @@
+:local .junklist {
+    max-width: 900px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+:local .header {
+    display: flex;
+    align-items: center;
+    background-color: #f4f4f4;
+}
+
+:local .title {
+    font-size: 1.4rem;
+    padding: 0 10px;
+}
+
+:local .title:visited {
+    color: #0000EE;
+}
+
+:local .nav {
+    font-size: 1.1rem;
+    padding: 0 10px;
+}
+
+:local .navLink {
+    padding: 0 10px;
+}
+
+:local .navLink:visited {
+    color: #0000EE;
+}

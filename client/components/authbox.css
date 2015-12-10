@@ -1,0 +1,8 @@
+:local .authbox {
+    margin: 0 0 0 auto;
+    padding: 10px;
+}
+
+:local .authbox > a {
+    margin-left: 8px;
+}

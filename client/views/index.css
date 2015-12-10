@@ -1,0 +1,23 @@
+:local .junklist {
+    max-width: 900px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+:local .siteheader {
+    display: flex;
+    background-color: #f4f4f4;
+}
+
+:local .searchIn {
+    width: 100%;
+    padding: 7px;
+    font-size: 20px;
+    margin: 20px 0 20px 0;
+}
+
+:local .items {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
