@@ -66,7 +66,7 @@
 
 	var _actions = __webpack_require__(77);
 
-	var _app = __webpack_require__(84);
+	var _app = __webpack_require__(85);
 
 	var _app2 = _interopRequireDefault(_app);
 
@@ -7210,7 +7210,7 @@
 
 	exports.default = (0, _redux.combineReducers)({
 	    auth: _reducer2.default,
-	    routing: createRouteReducer(['/', '/create', '/item/:id', '/item/:id/edit']),
+	    routing: createRouteReducer(['/', '/dashboard', '/create', '/item/:id', '/item/:id/edit']),
 	    items: function items() {
 	        var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 	        var _ref = arguments[1];
@@ -7228,54 +7228,118 @@
 	                return state;
 	        }
 	    },
-	    frontPageItemIds: function frontPageItemIds() {
+	    userItems: function userItems() {
 	        var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
-	        var action = arguments[1];
+	        var _ref2 = arguments[1];
+	        var type = _ref2.type;
+	        var payload = _ref2.payload;
 
-	        switch (action.type) {
-	            case 'SET_FRONTPAGE_ITEMS':
-	                return action.itemIds;
+	        switch (type) {
+	            case 'SET_USER_ITEMS':
+	                return payload;
 	            default:
 	                return state;
 	        }
 	    },
-	    userRequestedItemIds: function userRequestedItemIds() {
+	    frontPageItemIds: function frontPageItemIds() {
 	        var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
-	        var action = arguments[1];
+	        var _ref3 = arguments[1];
+	        var type = _ref3.type;
+	        var payload = _ref3.payload;
 
-	        switch (action.type) {
-	            case 'SET_USER_REQUESTED_ITEMS':
-	                return action.itemIds;
+	        switch (type) {
+	            case 'SET_FRONTPAGE_ITEMS':
+	                return payload;
 	            default:
 	                return state;
 	        }
 	    },
 	    viewItemId: function viewItemId() {
 	        var state = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
-	        var _ref2 = arguments[1];
-	        var type = _ref2.type;
-	        var id = _ref2.id;
+	        var _ref4 = arguments[1];
+	        var type = _ref4.type;
+	        var id = _ref4.id;
 
 	        if (type === 'SET_VIEW_ITEM') return id;
 	        return state;
 	    },
+	    sentRequests: function sentRequests() {
+	        var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+	        var _ref5 = arguments[1];
+	        var type = _ref5.type;
+	        var payload = _ref5.payload;
+
+	        if (type === 'SET_SENT_REQUESTS') return payload;
+	        return state;
+	    },
+	    incomingRequests: function incomingRequests() {
+	        var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+	        var _ref6 = arguments[1];
+	        var type = _ref6.type;
+	        var payload = _ref6.payload;
+
+	        if (type === 'SET_INCOMING_REQUESTS') return payload;
+	        return state;
+	    },
+	    viewItemRequests: function viewItemRequests() {
+	        var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+	        var _ref7 = arguments[1];
+	        var type = _ref7.type;
+	        var payload = _ref7.payload;
+
+	        if (type === 'SET_VIEW_ITEM_REQUESTS') return payload;
+	        return state;
+	    },
 	    editItemId: function editItemId() {
 	        var state = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
-	        var _ref3 = arguments[1];
-	        var type = _ref3.type;
-	        var id = _ref3.id;
+	        var _ref8 = arguments[1];
+	        var type = _ref8.type;
+	        var id = _ref8.id;
 
 	        if (type === 'SET_EDIT_ITEM') return id;
 	        return state;
 	    },
 	    editItemCache: function editItemCache() {
 	        var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-	        var _ref4 = arguments[1];
-	        var type = _ref4.type;
-	        var item = _ref4.item;
+	        var _ref9 = arguments[1];
+	        var type = _ref9.type;
+	        var payload = _ref9.payload;
 
-	        if (type === 'SET_EDIT_CACHE') return item;
-	        return state;
+	        switch (type) {
+	            case 'SET_EDIT_CACHE_DESCRIPTION':
+	                return _extends({}, state, {
+	                    description: payload
+	                });
+	            case 'SET_EDIT_CACHE_CITY':
+	                return _extends({}, state, {
+	                    city: payload
+	                });
+	            case 'SET_EDIT_CACHE_TEXT':
+	                return _extends({}, state, {
+	                    text: payload
+	                });
+	            case 'SET_EDIT_CACHE_IMAGE':
+	                return _extends({}, state, {
+	                    image: payload
+	                });
+	            case 'CLEAR_EDIT_CACHE':
+	                return {};
+	            default:
+	                return state;
+	        }
+	    },
+	    editImageUpload: function editImageUpload() {
+	        var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	        var _ref10 = arguments[1];
+	        var type = _ref10.type;
+	        var payload = _ref10.payload;
+
+	        switch (type) {
+	            case 'SET_UPLOAD_STATUS':
+	                return payload;
+	            default:
+	                return state;
+	        }
 	    }
 	});
 
@@ -7309,9 +7373,9 @@
 	    return function (path) {
 	        var params = null;
 
-	        compiledRoutes.some(function (_ref5) {
-	            var re = _ref5.re;
-	            var paramNames = _ref5.paramNames;
+	        compiledRoutes.some(function (_ref11) {
+	            var re = _ref11.re;
+	            var paramNames = _ref11.paramNames;
 
 	            var match = re.exec(path || '');
 	            if (match) {
@@ -7527,8 +7591,8 @@
 	});
 	var SET_TOKEN = exports.SET_TOKEN = '__SET_TOKEN_FLUX_AUTH';
 	var LOCALSTORAGE_TOKEN_KEY = exports.LOCALSTORAGE_TOKEN_KEY = 'auth_token';
-	var LOGIN_PATH = exports.LOGIN_PATH = '/auth/login/github';
-	var CALLBACK_PATH = exports.CALLBACK_PATH = '/auth/github/callback';
+	var LOGIN_PATH = exports.LOGIN_PATH = '/auth/login/google';
+	var CALLBACK_PATH = exports.CALLBACK_PATH = '/auth/callback/google';
 
 /***/ },
 /* 77 */
@@ -7543,19 +7607,24 @@
 	exports.initialize = initialize;
 	exports.navigateToItem = navigateToItem;
 	exports.navigateEditItem = navigateEditItem;
-	exports.getFrontPageItems = getFrontPageItems;
+	exports.loadFrontPageItems = loadFrontPageItems;
+	exports.loadUserItems = loadUserItems;
+	exports.ensureItem = ensureItem;
 	exports.selectViewItem = selectViewItem;
 	exports.selectEditItem = selectEditItem;
-	exports.cacheEditItem = cacheEditItem;
+	exports.cacheEditItemDescription = cacheEditItemDescription;
+	exports.cacheEditItemCity = cacheEditItemCity;
+	exports.cacheEditItemText = cacheEditItemText;
+	exports.cacheEditItemImage = cacheEditItemImage;
+	exports.clearEditCache = clearEditCache;
 	exports.saveCachedEditItem = saveCachedEditItem;
-	exports.uploadImage = uploadImage;
-	exports.requestItem = requestItem;
+	exports.uploadEditImage = uploadEditImage;
 
-	var _isomorphicFetch = __webpack_require__(78);
+	var _isomorphicFetch = __webpack_require__(79);
 
 	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
 
-	var _uuidv = __webpack_require__(80);
+	var _uuidv = __webpack_require__(83);
 
 	var _uuidv2 = _interopRequireDefault(_uuidv);
 
@@ -7565,7 +7634,9 @@
 
 	var _reduxSimpleRouter = __webpack_require__(69);
 
-	var _actions = __webpack_require__(83);
+	var _actions = __webpack_require__(84);
+
+	var _request = __webpack_require__(78);
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -7573,8 +7644,6 @@
 
 	function initialize() {
 	    return function (dispatch) {
-	        // TODO connect to server, get current and future state changes as actions
-
 	        dispatch((0, _actions.initialize)());
 	    };
 	}
@@ -7591,10 +7660,13 @@
 	}
 
 	function setFrontPageItems(itemIds) {
-	    return { type: 'SET_FRONTPAGE_ITEMS', itemIds: itemIds };
+	    return {
+	        type: 'SET_FRONTPAGE_ITEMS',
+	        payload: itemIds
+	    };
 	}
 
-	function getFrontPageItems() {
+	function loadFrontPageItems() {
 	    return function (dispatch) {
 	        (0, _isomorphicFetch2.default)('/', {
 	            headers: { 'Accept': 'application/json' }
@@ -7618,6 +7690,30 @@
 	    };
 	}
 
+	function setUserItems(itemIds) {
+	    return {
+	        type: 'SET_USER_ITEMS',
+	        payload: itemIds
+	    };
+	}
+
+	function loadUserItems() {
+	    return function (dispatch, getState) {
+	        var state = getState();
+	        if (!selectors.loggedIn(state)) return;
+
+	        (0, _isomorphicFetch2.default)('/user/items', {
+	            headers: {
+	                Authorization: selectors.token(state)
+	            }
+	        }).then(function (res) {
+	            return res.json();
+	        }).then(function (items) {
+	            dispatch(setUserItems(items));
+	        });
+	    };
+	}
+
 	function ensureItem(id) {
 	    return function (dispatch, getState) {
 	        var _getState = getState();
@@ -7625,7 +7721,7 @@
 	        var items = _getState.items;
 
 	        if (!items[id]) {
-	            (0, _isomorphicFetch2.default)('/item/' + id, {
+	            return (0, _isomorphicFetch2.default)('/item/' + id, {
 	                headers: { 'Accept': 'application/json' }
 	            }).then(function (res) {
 	                return res.json();
@@ -7635,6 +7731,8 @@
 	                }
 	            });
 	        }
+
+	        return Promise.resolve();
 	    };
 	}
 
@@ -7649,7 +7747,10 @@
 	        var items = _getState2.items;
 
 	        dispatch(setViewItem(id));
-	        dispatch(ensureItem(id));
+	        dispatch(ensureItem(id)).then(function () {
+	            dispatch((0, _request.loadRequestsForViewItem)());
+	            dispatch((0, _request.loadSentRequests)());
+	        });
 	    };
 	}
 
@@ -7668,8 +7769,38 @@
 	    };
 	}
 
-	function cacheEditItem(item) {
-	    return { type: 'SET_EDIT_CACHE', item: item };
+	function cacheEditItemDescription(description) {
+	    return {
+	        type: 'SET_EDIT_CACHE_DESCRIPTION',
+	        payload: description
+	    };
+	}
+
+	function cacheEditItemCity(city) {
+	    return {
+	        type: 'SET_EDIT_CACHE_CITY',
+	        payload: city
+	    };
+	}
+
+	function cacheEditItemText(text) {
+	    return {
+	        type: 'SET_EDIT_CACHE_TEXT',
+	        payload: text
+	    };
+	}
+
+	function cacheEditItemImage(id) {
+	    return {
+	        type: 'SET_EDIT_CACHE_IMAGE',
+	        payload: id
+	    };
+	}
+
+	function clearEditCache() {
+	    return {
+	        type: 'CLEAR_EDIT_CACHE'
+	    };
 	}
 
 	function saveCachedEditItem() {
@@ -7684,57 +7815,61 @@
 	            method: 'PUT',
 	            headers: {
 	                'Content-Type': 'application/json',
-	                Authorization: auth.token
+	                Authorization: selectors.token(getState())
 	            },
 	            body: JSON.stringify(editItemCache)
 	        }).then(function (res) {
 	            return res.json();
 	        }).then(function (data) {
-	            // TODO
-	            console.log('data', data);
+	            //console.log('data',data)
 	            // Clear edit cache
-	            dispatch(cacheEditItem({}));
+	            dispatch(setUploadStatus());
+	            dispatch(clearEditCache());
 	            dispatch(removeItem(editItemId));
 	            dispatch(navigateToItem(editItemId));
 	        });
 	    };
 	}
 
-	function uploadImage(file) {
-	    var id = (0, _uuidv2.default)();
-	    var body = new FormData();
-	    body.append('originalImage', file);
-
-	    (0, _isomorphicFetch2.default)('/item-images/' + id, {
-	        method: 'PUT',
-	        body: body
-	    }).then(function (res) {
-	        console.log('uploadImage', res.status);
-	    }, function (err) {
-	        return console.log('uploadImage err', err);
-	    });
-	}
-
-	function requestItem(id) {
-	    var requesting = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
-
+	var previousUpload = undefined;
+	function uploadEditImage(file) {
 	    return function (dispatch, getState) {
-	        // TODO create a request for some item on the site
-	        (0, _isomorphicFetch2.default)('/request', {
-	            method: 'POST',
-	            headers: {
-	                'Content-Type': 'application/json',
-	                Authorization: getState().auth.token
-	            },
-	            body: JSON.stringify({
-	                item: id,
-	                requesting: requesting
-	            })
-	        }).then(function (res) {
-	            return res.json();
-	        }).then(function (ids) {
-	            dispatch(setRequestedItemIds(ids));
+	        var state = getState();
+	        var auth = state.auth;
+	        var editItemCache = state.editItemCache;
+
+	        if (previousUpload) {
+	            previousUpload.abort();
+	        }
+
+	        if (!file || !auth.token) return;
+
+	        // TODO: This should terminate the previous upload if it's still going on
+	        var id = (0, _uuidv2.default)();
+	        var body = new FormData();
+	        body.append('originalImage', file);
+
+	        var x = new XMLHttpRequest();
+	        previousUpload = x;
+	        x.upload.addEventListener('progress', function (e) {
+	            if (e.lengthComputable) {
+	                dispatch(setUploadStatus('uploading', e.loaded / e.total));
+	            }
 	        });
+	        x.upload.addEventListener('error', function (err) {
+	            console.log('Upload failed');
+	            console.error(err);
+	            dispatch(setUploadStatus('failed'));
+	        });
+	        x.upload.addEventListener('load', function () {
+	            dispatch(cacheEditItemImage(id));
+	            dispatch(setUploadStatus('done', 1));
+	        });
+	        x.open('PUT', '/item-images/' + id);
+	        x.setRequestHeader('Authorization', selectors.token(state));
+	        x.send(body);
+
+	        dispatch(setUploadStatus('uploading', 0));
 	    };
 	}
 
@@ -7746,24 +7881,225 @@
 	    return { type: 'REMOVE_ITEM', payload: { id: id } };
 	}
 
-	function setRequestedItemIds(itemIds) {
-	    return { type: 'SET_REQUESTED_ITEMS', itemIds: itemIds };
+	function setUploadStatus() {
+	    var status = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
+	    var progress = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
+
+	    return {
+	        type: 'SET_UPLOAD_STATUS',
+	        payload: {
+	            status: status,
+	            progress: progress
+	        }
+	    };
 	}
 
 /***/ },
 /* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.loadSentRequests = loadSentRequests;
+	exports.loadRequestsForViewItem = loadRequestsForViewItem;
+	exports.requestItem = requestItem;
+	exports.unrequestItem = unrequestItem;
+	exports.acceptRequest = acceptRequest;
+	exports.unacceptRequest = unacceptRequest;
+
+	var _isomorphicFetch = __webpack_require__(79);
+
+	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+	var _selectors = __webpack_require__(81);
+
+	var selectors = _interopRequireWildcard(_selectors);
+
+	var _index = __webpack_require__(77);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function createValueActions(name, loadFn, initialState, reducerPath) {
+	    var TYPE = 'SET_' + name;
+
+	    function set(v) {
+	        return {
+	            type: TYPE,
+	            payload: v
+	        };
+	    }
+
+	    return {
+	        set: set,
+	        load: function load() {
+	            return function (dispatch, getState) {
+	                loadFn(getState).then(function (v) {
+	                    return dispatch(set(v));
+	                });
+	            };
+	        },
+	        reducer: function reducer() {
+	            var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
+	            var _ref = arguments[1];
+	            var type = _ref.type;
+	            var payload = _ref.payload;
+
+	            if (type === TYPE) return payload;
+	            return state;
+	        },
+	        selector: function selector(state) {
+	            return state[reducerPath];
+	        }
+	    };
+	}
+
+	var sentRequests = createValueActions('SENT_REQUESTS', function (getState) {
+	    var token = selectors.token(getState());
+	    if (token) {
+	        return (0, _isomorphicFetch2.default)('/user/sent_requests', {
+	            headers: {
+	                Authorization: token
+	            }
+	        }).then(function (res) {
+	            return res.json();
+	        });
+	    }
+
+	    return Promise.reject();
+	});
+
+	function setSentRequests(requests) {
+	    return {
+	        type: 'SET_SENT_REQUESTS',
+	        payload: requests
+	    };
+	}
+
+	function loadSentRequests() {
+	    return function (dispatch, getState) {
+	        var token = selectors.token(getState());
+	        if (!token) return;
+
+	        return (0, _isomorphicFetch2.default)('/user/sent_requests', {
+	            headers: {
+	                Authorization: token
+	            }
+	        }).then(function (res) {
+	            return res.json();
+	        }).then(function (requests) {
+	            dispatch(setSentRequests(requests));
+	        });
+	    };
+	}
+
+	function loadRequestsForViewItem() {
+	    return function (dispatch, getState) {
+	        var state = getState();
+	        var owned = selectors.viewItemOwned(state);
+	        if (!owned) return; // Don't bother loading requests if we don't own it
+	        var id = selectors.viewItemId(state);
+
+	        (0, _isomorphicFetch2.default)('/request/item/' + id, {
+	            headers: {
+	                Authorization: selectors.token(state)
+	            }
+	        }).then(function (res) {
+	            return res.json();
+	        }).then(function (requests) {
+	            dispatch(setViewItemRequests(requests));
+	        });
+	    };
+	}
+
+	function requestItem(id) {
+	    return function (dispatch, getState) {
+	        // TODO create a request for some item on the site
+	        (0, _isomorphicFetch2.default)('/request/item/' + id, {
+	            method: 'PUT',
+	            headers: {
+	                Authorization: getState().auth.token
+	            }
+	        }).then(function (res) {
+	            return res.json();
+	        }).then(function (requests) {
+	            dispatch(setSentRequests(requests));
+	        });
+	    };
+	}
+
+	function unrequestItem(id) {
+	    return function (dispatch, getState) {
+	        (0, _isomorphicFetch2.default)('/request/item/' + id, {
+	            method: 'DELETE',
+	            headers: {
+	                Authorization: getState().auth.token
+	            }
+	        }).then(function (res) {
+	            return res.json();
+	        }).then(function (requests) {
+	            dispatch(setSentRequests(requests));
+	        });
+	    };
+	}
+
+	function acceptRequest(id) {
+	    return function (dispatch, getState) {
+	        console.log('acceptRequest', id);
+	        (0, _isomorphicFetch2.default)('/request/' + id + '/accept', {
+	            method: 'POST',
+	            headers: {
+	                Authorization: selectors.token(getState())
+	            }
+	        }).then(function (res) {
+	            return res.json();
+	        }).then(function (requests) {
+	            dispatch(setViewItemRequests(requests));
+	        });
+	        // TODO: requestItem should check for an error if a request has already been accepted for item
+	    };
+	}
+
+	function unacceptRequest(id) {
+	    return function (dispatch, getState) {
+	        (0, _isomorphicFetch2.default)('/request/' + id + '/unaccept', {
+	            method: 'POST',
+	            headers: {
+	                Authorization: selectors.token(getState())
+	            }
+	        }).then(function (res) {
+	            return res.json();
+	        }).then(function (requests) {
+	            dispatch(setViewItemRequests(requests));
+	        });
+	    };
+	}
+
+	function setViewItemRequests(requests) {
+	    return {
+	        type: 'SET_VIEW_ITEM_REQUESTS',
+	        payload: requests
+	    };
+	}
+
+/***/ },
+/* 79 */
+/***/ function(module, exports, __webpack_require__) {
+
 	// the whatwg-fetch polyfill installs the fetch() function
 	// on the global object (window or self)
 	//
 	// Return that as the export for use in Webpack, Browserify etc.
-	__webpack_require__(79);
+	__webpack_require__(80);
 	module.exports = self.fetch.bind(self);
 
 
 /***/ },
-/* 79 */
+/* 80 */
 /***/ function(module, exports) {
 
 	(function() {
@@ -8150,32 +8486,6 @@
 
 
 /***/ },
-/* 80 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	// See http://stackoverflow.com/a/2117523/1333873 for details.
-	var uuidv4 = function () {
-	  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (character) {
-	    var randomNumber = Math.random() * 16 | 0,
-	        result =
-	          character === 'x' ?
-	            randomNumber :
-	            randomNumber & 0x3 | 0x8;
-
-	    return result.toString(16);
-	  });
-	};
-
-	uuidv4.empty = function () {
-	  return '00000000-0000-0000-0000-000000000000';
-	};
-
-	module.exports = uuidv4;
-
-
-/***/ },
 /* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -8184,7 +8494,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.editItem = exports.viewItemOwned = exports.viewItemRequested = exports.viewItem = exports.frontPageItems = exports.user = exports.path = undefined;
+	exports.editImageStatus = exports.editItem = exports.viewItemRequests = exports.viewItemOwned = exports.viewItemRequestAccepted = exports.viewItemRequested = exports.viewItem = exports.viewItemId = exports.incomingRequests = exports.sentRequests = exports.userItems = exports.frontPageItems = exports.token = exports.loggedIn = exports.user = exports.path = undefined;
 
 	var _reselect = __webpack_require__(82);
 
@@ -8200,6 +8510,12 @@
 	    user = function user(state) {
 	    return state.auth.user;
 	},
+	    loggedIn = (0, _reselect.createSelector)(user, function (user) {
+	    return !!user;
+	}),
+	    userItems = function userItems(state) {
+	    return state.userItems;
+	},
 	    frontPageItemIds = function frontPageItemIds(state) {
 	    return state.frontPageItemIds;
 	},
@@ -8214,19 +8530,35 @@
 	    viewItem = (0, _reselect.createSelector)(viewItemId, items, function (id, items) {
 	    return items[id];
 	}),
-	    requestedItemIds = function requestedItemIds(state) {
-	    return state.userRequestedItemIds;
+	    incomingRequests = function incomingRequests(state) {
+	    return state.incomingRequests;
 	},
-	    viewItemRequested = (0, _reselect.createSelector)(viewItem, requestedItemIds, function (item, ids) {
+	    sentRequests = function sentRequests(state) {
+	    return state.sentRequests;
+	},
+	    viewItemRequested = (0, _reselect.createSelector)(viewItem, sentRequests, function (item, requests) {
 	    if (item) {
-	        return ids.indexOf(item.id) !== -1;
+	        return requests.some(function (req) {
+	            return req.item === item.id;
+	        });
+	    }
+	}),
+	    viewItemRequestAccepted = (0, _reselect.createSelector)(viewItem, sentRequests, function (item, requests) {
+	    if (item) {
+	        var request = requests.find(function (req) {
+	            return req.item === item.id;
+	        });
+	        if (request) {
+	            return request.accepted;
+	        }
 	    }
 	}),
 	    viewItemOwned = (0, _reselect.createSelector)(viewItem, user, function (item, user) {
-	    if (item) {
-	        return item.owner === user.id;
-	    }
+	    return item && user && item.owner === user.id;
 	}),
+	    viewItemRequests = function viewItemRequests(state) {
+	    return state.viewItemRequests;
+	},
 	    editItemId = function editItemId(state) {
 	    return state.editItemId;
 	},
@@ -8238,19 +8570,31 @@
 
 	    return {
 	        description: cachedProperty('description', cachedItem, item),
-	        imageUrl: cachedProperty('imageUrl', cachedItem, item),
+	        image: cachedProperty('image', cachedItem, item),
 	        city: cachedProperty('city', cachedItem, item),
 	        text: cachedProperty('text', cachedItem, item)
 	    };
-	});
+	}),
+	    editImageStatus = function editImageStatus(state) {
+	    return state.editImageUpload;
+	};
 
 	exports.path = path;
 	exports.user = user;
+	exports.loggedIn = loggedIn;
+	exports.token = token;
 	exports.frontPageItems = frontPageItems;
+	exports.userItems = userItems;
+	exports.sentRequests = sentRequests;
+	exports.incomingRequests = incomingRequests;
+	exports.viewItemId = viewItemId;
 	exports.viewItem = viewItem;
 	exports.viewItemRequested = viewItemRequested;
+	exports.viewItemRequestAccepted = viewItemRequestAccepted;
 	exports.viewItemOwned = viewItemOwned;
+	exports.viewItemRequests = viewItemRequests;
 	exports.editItem = editItem;
+	exports.editImageStatus = editImageStatus;
 
 	function cachedProperty(name, cache, canonical) {
 	    var cacheVal = cache[name];
@@ -8379,6 +8723,32 @@
 
 /***/ },
 /* 83 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	// See http://stackoverflow.com/a/2117523/1333873 for details.
+	var uuidv4 = function () {
+	  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (character) {
+	    var randomNumber = Math.random() * 16 | 0,
+	        result =
+	          character === 'x' ?
+	            randomNumber :
+	            randomNumber & 0x3 | 0x8;
+
+	    return result.toString(16);
+	  });
+	};
+
+	uuidv4.empty = function () {
+	  return '00000000-0000-0000-0000-000000000000';
+	};
+
+	module.exports = uuidv4;
+
+
+/***/ },
+/* 84 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8428,7 +8798,7 @@
 	}
 
 /***/ },
-/* 84 */
+/* 85 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8445,7 +8815,7 @@
 
 	var _redux = __webpack_require__(36);
 
-	var _componentRouter = __webpack_require__(85);
+	var _componentRouter = __webpack_require__(86);
 
 	var _selectors = __webpack_require__(81);
 
@@ -8453,31 +8823,35 @@
 
 	var _actions = __webpack_require__(77);
 
-	var _index = __webpack_require__(86);
+	var _index = __webpack_require__(87);
 
 	var _index2 = _interopRequireDefault(_index);
 
-	var _create = __webpack_require__(94);
+	var _dashboard = __webpack_require__(95);
+
+	var _dashboard2 = _interopRequireDefault(_dashboard);
+
+	var _create = __webpack_require__(96);
 
 	var _create2 = _interopRequireDefault(_create);
 
-	var _item = __webpack_require__(95);
+	var _item = __webpack_require__(97);
 
 	var _item2 = _interopRequireDefault(_item);
 
-	var _edit = __webpack_require__(100);
+	var _edit = __webpack_require__(105);
 
 	var _edit2 = _interopRequireDefault(_edit);
 
-	var _authbox = __webpack_require__(106);
+	var _authbox = __webpack_require__(111);
 
 	var _authbox2 = _interopRequireDefault(_authbox);
 
-	var _link = __webpack_require__(109);
+	var _link = __webpack_require__(114);
 
 	var _link2 = _interopRequireDefault(_link);
 
-	var _app = __webpack_require__(112);
+	var _app = __webpack_require__(117);
 
 	var _app2 = _interopRequireDefault(_app);
 
@@ -8497,6 +8871,21 @@
 
 	        var loggedIn = !!user;
 
+	        var createLink = null;
+	        var dashLink = null;
+	        if (loggedIn) {
+	            createLink = (0, _virtualElement2.default)(
+	                _link2.default,
+	                { 'class': _app2.default.navLink, href: '/create', updatePath: updatePath },
+	                'Post Item'
+	            );
+	            dashLink = (0, _virtualElement2.default)(
+	                _link2.default,
+	                { 'class': _app2.default.navLink, href: '/dashboard', updatePath: updatePath },
+	                'Dashboard'
+	            );
+	        }
+
 	        return (0, _virtualElement2.default)(
 	            'div',
 	            { 'class': _app2.default.junklist },
@@ -8511,16 +8900,14 @@
 	                (0, _virtualElement2.default)(
 	                    'nav',
 	                    { 'class': _app2.default.nav },
-	                    (0, _virtualElement2.default)(
-	                        _link2.default,
-	                        { 'class': _app2.default.navLink, href: '/create', updatePath: updatePath },
-	                        'Post Item'
-	                    )
+	                    dashLink,
+	                    createLink
 	                ),
 	                (0, _virtualElement2.default)(_authbox2.default, { loggedIn: loggedIn, displayName: loggedIn ? user.displayName : null, onLogin: tryLogin, onLogout: logout })
 	            ),
 	            (0, _componentRouter.renderRoutes)(path, {
 	                '/': _index2.default,
+	                '/dashboard': _dashboard2.default,
 	                '/create': _create2.default,
 	                '/item/:id': _item2.default,
 	                '/item/:id/edit': _edit2.default
@@ -8543,7 +8930,7 @@
 	})(App);
 
 /***/ },
-/* 85 */
+/* 86 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8597,7 +8984,7 @@
 	}
 
 /***/ },
-/* 86 */
+/* 87 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8618,44 +9005,47 @@
 
 	var _actions = __webpack_require__(77);
 
-	var _itembox = __webpack_require__(87);
+	var _itembox = __webpack_require__(88);
 
 	var _itembox2 = _interopRequireDefault(_itembox);
 
-	var _index = __webpack_require__(92);
+	var _index = __webpack_require__(93);
 
 	var _index2 = _interopRequireDefault(_index);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var Index = {
-	    afterMount: function afterMount(_ref, el, setState) {
-	        var props = _ref.props;
+	    afterMount: function afterMount(_ref) {
+	        var loadFrontPageItems = _ref.props.loadFrontPageItems;
 
-	        props.getFrontPageItems();
+	        loadFrontPageItems();
 	    },
 	    render: function render(_ref2) {
 	        var _ref2$props = _ref2.props;
 	        var items = _ref2$props.items;
 	        var navigateToItem = _ref2$props.navigateToItem;
 
-	        var content = undefined;
+	        var itemsContent = null;
+	        var itemsError = null;
+	        var itemsThrobber = null;
+	        console.log('items', items);
 	        if (Array.isArray(items)) {
 	            if (items.length < 1) {
-	                content = (0, _virtualElement2.default)(
+	                itemsThrobber = (0, _virtualElement2.default)(
 	                    'div',
 	                    { 'class': _index2.default.searching },
 	                    'Searching...'
 	                );
 	            } else {
-	                content = items.map(function (item) {
+	                itemsContent = items.map(function (item) {
 	                    return (0, _virtualElement2.default)(_itembox2.default, { key: item.id, item: item, onClick: function onClick() {
 	                            return navigateToItem(item.id);
 	                        } });
 	                });
 	            }
 	        } else {
-	            content = (0, _virtualElement2.default)(
+	            itemsError = (0, _virtualElement2.default)(
 	                'div',
 	                { 'class': _index2.default.searchError },
 	                'Error: ',
@@ -8667,10 +9057,12 @@
 	            'div',
 	            null,
 	            (0, _virtualElement2.default)('input', { 'class': _index2.default.searchIn, type: 'search', placeholder: 'Find stuff' }),
+	            itemsThrobber,
+	            itemsError,
 	            (0, _virtualElement2.default)(
 	                'div',
 	                { 'class': _index2.default.items },
-	                content
+	                itemsContent
 	            )
 	        );
 	    }
@@ -8683,12 +9075,12 @@
 	}, function (dispatch) {
 	    return (0, _redux.bindActionCreators)({
 	        navigateToItem: _actions.navigateToItem,
-	        getFrontPageItems: _actions.getFrontPageItems
+	        loadFrontPageItems: _actions.loadFrontPageItems
 	    }, dispatch);
 	})(Index);
 
 /***/ },
-/* 87 */
+/* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8701,7 +9093,7 @@
 
 	var _virtualElement2 = _interopRequireDefault(_virtualElement);
 
-	var _itembox = __webpack_require__(88);
+	var _itembox = __webpack_require__(89);
 
 	var _itembox2 = _interopRequireDefault(_itembox);
 
@@ -8716,7 +9108,7 @@
 	        return (0, _virtualElement2.default)(
 	            'div',
 	            { 'class': _itembox2.default.itembox, onClick: onClick },
-	            (0, _virtualElement2.default)('img', { src: item.imageUrl }),
+	            item.image ? (0, _virtualElement2.default)('img', { src: '/item-images/' + item.image + '/small' }) : null,
 	            (0, _virtualElement2.default)(
 	                'div',
 	                { 'class': _itembox2.default.desc },
@@ -8732,23 +9124,23 @@
 	};
 
 /***/ },
-/* 88 */
+/* 89 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(89);
+	var content = __webpack_require__(90);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(91)(content, {});
+	var update = __webpack_require__(92)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept("!!./../../node_modules/css-loader/index.js!./itembox.css", function() {
-				var newContent = require("!!./../../node_modules/css-loader/index.js!./itembox.css");
+			module.hot.accept("!!./../../../node_modules/css-loader/index.js!./itembox.css", function() {
+				var newContent = require("!!./../../../node_modules/css-loader/index.js!./itembox.css");
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -8758,25 +9150,25 @@
 	}
 
 /***/ },
-/* 89 */
+/* 90 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(90)();
+	exports = module.exports = __webpack_require__(91)();
 	// imports
 
 
 	// module
-	exports.push([module.id, "._3R0DjbaQwA1_vzynuWoqPZ {\n    width: 240px;\n    border: 1px solid #888;\n    box-sizing: border-box;\n    cursor: pointer;\n    margin: 15px;\n}\n\n._3R0DjbaQwA1_vzynuWoqPZ > img {\n    width: 100%;\n    max-height: 240px;\n}\n\n._39zS0dEoA2In5xqzci-dTx {\n    color: #00e;\n    font-size: 1.1rem;\n    text-align: center;\n    padding: 10px;\n}\n\n._1ZR-itdKzoq7ar8o2KIypG {\n    color: #aaa;\n    font-size: 0.9rem;\n    padding-bottom: 6px;\n    text-align: center;\n}", ""]);
+	exports.push([module.id, ".vSeLWczFJws2qVRTStsv- {\n    width: 240px;\n    border: 1px solid #888;\n    box-sizing: border-box;\n    cursor: pointer;\n    margin: 15px;\n    text-align: center;\n}\n\n.vSeLWczFJws2qVRTStsv- > img {\n    max-width: 100%;\n    max-height: 240px;\n}\n\n._3D7eORQ89oDZUlkys24xAf {\n    color: #00e;\n    font-size: 1.1rem;\n    padding: 10px;\n}\n\n.DQTH_kipBOl8EuLXeLEQs {\n    color: #aaa;\n    font-size: 0.9rem;\n    padding-bottom: 6px;\n}", ""]);
 
 	// exports
 	exports.locals = {
-		"itembox": "_3R0DjbaQwA1_vzynuWoqPZ",
-		"desc": "_39zS0dEoA2In5xqzci-dTx",
-		"city": "_1ZR-itdKzoq7ar8o2KIypG"
+		"itembox": "vSeLWczFJws2qVRTStsv-",
+		"desc": "_3D7eORQ89oDZUlkys24xAf",
+		"city": "DQTH_kipBOl8EuLXeLEQs"
 	};
 
 /***/ },
-/* 90 */
+/* 91 */
 /***/ function(module, exports) {
 
 	/*
@@ -8832,7 +9224,7 @@
 
 
 /***/ },
-/* 91 */
+/* 92 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -9086,23 +9478,23 @@
 
 
 /***/ },
-/* 92 */
+/* 93 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(93);
+	var content = __webpack_require__(94);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(91)(content, {});
+	var update = __webpack_require__(92)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept("!!./../../node_modules/css-loader/index.js!./index.css", function() {
-				var newContent = require("!!./../../node_modules/css-loader/index.js!./index.css");
+			module.hot.accept("!!./../../../node_modules/css-loader/index.js!./index.css", function() {
+				var newContent = require("!!./../../../node_modules/css-loader/index.js!./index.css");
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -9112,26 +9504,26 @@
 	}
 
 /***/ },
-/* 93 */
+/* 94 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(90)();
+	exports = module.exports = __webpack_require__(91)();
 	// imports
 
 
 	// module
-	exports.push([module.id, ".jKLwe4fFG1xmqC23xeV8f {\n    max-width: 900px;\n    width: 100%;\n    margin: 0 auto;\n}\n\n._2lW4nCtlCnkH0pH-AOM9I8 {\n    display: flex;\n    background-color: #f4f4f4;\n}\n\n._3tTuVqNTxNStY8DEdT6Cir {\n    width: 100%;\n    padding: 7px;\n    font-size: 20px;\n    margin: 20px 0 20px 0;\n}\n\n._3Y7n0IcCdEN5dfQ42gYaDQ {\n    display: flex;\n    flex-wrap: wrap;\n    justify-content: center;\n}", ""]);
+	exports.push([module.id, "._3N77DrT7rmkAAJRZY7Sqfh {\n    max-width: 900px;\n    width: 100%;\n    margin: 0 auto;\n}\n\n._3D5ZO8dDCZpscY8voNURpX {\n    display: flex;\n    background-color: #f4f4f4;\n}\n\n._1MEwMmchyVrL4eWvf-9Koy {\n    width: 100%;\n    padding: 7px;\n    font-size: 20px;\n    margin: 20px 0 20px 0;\n}\n\n.dAF8tagcKzcJkwCJdgSXw {\n    display: flex;\n    flex-wrap: wrap;\n    justify-content: center;\n    align-items: flex-start;\n}", ""]);
 
 	// exports
 	exports.locals = {
-		"junklist": "jKLwe4fFG1xmqC23xeV8f",
-		"siteheader": "_2lW4nCtlCnkH0pH-AOM9I8",
-		"searchIn": "_3tTuVqNTxNStY8DEdT6Cir",
-		"items": "_3Y7n0IcCdEN5dfQ42gYaDQ"
+		"junklist": "_3N77DrT7rmkAAJRZY7Sqfh",
+		"siteheader": "_3D5ZO8dDCZpscY8voNURpX",
+		"searchIn": "_1MEwMmchyVrL4eWvf-9Koy",
+		"items": "dAF8tagcKzcJkwCJdgSXw"
 	};
 
 /***/ },
-/* 94 */
+/* 95 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -9148,7 +9540,86 @@
 
 	var _redux = __webpack_require__(36);
 
-	var _uuidv = __webpack_require__(80);
+	var _selectors = __webpack_require__(81);
+
+	var _actions = __webpack_require__(77);
+
+	var _itembox = __webpack_require__(88);
+
+	var _itembox2 = _interopRequireDefault(_itembox);
+
+	var _dashboard = __webpack_require__(119);
+
+	var _dashboard2 = _interopRequireDefault(_dashboard);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Dashboard = {
+	    afterMount: function afterMount(_ref) {
+	        var loadUserItems = _ref.props.loadUserItems;
+
+	        loadUserItems();
+	    },
+	    render: function render(_ref2) {
+	        var _ref2$props = _ref2.props;
+	        var userItems = _ref2$props.userItems;
+	        var navigateToItem = _ref2$props.navigateToItem;
+
+	        return (0, _virtualElement2.default)(
+	            'div',
+	            null,
+	            (0, _virtualElement2.default)(
+	                'div',
+	                null,
+	                (0, _virtualElement2.default)(
+	                    'h2',
+	                    { 'class': _dashboard2.default.title },
+	                    'My Items'
+	                ),
+	                (0, _virtualElement2.default)(
+	                    'div',
+	                    null,
+	                    userItems.map(function (item) {
+	                        return (0, _virtualElement2.default)(_itembox2.default, { key: item.id, item: item, onClick: function onClick() {
+	                                return navigateToItem(item.id);
+	                            } });
+	                    })
+	                )
+	            )
+	        );
+	    }
+	};
+
+	exports.default = (0, _dekuRedux.connect)(function (state) {
+	    return {
+	        userItems: (0, _selectors.userItems)(state)
+	    };
+	}, function (dispatch) {
+	    return (0, _redux.bindActionCreators)({
+	        navigateToItem: _actions.navigateToItem,
+	        loadUserItems: _actions.loadUserItems
+	    }, dispatch);
+	})(Dashboard);
+
+/***/ },
+/* 96 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _virtualElement = __webpack_require__(1);
+
+	var _virtualElement2 = _interopRequireDefault(_virtualElement);
+
+	var _dekuRedux = __webpack_require__(34);
+
+	var _redux = __webpack_require__(36);
+
+	var _uuidv = __webpack_require__(83);
 
 	var _uuidv2 = _interopRequireDefault(_uuidv);
 
@@ -9176,7 +9647,7 @@
 	})(Create);
 
 /***/ },
-/* 95 */
+/* 97 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -9197,11 +9668,17 @@
 
 	var _actions = __webpack_require__(77);
 
-	var _item = __webpack_require__(96);
+	var _request = __webpack_require__(78);
+
+	var _item = __webpack_require__(98);
 
 	var _item2 = _interopRequireDefault(_item);
 
-	var _button = __webpack_require__(98);
+	var _button = __webpack_require__(100);
+
+	var _requestbox = __webpack_require__(102);
+
+	var _requestbox2 = _interopRequireDefault(_requestbox);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -9215,30 +9692,46 @@
 	    },
 	    render: function render(_ref2) {
 	        var _ref2$props = _ref2.props;
+	        var loggedIn = _ref2$props.loggedIn;
 	        var item = _ref2$props.item;
 	        var requested = _ref2$props.requested;
+	        var requestAccepted = _ref2$props.requestAccepted;
 	        var owned = _ref2$props.owned;
+	        var itemRequests = _ref2$props.itemRequests;
 	        var requestItem = _ref2$props.requestItem;
+	        var unrequestItem = _ref2$props.unrequestItem;
+	        var acceptRequest = _ref2$props.acceptRequest;
+	        var unacceptRequest = _ref2$props.unacceptRequest;
 	        var navigateEditItem = _ref2$props.navigateEditItem;
 
-	        var content = undefined;
+	        var itemError = null;
+	        var itemThrobber = null;
+	        var itemContent = null;
+	        var editButton = null;
+	        var requestButton = null;
+	        var requestContent = null;
+
 	        if (item) {
 	            if (typeof item === 'string') {
-	                content = (0, _virtualElement2.default)(
+	                itemError = (0, _virtualElement2.default)(
 	                    'div',
 	                    { 'class': _item2.default.error },
 	                    'Error: ',
 	                    item
 	                );
 	            } else {
-	                content = [(0, _virtualElement2.default)(
+	                itemContent = [(0, _virtualElement2.default)(
 	                    'h1',
 	                    { 'class': _item2.default.desc },
 	                    item.description
 	                ), (0, _virtualElement2.default)(
 	                    'div',
 	                    { 'class': _item2.default.imageHolder },
-	                    (0, _virtualElement2.default)('img', { 'class': _item2.default.image, src: item.imageUrl }),
+	                    item.image ? (0, _virtualElement2.default)(
+	                        'a',
+	                        { target: '_blank', href: '/item-images/' + item.image },
+	                        (0, _virtualElement2.default)('img', { 'class': _item2.default.image, src: '/item-images/' + item.image + '/small' })
+	                    ) : null,
 	                    (0, _virtualElement2.default)(
 	                        'div',
 	                        { 'class': _item2.default.city },
@@ -9251,8 +9744,7 @@
 	                )];
 
 	                if (owned) {
-	                    // TODO: Show edit button
-	                    content.push((0, _virtualElement2.default)(
+	                    editButton = [(0, _virtualElement2.default)(
 	                        'button',
 	                        { 'class': _button.button, onClick: function onClick() {
 	                                return navigateEditItem(item.id);
@@ -9262,29 +9754,51 @@
 	                        'div',
 	                        { 'class': _item2.default.ownerInfo },
 	                        'This post belongs to you'
-	                    ));
+	                    )];
+	                    console.log('requestbox', itemRequests);
+	                    requestContent = itemRequests.map(function (request) {
+	                        return (0, _virtualElement2.default)(_requestbox2.default, { request: request, onAccept: function onAccept() {
+	                                return acceptRequest(request.id);
+	                            }, onUndoAccept: function onUndoAccept() {
+	                                return unacceptRequest(request.id);
+	                            } });
+	                    });
 	                } else {
 	                    if (requested) {
-	                        content.push((0, _virtualElement2.default)(
-	                            'button',
-	                            { 'class': _button.button + ' requested', onClick: function onClick() {
-	                                    return requestItem(item.id, false);
-	                                } },
-	                            'Remove Request'
-	                        ));
-	                    } else {
-	                        content.push((0, _virtualElement2.default)(
+	                        if (requestAccepted === true) {
+	                            requestButton = (0, _virtualElement2.default)(
+	                                'div',
+	                                null,
+	                                'Your request was accepted'
+	                            );
+	                        } else if (requestAccepted === false) {
+	                            requestButton = (0, _virtualElement2.default)(
+	                                'div',
+	                                null,
+	                                'Someone else\'s request was selected'
+	                            );
+	                        } else {
+	                            requestButton = (0, _virtualElement2.default)(
+	                                'button',
+	                                { 'class': _button.button + ' requested', onClick: function onClick() {
+	                                        return unrequestItem(item.id);
+	                                    } },
+	                                'Remove Request'
+	                            );
+	                        }
+	                    } else if (loggedIn) {
+	                        requestButton = (0, _virtualElement2.default)(
 	                            'button',
 	                            { 'class': _button.button, onClick: function onClick() {
-	                                    return requestItem(item.id, true);
+	                                    return requestItem(item.id);
 	                                } },
 	                            'Request Item'
-	                        ));
+	                        );
 	                    }
 	                }
 	            }
 	        } else {
-	            content = (0, _virtualElement2.default)(
+	            itemThrobber = (0, _virtualElement2.default)(
 	                'div',
 	                { 'class': _item2.default.loading },
 	                'Loading...'
@@ -9294,7 +9808,12 @@
 	        return (0, _virtualElement2.default)(
 	            'div',
 	            { 'class': _item2.default.item },
-	            content
+	            itemThrobber,
+	            itemError,
+	            itemContent,
+	            editButton,
+	            requestButton,
+	            requestContent
 	        );
 	    }
 	};
@@ -9302,66 +9821,24 @@
 	exports.default = (0, _dekuRedux.connect)(function (state, _ref3) {
 	    var params = _ref3.params;
 	    return {
+	        loggedIn: (0, _selectors.loggedIn)(state),
 	        id: params.id,
 	        item: (0, _selectors.viewItem)(state),
 	        requested: (0, _selectors.viewItemRequested)(state),
-	        owned: (0, _selectors.viewItemOwned)(state)
+	        requestAccepted: (0, _selectors.viewItemRequestAccepted)(state),
+	        owned: (0, _selectors.viewItemOwned)(state),
+	        itemRequests: (0, _selectors.viewItemRequests)(state)
 	    };
 	}, function (dispatch) {
 	    return (0, _redux.bindActionCreators)({
 	        selectViewItem: _actions.selectViewItem,
 	        requestItem: _actions.requestItem,
+	        unrequestItem: _actions.unrequestItem,
+	        acceptRequest: _request.acceptRequest,
+	        unacceptRequest: _request.unacceptRequest,
 	        navigateEditItem: _actions.navigateEditItem
 	    }, dispatch);
 	})(Item);
-
-/***/ },
-/* 96 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// style-loader: Adds some css to the DOM by adding a <style> tag
-
-	// load the styles
-	var content = __webpack_require__(97);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(91)(content, {});
-	if(content.locals) module.exports = content.locals;
-	// Hot Module Replacement
-	if(false) {
-		// When the styles change, update the <style> tags
-		if(!content.locals) {
-			module.hot.accept("!!./../../node_modules/css-loader/index.js!./item.css", function() {
-				var newContent = require("!!./../../node_modules/css-loader/index.js!./item.css");
-				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-				update(newContent);
-			});
-		}
-		// When the module is disposed, remove the <style> tags
-		module.hot.dispose(function() { update(); });
-	}
-
-/***/ },
-/* 97 */
-/***/ function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(90)();
-	// imports
-
-
-	// module
-	exports.push([module.id, ".bf1tS1_cVY0tp2SrM3Tx1 {\n    text-align: center;\n    padding: 20px 0;\n}\n\n.fi8nqZk-3Uo8Ac9Eosm_X {\n    font-size: 1.4rem;\n    color: #00e;\n    margin: 0;\n    padding: 10px 0;\n}\n\n.mfotfs0PPmIW28COUXQgi {\n    display: inline-block;\n    margin: 0 auto;\n    max-width: 400px;\n}\n\n._1yMQ5fPdBD4YcmNL3y-TIl {\n    display: block;\n    max-width: 100%;\n}\n\n.KkTrFi7KKAKdVyMPUiZJg {\n    color: #aaa;\n    font-size: 0.9rem;\n    padding-bottom: 4px 0;\n    text-align: left;\n}\n\n._1xazcylZ9FpMOvbiR02YkC {\n    font-size: 1rem;\n    font-family: Arial, sans-serif;\n    color: black;\n    max-width: 600px;\n    padding: 30px 10px 30px 10px;\n    margin: 0 auto;\n    text-align: start;\n}\n\n._1DrIFDjnj1EV824KOkez2- {\n    color: #d0d0d0;\n    font-size: 0.8rem;\n    margin-top: 5px;\n}", ""]);
-
-	// exports
-	exports.locals = {
-		"item": "bf1tS1_cVY0tp2SrM3Tx1",
-		"desc": "fi8nqZk-3Uo8Ac9Eosm_X",
-		"imageHolder": "mfotfs0PPmIW28COUXQgi",
-		"image": "_1yMQ5fPdBD4YcmNL3y-TIl",
-		"city": "KkTrFi7KKAKdVyMPUiZJg",
-		"text": "_1xazcylZ9FpMOvbiR02YkC",
-		"ownerInfo": "_1DrIFDjnj1EV824KOkez2-"
-	};
 
 /***/ },
 /* 98 */
@@ -9373,14 +9850,14 @@
 	var content = __webpack_require__(99);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(91)(content, {});
+	var update = __webpack_require__(92)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept("!!./../../node_modules/css-loader/index.js!./button.css", function() {
-				var newContent = require("!!./../../node_modules/css-loader/index.js!./button.css");
+			module.hot.accept("!!./../../../node_modules/css-loader/index.js!./item.css", function() {
+				var newContent = require("!!./../../../node_modules/css-loader/index.js!./item.css");
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -9393,20 +9870,191 @@
 /* 99 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(90)();
+	exports = module.exports = __webpack_require__(91)();
 	// imports
 
 
 	// module
-	exports.push([module.id, ".sqwVDmvJLp5jIehlK_Xnu {\n    padding: 10px 14px;\n    border-radius: 2px;\n    border: 0;\n    background-color: #e0e0e0;\n    color: #00e;\n    font-size: 16px;\n    font-family: Verdana, Geneva, sans-serif;\n}\n\n.sqwVDmvJLp5jIehlK_Xnu:hover {\n    background-color: #f0f0f0;\n}", ""]);
+	exports.push([module.id, "._3opp8Q8hHcfNrG-EX-lxD7 {\n    text-align: center;\n    padding: 20px 0;\n}\n\n.uMBfsqo7d8ILRe_krr4d4 {\n    font-size: 1.4rem;\n    color: #00e;\n    margin: 0;\n    padding: 10px 0;\n}\n\n._1Mgo8XBMJK-OBMDr1RayRU {\n    display: inline-block;\n    margin: 0 auto;\n    max-width: 400px;\n}\n\n.kw7TLOgUaSrEZkMQhMU6x {\n    display: block;\n    max-width: 100%;\n}\n\n.PzltqynOfkFNyByk6axG6 {\n    color: #aaa;\n    font-size: 0.9rem;\n    padding-bottom: 4px 0;\n    text-align: left;\n}\n\n._28kdH2wt1jZpxCXPD5XGLd {\n    font-size: 1rem;\n    font-family: Arial, sans-serif;\n    color: black;\n    max-width: 600px;\n    padding: 30px 10px 30px 10px;\n    margin: 0 auto;\n    text-align: start;\n}\n\n._2qXuEMMVEp_4QINrHsc4_Y {\n    color: #d0d0d0;\n    font-size: 0.8rem;\n    margin-top: 5px;\n    margin-bottom: 20px;\n}", ""]);
 
 	// exports
 	exports.locals = {
-		"button": "sqwVDmvJLp5jIehlK_Xnu"
+		"item": "_3opp8Q8hHcfNrG-EX-lxD7",
+		"desc": "uMBfsqo7d8ILRe_krr4d4",
+		"imageHolder": "_1Mgo8XBMJK-OBMDr1RayRU",
+		"image": "kw7TLOgUaSrEZkMQhMU6x",
+		"city": "PzltqynOfkFNyByk6axG6",
+		"text": "_28kdH2wt1jZpxCXPD5XGLd",
+		"ownerInfo": "_2qXuEMMVEp_4QINrHsc4_Y"
 	};
 
 /***/ },
 /* 100 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(101);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(92)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../../node_modules/css-loader/index.js!./button.css", function() {
+				var newContent = require("!!./../../../node_modules/css-loader/index.js!./button.css");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 101 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(91)();
+	// imports
+
+
+	// module
+	exports.push([module.id, ".xEgWHqhzJZWpkx3_RZE-w {\n    padding: 10px 14px;\n    border-radius: 2px;\n    border: 0;\n    background-color: #e0e0e0;\n    color: #00e;\n    font-size: 16px;\n    font-family: Verdana, Geneva, sans-serif;\n}\n\n.xEgWHqhzJZWpkx3_RZE-w:hover {\n    background-color: #f0f0f0;\n}\n\n.xEgWHqhzJZWpkx3_RZE-w:disabled {\n    background-color: #d0d0d0;\n    color: #99e;\n}", ""]);
+
+	// exports
+	exports.locals = {
+		"button": "xEgWHqhzJZWpkx3_RZE-w"
+	};
+
+/***/ },
+/* 102 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _virtualElement = __webpack_require__(1);
+
+	var _virtualElement2 = _interopRequireDefault(_virtualElement);
+
+	var _requestbox = __webpack_require__(103);
+
+	var _requestbox2 = _interopRequireDefault(_requestbox);
+
+	var _button = __webpack_require__(100);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = {
+	    render: function render(_ref) {
+	        var _ref$props = _ref.props;
+	        var _ref$props$request = _ref$props.request;
+	        var accepted = _ref$props$request.accepted;
+	        var displayName = _ref$props$request.displayName;
+	        var onAccept = _ref$props.onAccept;
+	        var onUndoAccept = _ref$props.onUndoAccept;
+
+	        var requestContent = (0, _virtualElement2.default)(
+	            'div',
+	            { 'class': _requestbox2.default.request },
+	            'Requested by ',
+	            displayName
+	        );
+	        var acceptContent = null;
+	        if (accepted === true) {
+	            acceptContent = (0, _virtualElement2.default)(
+	                'div',
+	                { 'class': _requestbox2.default.accept },
+	                (0, _virtualElement2.default)(
+	                    'div',
+	                    { 'class': _requestbox2.default.accepted },
+	                    'Accepted'
+	                ),
+	                (0, _virtualElement2.default)(
+	                    'button',
+	                    { 'class': _button.button, onClick: onUndoAccept },
+	                    'Undo'
+	                )
+	            );
+	        } else if (accepted === false) {
+	            requestContent = (0, _virtualElement2.default)(
+	                'div',
+	                { 'class': _requestbox2.default.request + ' ' + _requestbox2.default.denied },
+	                'Requested by ',
+	                displayName
+	            );
+	        } else {
+	            acceptContent = (0, _virtualElement2.default)(
+	                'button',
+	                { 'class': _button.button + ' ' + _requestbox2.default.accept, onClick: onAccept },
+	                'Accept'
+	            );
+	        }
+
+	        return (0, _virtualElement2.default)(
+	            'div',
+	            { 'class': _requestbox2.default.box },
+	            requestContent,
+	            acceptContent
+	        );
+	    }
+	};
+
+/***/ },
+/* 103 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(104);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(92)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../../node_modules/css-loader/index.js!./requestbox.css", function() {
+				var newContent = require("!!./../../../node_modules/css-loader/index.js!./requestbox.css");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 104 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(91)();
+	// imports
+
+
+	// module
+	exports.push([module.id, "._3LpZk9TWNcL2Ay_Bk0ettm {\n    margin: 10px 0;\n}\n\n._2uoWgA86PGPYvSkZaa-ZlS {\n    display: inline-block;\n    margin: 10px 0;\n}\n\n.UL7Bcd-pISejA053Q4Vie {\n    display: inline-block;\n    margin: 0 4px;\n}\n\n._2YuivXyRWErR-RaGtfLloX {\n    display: inline-block;\n    color: green;\n    margin: 0 4px;\n}\n\n.bI4PpPHGIy3wUVJPAY_G_ {\n    color: gray;\n    text-decoration: line-through;\n}", ""]);
+
+	// exports
+	exports.locals = {
+		"box": "_3LpZk9TWNcL2Ay_Bk0ettm",
+		"request": "_2uoWgA86PGPYvSkZaa-ZlS",
+		"accept": "UL7Bcd-pISejA053Q4Vie",
+		"accepted": "_2YuivXyRWErR-RaGtfLloX",
+		"denied": "bI4PpPHGIy3wUVJPAY_G_"
+	};
+
+/***/ },
+/* 105 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -9427,15 +10075,15 @@
 
 	var _actions = __webpack_require__(77);
 
-	var _imagepicker = __webpack_require__(101);
+	var _imagepicker = __webpack_require__(106);
 
 	var _imagepicker2 = _interopRequireDefault(_imagepicker);
 
-	var _edit = __webpack_require__(104);
+	var _edit = __webpack_require__(109);
 
 	var _edit2 = _interopRequireDefault(_edit);
 
-	var _button = __webpack_require__(98);
+	var _button = __webpack_require__(100);
 
 	var _button2 = _interopRequireDefault(_button);
 
@@ -9446,7 +10094,6 @@
 	        var _ref$props = _ref.props;
 	        var id = _ref$props.id;
 	        var selectEditItem = _ref$props.selectEditItem;
-	        var uploadImage = _ref$props.uploadImage;
 	        var untrackedState = _ref.state.untrackedState;
 
 	        selectEditItem(id);
@@ -9456,47 +10103,76 @@
 	    render: function render(_ref2) {
 	        var _ref2$props = _ref2.props;
 	        var item = _ref2$props.item;
-	        var cacheEditItem = _ref2$props.cacheEditItem;
+	        var user = _ref2$props.user;
+	        var imageStatus = _ref2$props.imageStatus;
+	        var cacheEditItemDescription = _ref2$props.cacheEditItemDescription;
+	        var cacheEditItemCity = _ref2$props.cacheEditItemCity;
+	        var cacheEditItemText = _ref2$props.cacheEditItemText;
+	        var clearEditCache = _ref2$props.clearEditCache;
 	        var saveCachedEditItem = _ref2$props.saveCachedEditItem;
+	        var uploadEditImage = _ref2$props.uploadEditImage;
 	        var el = _ref2.state.el;
 
-	        var change = function change() {
-	            var c = el.children;
-	            var data = {
-	                description: c[0].value,
-	                imageUrl: c[2].value,
-	                city: c[3].value,
-	                text: c[4].value
-	            };
+	        var loggedIn = !!user;
 
-	            cacheEditItem(data);
-	        };
+	        var canClear = item.description || item.city || item.text;
+	        var statusContent = null;
+	        var status = imageStatus.status;
+	        var progress = imageStatus.progress;
 
-	        var pick = function pick(file) {
-	            (0, _actions.uploadImage)(file);
-	            // TODO: Get back results and use to upload item
-	        };
+	        switch (status) {
+	            case 'done':
+	                statusContent = 'Done';
+	                break;
+	            case 'failed':
+	                statusContent = 'Upload failed';
+	                break;
+	            case 'uploading':
+	                statusContent = (0, _virtualElement2.default)('progress', { value: progress });
+	                break;
+	        }
+
+	        console.log('imageStatus', imageStatus);
+	        var canSave = item.description && item.city;
+	        console.log('canSave', item, 'loggedIn', loggedIn);
+	        if (imageStatus.status) {
+	            canSave = canSave && item.image;
+	        }
+
+	        // TODO: If not logged in don't allow saving
+	        var saveText = 'Save';
+	        if (!loggedIn) {
+	            canSave = false;
+	            saveText = 'Login to Save';
+	        }
 
 	        return (0, _virtualElement2.default)(
 	            'div',
 	            { 'class': _edit2.default.editor },
-	            (0, _virtualElement2.default)('input', { 'class': _edit2.default.desc, placeholder: 'Short description', value: item.description, onKeyUp: change }),
-	            (0, _virtualElement2.default)(_imagepicker2.default, { onPick: pick }),
-	            (0, _virtualElement2.default)('input', { 'class': _edit2.default.city, placeholder: 'City', type: 'url', value: item.city, onKeyUp: change }),
-	            (0, _virtualElement2.default)('textarea', { 'class': _edit2.default.notes, placeholder: 'Notes...', value: item.text, onKeyUp: change }),
+	            (0, _virtualElement2.default)('input', { 'class': _edit2.default.desc, placeholder: 'Short description', value: item.description, onKeyUp: targetValue(cacheEditItemDescription) }),
+	            item.image ? (0, _virtualElement2.default)('img', { src: '/item-images/' + item.image + '/small' }) : null,
+	            (0, _virtualElement2.default)(_imagepicker2.default, { onPick: uploadEditImage }),
+	            (0, _virtualElement2.default)(
+	                'div',
+	                null,
+	                statusContent
+	            ),
+	            (0, _virtualElement2.default)(
+	                'div',
+	                null,
+	                imageStatus.text
+	            ),
+	            (0, _virtualElement2.default)('input', { 'class': _edit2.default.city, placeholder: 'City', type: 'url', value: item.city, onKeyUp: targetValue(cacheEditItemCity) }),
+	            (0, _virtualElement2.default)('textarea', { 'class': _edit2.default.notes, placeholder: 'Notes...', value: item.text, onKeyUp: targetValue(cacheEditItemText) }),
 	            (0, _virtualElement2.default)(
 	                'button',
-	                { 'class': _button2.default.button + ' ' + _edit2.default.clear, onClick: function onClick() {
-	                        return cacheEditItem({});
-	                    } },
+	                { 'class': _button2.default.button + ' ' + _edit2.default.clear, onClick: clearEditCache, disabled: !canClear },
 	                'Clear'
 	            ),
 	            (0, _virtualElement2.default)(
 	                'button',
-	                { 'class': _button2.default.button, onClick: function onClick() {
-	                        return saveCachedEditItem();
-	                    } },
-	                'Save'
+	                { 'class': _button2.default.button, onClick: saveCachedEditItem, disabled: !canSave },
+	                saveText
 	            )
 	        );
 	    }
@@ -9506,19 +10182,30 @@
 	    var id = _ref3.params.id;
 	    return {
 	        id: id,
-	        item: (0, _selectors.editItem)(state)
+	        user: (0, _selectors.user)(state),
+	        item: (0, _selectors.editItem)(state),
+	        imageStatus: (0, _selectors.editImageStatus)(state)
 	    };
 	}, function (dispatch) {
 	    return (0, _redux.bindActionCreators)({
 	        selectEditItem: _actions.selectEditItem,
-	        cacheEditItem: _actions.cacheEditItem,
+	        cacheEditItemDescription: _actions.cacheEditItemDescription,
+	        cacheEditItemCity: _actions.cacheEditItemCity,
+	        cacheEditItemText: _actions.cacheEditItemText,
+	        clearEditCache: _actions.clearEditCache,
 	        saveCachedEditItem: _actions.saveCachedEditItem,
-	        uploadImage: _actions.uploadImage
+	        uploadEditImage: _actions.uploadEditImage
 	    }, dispatch);
 	})(Edit);
 
+	function targetValue(fn) {
+	    return function (e) {
+	        fn(e.target.value);
+	    };
+	}
+
 /***/ },
-/* 101 */
+/* 106 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -9531,7 +10218,7 @@
 
 	var _virtualElement2 = _interopRequireDefault(_virtualElement);
 
-	var _imagepicker = __webpack_require__(102);
+	var _imagepicker = __webpack_require__(107);
 
 	var _imagepicker2 = _interopRequireDefault(_imagepicker);
 
@@ -9559,17 +10246,24 @@
 	        };
 
 	        var drop = function drop(e) {
-	            e.preventDefault();
 	            var files = e.dataTransfer.files;
 
-	            if (files.length > 0) {
-	                picked(files[0]);
+	            var allowedFiles = filter(files, function (file) {
+	                return file.type.indexOf('image/') === 0;
+	            });
+	            if (allowedFiles.length > 0) {
+	                e.preventDefault();
+	                picked(allowedFiles[0]);
 	            }
+
 	            setState({ hover: false });
 	        };
 
 	        var click = function click(e) {
-	            return e.target.children[0].click();
+	            var el = e.delegateTarget.querySelector('.' + _imagepicker2.default.fileInput);
+	            if (el) {
+	                el.click();
+	            }
 	        };
 
 	        var change = function change(e) {
@@ -9592,9 +10286,8 @@
 	            (0, _virtualElement2.default)(
 	                'div',
 	                { 'class': _imagepicker2.default.droparea + (hover ? ' hover' : ''), onClick: click, onDragEnter: dragEnter, onDragOver: dragOver, onDragLeave: dragLeave, onDrop: drop },
-	                (0, _virtualElement2.default)('input', { 'class': _imagepicker2.default.fileinput, type: 'file', accept: 'image/*', onChange: change }),
-	                (0, _virtualElement2.default)('img', { 'class': _imagepicker2.default.preview, src: previewUrl }),
-	                (0, _virtualElement2.default)(
+	                (0, _virtualElement2.default)('input', { 'class': _imagepicker2.default.fileInput, type: 'file', accept: 'image/*', onChange: change }),
+	                previewUrl ? (0, _virtualElement2.default)('img', { 'class': _imagepicker2.default.preview, src: previewUrl }) : (0, _virtualElement2.default)(
 	                    'div',
 	                    null,
 	                    'Drop File Here'
@@ -9604,24 +10297,28 @@
 	    }
 	};
 
+	function filter(it, fn) {
+	    return Array.prototype.filter.call(it, fn);
+	}
+
 /***/ },
-/* 102 */
+/* 107 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(103);
+	var content = __webpack_require__(108);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(91)(content, {});
+	var update = __webpack_require__(92)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept("!!./../../node_modules/css-loader/index.js!./imagepicker.css", function() {
-				var newContent = require("!!./../../node_modules/css-loader/index.js!./imagepicker.css");
+			module.hot.accept("!!./../../../node_modules/css-loader/index.js!./imagepicker.css", function() {
+				var newContent = require("!!./../../../node_modules/css-loader/index.js!./imagepicker.css");
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -9631,43 +10328,43 @@
 	}
 
 /***/ },
-/* 103 */
+/* 108 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(90)();
+	exports = module.exports = __webpack_require__(91)();
 	// imports
 
 
 	// module
-	exports.push([module.id, "._2hnX1chwIxIJGw85pyV_IU {\n    display: inline-block;\n}\n\n._2hNKBiXyWVCyMBEKZxOw6j {\n    cursor: pointer;\n    display: flex;\n    justify-content: center;\n    flex-direction: column;\n    height: 400px;\n    height: 200px;\n    width: 200px;\n    border: 3px dashed #d0d0d0;\n    transition: all 80ms;\n}\n\n._2hNKBiXyWVCyMBEKZxOw6j._23QRmLCa_3GYa3NGTRUfFi {\n    border-color: #aaa;\n}\n\n.SNHAxVOaG8FsnJYEwgqRx {\n    display: none;\n}\n\n.sQRV4gsezg0dJXRYEamsj {\n    max-width: 180px;\n    max-height: 180px;\n}\n\n.sQRV4gsezg0dJXRYEamsj:not([src]) {\n    display: none;\n}", ""]);
+	exports.push([module.id, "._298ZJzfQNrYQNkEzKEMc30 {\n    display: inline-block;\n}\n\n._33bifT4nEAO0S-MkmNnitS {\n    cursor: pointer;\n    display: flex;\n    justify-content: center;\n    align-items: center;\n    flex-direction: column;\n    height: 400px;\n    height: 200px;\n    width: 200px;\n    border: 3px dashed #d0d0d0;\n    transition: all 80ms;\n}\n\n._33bifT4nEAO0S-MkmNnitS.EYROiQoIRFya_mbQPdYab {\n    border-color: #aaa;\n}\n\n._3vQ1nnj0_edtwtOdheQQO- {\n    display: none;\n}\n\n._1MYdHa3pcLfpT3hxk7bi5Q {\n    max-width: 180px;\n    max-height: 180px;\n}\n\n._1MYdHa3pcLfpT3hxk7bi5Q:not([src]) {\n    display: none;\n}", ""]);
 
 	// exports
 	exports.locals = {
-		"picker": "_2hnX1chwIxIJGw85pyV_IU",
-		"droparea": "_2hNKBiXyWVCyMBEKZxOw6j",
-		"hover": "_23QRmLCa_3GYa3NGTRUfFi",
-		"fileinput": "SNHAxVOaG8FsnJYEwgqRx",
-		"preview": "sQRV4gsezg0dJXRYEamsj"
+		"picker": "_298ZJzfQNrYQNkEzKEMc30",
+		"droparea": "_33bifT4nEAO0S-MkmNnitS",
+		"hover": "EYROiQoIRFya_mbQPdYab",
+		"fileInput": "_3vQ1nnj0_edtwtOdheQQO-",
+		"preview": "_1MYdHa3pcLfpT3hxk7bi5Q"
 	};
 
 /***/ },
-/* 104 */
+/* 109 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(105);
+	var content = __webpack_require__(110);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(91)(content, {});
+	var update = __webpack_require__(92)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept("!!./../../node_modules/css-loader/index.js!./edit.css", function() {
-				var newContent = require("!!./../../node_modules/css-loader/index.js!./edit.css");
+			module.hot.accept("!!./../../../node_modules/css-loader/index.js!./edit.css", function() {
+				var newContent = require("!!./../../../node_modules/css-loader/index.js!./edit.css");
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -9677,26 +10374,26 @@
 	}
 
 /***/ },
-/* 105 */
+/* 110 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(90)();
+	exports = module.exports = __webpack_require__(91)();
 	// imports
 
 
 	// module
-	exports.push([module.id, "._38rFfDSJW9RdnQd1eBTK-k {\n    max-width: 400px;\n    margin: 0 auto;\n    text-align: center;\n    padding-top: 20px;\n}\n\n._38rFfDSJW9RdnQd1eBTK-k > input {\n    width: 100%;\n    margin-bottom: 10px;\n    padding: 7px;\n    font-size: 1.05rem;\n    font-family: inherit;\n    text-align: start;\n    border: 1px solid #ccc;\n}\n\n._2q7Ql4BPoPJ0kJEdEKoASo:invalid {\n    background-color: #FFF5F5;\n}\n\n.oTZhfAJ02Pqw538twUff4 {\n    width: 100%;\n    height: 150px;\n    margin-bottom: 10px;\n    padding: 7px;\n    font-size: 1.05rem;\n    font-family: inherit;\n    text-align: start;\n    border: 1px solid #ccc;\n}\n\n._2SmXbfT8o_UbY8rJosqKRC {\n    margin-right: 15px;\n}", ""]);
+	exports.push([module.id, ".xgdenVo-Z5aKrawtnm-cU {\n    max-width: 400px;\n    margin: 0 auto;\n    text-align: center;\n    padding-top: 20px;\n}\n\n.xgdenVo-Z5aKrawtnm-cU > input {\n    width: 100%;\n    margin-bottom: 10px;\n    padding: 7px;\n    font-size: 1.05rem;\n    font-family: inherit;\n    text-align: start;\n    border: 1px solid #ccc;\n}\n\n._63u_LYFX_-nPhfiyiTQwo {\n    margin-top: 10px;\n}\n\n._22cM9krG9KrAezHMsttSEz {\n    width: 100%;\n    height: 150px;\n    margin-bottom: 10px;\n    padding: 7px;\n    font-size: 1.05rem;\n    font-family: inherit;\n    text-align: start;\n    border: 1px solid #ccc;\n}\n\n._160RavNQValXz9NNqQ2S51 {\n    margin-right: 15px;\n}", ""]);
 
 	// exports
 	exports.locals = {
-		"editor": "_38rFfDSJW9RdnQd1eBTK-k",
-		"imageUrl": "_2q7Ql4BPoPJ0kJEdEKoASo",
-		"notes": "oTZhfAJ02Pqw538twUff4",
-		"clear": "_2SmXbfT8o_UbY8rJosqKRC"
+		"editor": "xgdenVo-Z5aKrawtnm-cU",
+		"city": "_63u_LYFX_-nPhfiyiTQwo",
+		"notes": "_22cM9krG9KrAezHMsttSEz",
+		"clear": "_160RavNQValXz9NNqQ2S51"
 	};
 
 /***/ },
-/* 106 */
+/* 111 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -9709,7 +10406,7 @@
 
 	var _virtualElement2 = _interopRequireDefault(_virtualElement);
 
-	var _authbox = __webpack_require__(107);
+	var _authbox = __webpack_require__(112);
 
 	var _authbox2 = _interopRequireDefault(_authbox);
 
@@ -9760,23 +10457,23 @@
 	exports.default = AuthBox;
 
 /***/ },
-/* 107 */
+/* 112 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(108);
+	var content = __webpack_require__(113);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(91)(content, {});
+	var update = __webpack_require__(92)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept("!!./../../node_modules/css-loader/index.js!./authbox.css", function() {
-				var newContent = require("!!./../../node_modules/css-loader/index.js!./authbox.css");
+			module.hot.accept("!!./../../../node_modules/css-loader/index.js!./authbox.css", function() {
+				var newContent = require("!!./../../../node_modules/css-loader/index.js!./authbox.css");
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -9786,23 +10483,23 @@
 	}
 
 /***/ },
-/* 108 */
+/* 113 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(90)();
+	exports = module.exports = __webpack_require__(91)();
 	// imports
 
 
 	// module
-	exports.push([module.id, "._2bnDsQ6FCFg2_BKiPT_lT0 {\n    margin: 0 0 0 auto;\n    padding: 10px;\n}\n\n._2bnDsQ6FCFg2_BKiPT_lT0 > a {\n    margin-left: 8px;\n}", ""]);
+	exports.push([module.id, "._35k5ty-ujSuXD2yprad7TA {\n    margin: 0 0 0 auto;\n    padding: 10px;\n}\n\n._35k5ty-ujSuXD2yprad7TA > a {\n    margin-left: 8px;\n}", ""]);
 
 	// exports
 	exports.locals = {
-		"authbox": "_2bnDsQ6FCFg2_BKiPT_lT0"
+		"authbox": "_35k5ty-ujSuXD2yprad7TA"
 	};
 
 /***/ },
-/* 109 */
+/* 114 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -9815,7 +10512,7 @@
 
 	var _virtualElement2 = _interopRequireDefault(_virtualElement);
 
-	var _link = __webpack_require__(110);
+	var _link = __webpack_require__(115);
 
 	var _link2 = _interopRequireDefault(_link);
 
@@ -9841,16 +10538,16 @@
 	};
 
 /***/ },
-/* 110 */
+/* 115 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(111);
+	var content = __webpack_require__(116);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(91)(content, {});
+	var update = __webpack_require__(92)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -9867,10 +10564,10 @@
 	}
 
 /***/ },
-/* 111 */
+/* 116 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(90)();
+	exports = module.exports = __webpack_require__(91)();
 	// imports
 
 
@@ -9881,23 +10578,23 @@
 
 
 /***/ },
-/* 112 */
+/* 117 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(113);
+	var content = __webpack_require__(118);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(91)(content, {});
+	var update = __webpack_require__(92)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept("!!./../../node_modules/css-loader/index.js!./app.css", function() {
-				var newContent = require("!!./../../node_modules/css-loader/index.js!./app.css");
+			module.hot.accept("!!./../../../node_modules/css-loader/index.js!./app.css", function() {
+				var newContent = require("!!./../../../node_modules/css-loader/index.js!./app.css");
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -9907,23 +10604,65 @@
 	}
 
 /***/ },
-/* 113 */
+/* 118 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(90)();
+	exports = module.exports = __webpack_require__(91)();
 	// imports
 
 
 	// module
-	exports.push([module.id, ".Lk4tw-U1z2Oy7NppBu5OG {\n    max-width: 900px;\n    width: 100%;\n    margin: 0 auto;\n}\n\n.KE7jWPANeJXW_cQmpVWte {\n    display: flex;\n    align-items: center;\n    background-color: #f4f4f4;\n}\n\n._2iIm1hhzfzkjuH2D_6e2os {\n    font-size: 1.4rem;\n    padding: 0 10px;\n}\n\n._2iIm1hhzfzkjuH2D_6e2os:visited {\n    color: #0000EE;\n}\n\n._2Hn_DIjj5XxELrPgvKhjTv {\n    font-size: 1.1rem;\n    padding: 0 10px;\n}\n\n._2skt5osZh9BKHqHqnTGiu4 {\n    padding: 0 10px;\n}\n\n._2skt5osZh9BKHqHqnTGiu4:visited {\n    color: #0000EE;\n}", ""]);
+	exports.push([module.id, ".pwbx9cNR8ZYcO95bcAoFw {\n    max-width: 900px;\n    width: 100%;\n    margin: 0 auto;\n}\n\n._2--Ky9C5b6s9S-nzUO7Gpe {\n    display: flex;\n    align-items: center;\n    background-color: #f4f4f4;\n}\n\n._3O9oxqK78wCc8HOlIEOWzT {\n    font-size: 1.4rem;\n    padding: 0 10px;\n}\n\n._3O9oxqK78wCc8HOlIEOWzT:visited {\n    color: #0000EE;\n}\n\n._3laVAIjhAWm1eWtEZv7tKp {\n    font-size: 1.1rem;\n    padding: 0 10px;\n}\n\n._2yI4DdWIIozT0tpprZYPl- {\n    padding: 0 10px;\n}\n\n._2yI4DdWIIozT0tpprZYPl-:visited {\n    color: #0000EE;\n}", ""]);
 
 	// exports
 	exports.locals = {
-		"junklist": "Lk4tw-U1z2Oy7NppBu5OG",
-		"header": "KE7jWPANeJXW_cQmpVWte",
-		"title": "_2iIm1hhzfzkjuH2D_6e2os",
-		"nav": "_2Hn_DIjj5XxELrPgvKhjTv",
-		"navLink": "_2skt5osZh9BKHqHqnTGiu4"
+		"junklist": "pwbx9cNR8ZYcO95bcAoFw",
+		"header": "_2--Ky9C5b6s9S-nzUO7Gpe",
+		"title": "_3O9oxqK78wCc8HOlIEOWzT",
+		"nav": "_3laVAIjhAWm1eWtEZv7tKp",
+		"navLink": "_2yI4DdWIIozT0tpprZYPl-"
+	};
+
+/***/ },
+/* 119 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(120);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(92)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../../node_modules/css-loader/index.js!./dashboard.css", function() {
+				var newContent = require("!!./../../../node_modules/css-loader/index.js!./dashboard.css");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 120 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(91)();
+	// imports
+
+
+	// module
+	exports.push([module.id, "._1X99RZSiEuUK7f7pPSuosm {\n    text-align: center;\n    font-size: 1.2rem;\n}", ""]);
+
+	// exports
+	exports.locals = {
+		"title": "_1X99RZSiEuUK7f7pPSuosm"
 	};
 
 /***/ }

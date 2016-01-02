@@ -11,7 +11,10 @@ export default {
         }
     }) {
         return <div class={styles.itembox} onClick={onClick}>
-            <img src={item.imageUrl} />
+            { item.image ?
+                <img src={`/item-images/${item.image}/small`}/> :
+                null
+            }
             <div class={styles.desc}>{item.description}</div>
             <div class={styles.city}>{item.city}</div>
         </div>;

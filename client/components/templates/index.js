@@ -2,20 +2,24 @@ import element from 'virtual-element';
 import {connect} from 'deku-redux';
 import {bindActionCreators} from 'redux';
 
-import {frontPageItems} from '../store/selectors';
+import {frontPageItems} from '../../store/selectors';
 import {
     navigateToItem,
-    getFrontPageItems
-} from '../store/actions';
+    loadFrontPageItems
+} from '../../store/actions';
 
-import ItemBox from '../components/itembox';
+import ItemBox from '../molecules/itembox';
 
 import styles from './index.css';
 
 
 const Index = {
-    afterMount({props}, el, setState) {
-        props.getFrontPageItems();
+    afterMount({
+        props: {
+            loadFrontPageItems
+        }
+    }) {
+        loadFrontPageItems();
     },
     render({
         props: {
@@ -23,21 +27,26 @@ const Index = {
             navigateToItem
         }
     }) {
-        let content;
+        let itemsContent = null;
+        let itemsError = null;
+        let itemsThrobber = null;
+        console.log('items',items)
         if(Array.isArray(items)) {
             if(items.length < 1) {
-                content = <div class={styles.searching}>Searching...</div>;
+                itemsThrobber = <div class={styles.searching}>Searching...</div>;
             } else {
-                content = items.map(item => <ItemBox key={item.id} item={item} onClick={() => navigateToItem(item.id)} />);
+                itemsContent = items.map(item => <ItemBox key={item.id} item={item} onClick={() => navigateToItem(item.id)} />);
             }
         } else {
-            content = <div class={styles.searchError}>Error: {items}</div>;
+            itemsError = <div class={styles.searchError}>Error: {items}</div>;
         } 
         
         return <div>
             <input class={styles.searchIn} type="search" placeholder="Find stuff" />
+            {itemsThrobber}
+            {itemsError}
             <div class={styles.items}>
-                {content}
+                {itemsContent}
             </div>
         </div>;
     }
@@ -50,6 +59,6 @@ export default connect(
     }),
     dispatch => bindActionCreators({
         navigateToItem,
-        getFrontPageItems
+        loadFrontPageItems
     }, dispatch)
 )(Index);

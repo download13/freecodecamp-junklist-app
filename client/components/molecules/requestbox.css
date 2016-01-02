@@ -1,0 +1,24 @@
+:local .box {
+    margin: 10px 0;
+}
+
+:local .request {
+    display: inline-block;
+    margin: 10px 0;
+}
+
+:local .accept {
+    display: inline-block;
+    margin: 0 4px;
+}
+
+:local .accepted {
+    display: inline-block;
+    color: green;
+    margin: 0 4px;
+}
+
+:local .denied {
+    color: gray;
+    text-decoration: line-through;
+}

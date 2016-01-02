@@ -7,7 +7,7 @@ import {syncReduxAndRouter} from 'redux-simple-router';
 import createStore from './store';
 import {initialize} from './store/actions';
 
-import AppView from './views/app';
+import App from './components/templates/app';
 
 
 function createApp() {
@@ -19,7 +19,7 @@ function createApp() {
     syncReduxAndRouter(history, store);
     store.dispatch(initialize());
     
-    return tree().use(storePlugin(store)).mount(<AppView/>);
+    return tree().use(storePlugin(store)).mount(<App/>);
 }
 
 render(createApp(), document.getElementById('approot'));

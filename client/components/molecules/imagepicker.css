@@ -6,6 +6,7 @@
     cursor: pointer;
     display: flex;
     justify-content: center;
+    align-items: center;
     flex-direction: column;
     height: 400px;
     height: 200px;
@@ -18,7 +19,7 @@
     border-color: #aaa;
 }
 
-:local .fileinput {
+:local .fileInput {
     display: none;
 }
 

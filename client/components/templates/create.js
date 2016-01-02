@@ -5,7 +5,7 @@ import uuid from 'uuidv4';
 
 import {
     navigateEditItem
-} from '../store/actions';
+} from '../../store/actions';
 
 
 const Create = {

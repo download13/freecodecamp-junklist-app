@@ -6,6 +6,11 @@ const
     token = state => state.auth.token,
     path = state => state.routing.path,
     user = state => state.auth.user,
+    loggedIn = createSelector(
+        user,
+        user => !!user
+    ),
+    userItems = state => state.userItems,
     frontPageItemIds = state => state.frontPageItemIds,
     frontPageItems = createSelector(
         frontPageItemIds,
@@ -18,13 +23,26 @@ const
         items,
         (id, items) => items[id]
     ),
-    requestedItemIds = state => state.userRequestedItemIds,
+    incomingRequests = state => state.incomingRequests,
+    sentRequests = state => state.sentRequests,
     viewItemRequested = createSelector(
         viewItem,
-        requestedItemIds,
-        (item, ids) => {
+        sentRequests,
+        (item, requests) => {
             if(item) {
-                return ids.indexOf(item.id) !== -1;
+                return requests.some((req => req.item === item.id));
+            }
+        }
+    ),
+    viewItemRequestAccepted = createSelector(
+        viewItem,
+        sentRequests,
+        (item, requests) => {
+            if(item) {
+                let request = requests.find(req => req.item === item.id);
+                if(request) {
+                    return request.accepted;
+                }
             }
         }
     ),
@@ -32,11 +50,10 @@ const
         viewItem,
         user,
         (item, user) => {
-            if(item) {
-                return item.owner === user.id;
-            }
+            return item && user && item.owner === user.id;
         }
     ),
+    viewItemRequests = state => state.viewItemRequests,
     editItemId = state => state.editItemId,
     editItemCache = state => state.editItemCache,
     editItem = createSelector(
@@ -48,23 +65,33 @@ const
             
             return {
                 description: cachedProperty('description', cachedItem, item),
-                imageUrl: cachedProperty('imageUrl', cachedItem, item),
+                image: cachedProperty('image', cachedItem, item),
                 city: cachedProperty('city', cachedItem, item),
                 text: cachedProperty('text', cachedItem, item)
             };
         }
-    )
+    ),
+    editImageStatus = state => state.editImageUpload
 ;
 
 
 export {
     path,
     user,
+    loggedIn,
+    token,
     frontPageItems,
+    userItems,
+    sentRequests,
+    incomingRequests,
+    viewItemId,
     viewItem,
     viewItemRequested,
+    viewItemRequestAccepted,
     viewItemOwned,
-    editItem
+    viewItemRequests,
+    editItem,
+    editImageStatus
 };
 
 

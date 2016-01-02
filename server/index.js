@@ -8,14 +8,14 @@ import routes from './routes';
 
 import {
     getOrCreateUser
-} from './store/rethinkdb';
+} from './store/user';
 
 
 const authRouter = createAuthMiddleware({
     jwtSecret: 'dskajfidsuafdsf87das9f9',
     getOrCreateUser,
-    clientID: '2cbdd79900e64484d3f8',
-    clientSecret: 'c306035d51a35d12c099ff82830cc8998951ab48',
+    clientID: '782271593008-ojlttrvpijmao9d5vac603ntvvb9cc3p.apps.googleusercontent.com',
+    clientSecret: 'utKlzH7q96Xa0tn1Tow7zSPL',
     host: 'junklist-app-download13.c9users.io'
 });
 
@@ -30,6 +30,9 @@ io.on('connection', socket => {
 	// TODO
 });
 */
+
+app.disable('x-powered-by');
+
 app.use(express.static('public', {index: false}));
 
 app.use(authRouter);

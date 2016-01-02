@@ -5,7 +5,9 @@
   "main": "server/index-preload.js",
   "scripts": {
     "start": "node server/app.compiled.js",
+    "start-dev": "node server/app.debug.js",
     "watch": "webpack --watch",
+    "setupdb": "babel-node --presets es2015 server/store/setup",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -20,6 +22,7 @@
     "multiparty": "^4.1.2",
     "passport": "^0.3.2",
     "passport-github": "^1.0.0",
+    "passport-google-oauth": "^0.2.0",
     "rethinkdbdash": "^2.2.1",
     "revalidator": "^0.3.1",
     "sharp": "^0.12.0",

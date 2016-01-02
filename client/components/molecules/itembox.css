@@ -4,17 +4,17 @@
     box-sizing: border-box;
     cursor: pointer;
     margin: 15px;
+    text-align: center;
 }
 
 :local .itembox > img {
-    width: 100%;
+    max-width: 100%;
     max-height: 240px;
 }
 
 :local .desc {
     color: #00e;
     font-size: 1.1rem;
-    text-align: center;
     padding: 10px;
 }
 
@@ -22,5 +22,4 @@
     color: #aaa;
     font-size: 0.9rem;
     padding-bottom: 6px;
-    text-align: center;
 }

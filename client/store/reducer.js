@@ -9,6 +9,7 @@ export default combineReducers({
     auth: authReducer,
     routing: createRouteReducer([
         '/',
+        '/dashboard',
         '/create',
         '/item/:id',
         '/item/:id/edit'
@@ -28,18 +29,18 @@ export default combineReducers({
             return state;
         }
     },
-    frontPageItemIds(state = [], action) {
-        switch(action.type) {
-        case 'SET_FRONTPAGE_ITEMS':
-            return action.itemIds;
+    userItems(state = [], {type, payload}) {
+        switch(type) {
+        case 'SET_USER_ITEMS':
+            return payload;
         default:
             return state;
         }
     },
-    userRequestedItemIds(state = [], action) {
-        switch(action.type) {
-        case 'SET_USER_REQUESTED_ITEMS':
-            return action.itemIds;
+    frontPageItemIds(state = [], {type, payload}) {
+        switch(type) {
+        case 'SET_FRONTPAGE_ITEMS':
+            return payload;
         default:
             return state;
         }
@@ -48,13 +49,57 @@ export default combineReducers({
         if(type === 'SET_VIEW_ITEM') return id;
         return state;
     },
+    sentRequests(state = [], {type, payload}) {
+        if(type === 'SET_SENT_REQUESTS') return payload;
+        return state;
+    },
+    incomingRequests(state = [], {type, payload}) {
+        if(type === 'SET_INCOMING_REQUESTS') return payload;
+        return state;
+    },
+    viewItemRequests(state = [], {type, payload}) {
+        if(type === 'SET_VIEW_ITEM_REQUESTS') return payload;
+        return state;
+    },
     editItemId(state = null, {type, id}) {
         if(type === 'SET_EDIT_ITEM') return id;
         return state;
     },
-    editItemCache(state = {}, {type, item}) {
-        if(type === 'SET_EDIT_CACHE') return item;
-        return state;
+    editItemCache(state = {}, {type, payload}) {
+        switch(type) {
+            case 'SET_EDIT_CACHE_DESCRIPTION':
+                return {
+                    ...state,
+                    description: payload
+                };
+            case 'SET_EDIT_CACHE_CITY':
+                return {
+                    ...state,
+                    city: payload
+                };
+            case 'SET_EDIT_CACHE_TEXT':
+                return {
+                    ...state,
+                    text: payload
+                };
+            case 'SET_EDIT_CACHE_IMAGE':
+                return {
+                    ...state,
+                    image: payload
+                };
+            case 'CLEAR_EDIT_CACHE':
+                return {};
+            default:
+                return state;
+        }
+    },
+    editImageUpload(state = {}, {type, payload}) {
+        switch(type) {
+            case 'SET_UPLOAD_STATUS':
+                return payload;
+            default:
+                return state;
+        }
     }
 });
 

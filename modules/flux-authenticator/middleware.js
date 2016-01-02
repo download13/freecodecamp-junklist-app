@@ -1,5 +1,5 @@
 import {Authenticator} from 'passport';
-import GithubStrategy from 'passport-github';
+import {OAuth2Strategy} from 'passport-google-oauth';
 import jwt from 'jsonwebtoken';
 import createRouter from 'express/lib/router';
 
@@ -27,12 +27,12 @@ export default function createAuthMiddleware(opts) {
     const router = createRouter();
     const authenticator = new Authenticator();
     
-    authenticator.use(new GithubStrategy(
+    authenticator.use(new OAuth2Strategy(
         {
             clientID: opts.clientID,
             clientSecret: opts.clientSecret,
             callbackURL: opts.protocol + '//' + opts.host + opts.callbackPath,
-            scope: 'user:email'
+            scope: 'email'
         },
         (accessToken, refreshToken, profile, done) => {
             return done(null, {
@@ -47,14 +47,16 @@ export default function createAuthMiddleware(opts) {
         
         try {
             req.user = jwt.verify(token, opts.jwtSecret, {algorithms: ['HS256'], maxAge: opts.maxAge});
-        } catch(e) {}
+        } catch(e) {
+            //console.log('JWT verify error: ', e);
+        }
         
         next();
     });
     
-    router.get(opts.loginPath, authenticator.authenticate('github', {session: false}));
+    router.get(opts.loginPath, authenticator.authenticate('google', {session: false}));
     
-    router.get(opts.callbackPath, authenticator.authenticate('github', {session: false, failureRedirect: '/'}), (req, res) => {
+    router.get(opts.callbackPath, authenticator.authenticate('google', {session: false, failureRedirect: '/'}), (req, res) => {
         if(req.user) {
             opts.getOrCreateUser(req.user.email, req.user.displayName).then(user => {
                 let token = jwt.sign(user, opts.jwtSecret, {algorithm: 'HS256'});

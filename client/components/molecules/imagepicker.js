@@ -28,15 +28,22 @@ export default {
         };
         
         const drop = e => {
-            e.preventDefault();
             let {files} = e.dataTransfer;
-            if(files.length > 0) {
-                picked(files[0]);
+            let allowedFiles = filter(files, file => file.type.indexOf('image/') === 0);
+            if(allowedFiles.length > 0) {
+                e.preventDefault();
+                picked(allowedFiles[0]);
             }
+            
             setState({hover: false});
         };
         
-        const click = e => e.target.children[0].click();
+        const click = e => {
+            let el = e.delegateTarget.querySelector('.' + styles.fileInput);
+            if(el) {
+                el.click();
+            }
+        }
         
         const change = e => picked(e.target.files[0]);
         
@@ -52,10 +59,17 @@ export default {
 
         return <div class={styles.picker}>
             <div class={styles.droparea + (hover ? ' hover' : '')} onClick={click} onDragEnter={dragEnter} onDragOver={dragOver} onDragLeave={dragLeave} onDrop={drop}>
-                <input class={styles.fileinput} type="file" accept="image/*" onChange={change} />
-                <img class={styles.preview} src={previewUrl} />
-                <div>Drop File Here</div>
+                <input class={styles.fileInput} type="file" accept="image/*" onChange={change} />
+                { previewUrl ?
+                    <img class={styles.preview} src={previewUrl} /> :
+                    <div>Drop File Here</div>
+                }
             </div>
         </div>;
     }
+}
+
+
+function filter(it, fn) {
+    return Array.prototype.filter.call(it, fn);
 }
