@@ -13,10 +13,21 @@
   "author": "",
   "private": true,
   "dependencies": {
-    "babel-core": "^6.2.1",
-    "babel-preset-es2015": "^6.1.18",
     "body-parser": "^1.14.1",
     "express": "^4.13.3",
+    "sharp": "^0.12.0",
+    "socket.io": "^1.4.5"
+  },
+  "devDependencies": {
+    "babel-core": "^6.2.1",
+    "babel-preset-es2015": "^6.1.18",
+    "babel-loader": "^6.2.0",
+    "babel-plugin-syntax-jsx": "^6.1.18",
+    "babel-plugin-transform-object-rest-spread": "^6.1.18",
+    "babel-plugin-transform-react-jsx": "^6.2.0",
+    "css-loader": "^0.23.0",
+    "deku": "^0.5.6",
+    "deku-redux": "^1.0.0",
     "http-accept": "^0.1.6",
     "jsonwebtoken": "^5.4.1",
     "multiparty": "^4.1.2",
@@ -25,18 +36,6 @@
     "passport-google-oauth": "^0.2.0",
     "rethinkdbdash": "^2.2.1",
     "revalidator": "^0.3.1",
-    "sharp": "^0.12.0",
-    "uuidv4": "^0.3.1",
-    "validator": "^4.4.0"
-  },
-  "devDependencies": {
-    "babel-loader": "^6.2.0",
-    "babel-plugin-syntax-jsx": "^6.1.18",
-    "babel-plugin-transform-object-rest-spread": "^6.1.18",
-    "babel-plugin-transform-react-jsx": "^6.2.0",
-    "css-loader": "^0.23.0",
-    "deku": "^0.5.6",
-    "deku-redux": "^1.0.0",
     "history": "^1.13.1",
     "immutable": "^3.7.5",
     "isomorphic-fetch": "^2.2.0",
@@ -48,6 +47,8 @@
     "reselect": "^2.0.1",
     "style-loader": "^0.13.0",
     "virtual-element": "^1.2.0",
-    "webpack": "^1.12.7"
+    "webpack": "^1.12.7",
+    "uuidv4": "^0.3.1",
+    "validator": "^4.4.0"
   }
 }

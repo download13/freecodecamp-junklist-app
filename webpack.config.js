@@ -47,11 +47,11 @@ module.exports = [
             ]
         },
         target: 'node',
-        externals: function(context, request, cb) {
-            if(request.charAt(0) !== '.') {
-                return cb(null, 'commonjs ' + request);
-            }
-            cb();
-        }
+        externals: [
+            'express',
+            'socket.io',
+            'sharp',
+            'body-parser'
+        ]
     }
 ];

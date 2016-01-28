@@ -14,12 +14,10 @@ import {
     selectViewItem,
     requestItem,
     unrequestItem,
-    navigateEditItem
-} from '../../store/actions';
-import {
+    navigateEditItem,
     acceptRequest,
     unacceptRequest
-} from '../../store/actions/request';
+} from '../../store/actions';
 
 import styles from './item.css';
 import {button as buttonClass} from '../atoms/button.css';
@@ -81,7 +79,6 @@ const Item = {
                         <button class={buttonClass} onClick={() => navigateEditItem(item.id)}>Edit</button>,
                         <div class={styles.ownerInfo}>This post belongs to you</div>
                     ];
-                    console.log('requestbox', itemRequests)
                     requestContent = itemRequests.map(request => <RequestBox request={request} onAccept={() => acceptRequest(request.id)} onUndoAccept={() => unacceptRequest(request.id)} />);
                 } else {
                     if(requested) {
