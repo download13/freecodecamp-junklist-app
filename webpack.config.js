@@ -2,7 +2,7 @@ module.exports = [
     {
         entry: './client/index.js',
         output: {
-            path: __dirname + '/public',
+            path: __dirname + '/dist/public',
             filename: 'app.js'
         },
         module: {

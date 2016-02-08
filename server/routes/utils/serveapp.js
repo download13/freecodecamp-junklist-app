@@ -1,3 +1,3 @@
 export default function serveApp(req, res) {
-    res.sendFile('index.html', {root: 'public'});
+    res.sendFile('index.html', {root: 'dist/public'});
 }
