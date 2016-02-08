@@ -30,8 +30,8 @@ module.exports = [
     {
         entry: './server/index.js',
         output: {
-            path: __dirname + '/server',
-            filename: 'app.compiled.js'
+            path: __dirname + '/dist',
+            filename: 'server.js'
         },
         module: {
             loaders: [

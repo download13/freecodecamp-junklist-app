@@ -4,8 +4,8 @@
   "description": "",
   "main": "server/index-preload.js",
   "scripts": {
-    "start": "node server/app.compiled.js",
-    "start-dev": "node server/app.debug.js",
+    "start": "NODE_ENV=production node dist/server",
+    "dev": "node dist/server",
     "watch": "webpack --watch",
     "setupdb": "babel-node --presets es2015 server/store/setup",
     "test": "echo \"Error: no test specified\" && exit 1"
