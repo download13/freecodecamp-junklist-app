@@ -31,7 +31,8 @@ module.exports = [
         entry: './server/index.js',
         output: {
             path: __dirname + '/dist',
-            filename: 'server.js'
+            filename: 'server.js',
+            libraryTarget: 'commonjs'
         },
         module: {
             loaders: [
@@ -51,7 +52,8 @@ module.exports = [
             'express',
             'socket.io',
             'sharp',
-            'body-parser'
+            'body-parser',
+            'passport-google-oauth'
         ]
     }
 ];
