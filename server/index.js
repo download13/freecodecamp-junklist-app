@@ -33,7 +33,7 @@ io.on('connection', socket => {
 
 app.disable('x-powered-by');
 
-app.use(express.static('public', {index: false}));
+app.use(express.static('dist/public', {index: false}));
 
 app.use(authRouter);
 
