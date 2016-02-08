@@ -1,11 +1,14 @@
+const dev = process.env.NODE_ENV !== 'production';
+
 let config = {
-	rethinkHost: 'localhost'
+	rethinkHost: 'localhost',
+	dev
 }
 
 // Production
 if(!dev) {
 	config = {
-		rethinkHost: 'b2c4d3746863' // TODO: For debugging only!
+		rethinkHost: 'rethinkdb'
 	}
 }
 
