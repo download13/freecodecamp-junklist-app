@@ -1,4 +1,4 @@
-/******/ (function(modules) { // webpackBootstrap
+(function(e, a) { for(var i in a) e[i] = a[i]; }(exports, /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 
@@ -62,11 +62,11 @@
 
 	var _middleware2 = _interopRequireDefault(_middleware);
 
-	var _routes = __webpack_require__(85);
+	var _routes = __webpack_require__(62);
 
 	var _routes2 = _interopRequireDefault(_routes);
 
-	var _user = __webpack_require__(157);
+	var _user = __webpack_require__(136);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -91,7 +91,7 @@
 
 	app.disable('x-powered-by');
 
-	app.use(_express2.default.static('public', { index: false }));
+	app.use(_express2.default.static('dist/public', { index: false }));
 
 	app.use(authRouter);
 
@@ -111,13 +111,13 @@
 /* 2 */
 /***/ function(module, exports) {
 
-	module.exports = express;
+	module.exports = require("express");
 
 /***/ },
 /* 3 */
 /***/ function(module, exports) {
 
-	module.exports = socket.io;
+	module.exports = require("socket.io");
 
 /***/ },
 /* 4 */
@@ -137,15 +137,15 @@
 
 	var _passportGoogleOauth = __webpack_require__(17);
 
-	var _jsonwebtoken = __webpack_require__(46);
+	var _jsonwebtoken = __webpack_require__(18);
 
 	var _jsonwebtoken2 = _interopRequireDefault(_jsonwebtoken);
 
-	var _router = __webpack_require__(67);
+	var _router = __webpack_require__(40);
 
 	var _router2 = _interopRequireDefault(_router);
 
-	var _constants = __webpack_require__(84);
+	var _constants = __webpack_require__(61);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1502,2893 +1502,24 @@
 
 /***/ },
 /* 17 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
-	/* WEBPACK VAR INJECTION */(function(module) {/**
-	 * Module dependencies.
-	 */
-	var OAuthStrategy = __webpack_require__(19);
-	var OAuth2Strategy = __webpack_require__(42);
-
-
-	/**
-	 * Framework version.
-	 */
-	__webpack_require__(43)(module, 'version');
-
-	/**
-	 * Expose constructors.
-	 */
-	exports.Strategy =
-	exports.OAuthStrategy = OAuthStrategy;
-	exports.OAuth2Strategy = OAuth2Strategy;
-
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(18)(module)))
+	module.exports = require("passport-google-oauth");
 
 /***/ },
 /* 18 */
-/***/ function(module, exports) {
-
-	module.exports = function(module) {
-		if(!module.webpackPolyfill) {
-			module.deprecate = function() {};
-			module.paths = [];
-			// module.parent = undefined by default
-			module.children = [];
-			module.webpackPolyfill = 1;
-		}
-		return module;
-	}
-
-
-/***/ },
-/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/**
-	 * Module dependencies.
-	 */
-	var util = __webpack_require__(9)
-	  , OAuthStrategy = __webpack_require__(20).OAuthStrategy
-	  , InternalOAuthError = __webpack_require__(20).InternalOAuthError;
-
-
-	/**
-	 * `Strategy` constructor.
-	 *
-	 * The Google authentication strategy authenticates requests by delegating to
-	 * Google using the OAuth protocol.
-	 *
-	 * Applications must supply a `verify` callback which accepts a `token`,
-	 * `tokenSecret` and service-specific `profile`, and then calls the `done`
-	 * callback supplying a `user`, which should be set to `false` if the
-	 * credentials are not valid.  If an exception occured, `err` should be set.
-	 *
-	 * Options:
-	 *   - `consumerKey`     identifies client to Google
-	 *   - `consumerSecret`  secret used to establish ownership of the consumer key
-	 *   - `callbackURL`     URL to which Google will redirect the user after obtaining authorization
-	 *
-	 * Examples:
-	 *
-	 *     passport.use(new GoogleStrategy({
-	 *         consumerKey: '123-456-789',
-	 *         consumerSecret: 'shhh-its-a-secret'
-	 *         callbackURL: 'https://www.example.net/auth/google/callback'
-	 *       },
-	 *       function(token, tokenSecret, profile, done) {
-	 *         User.findOrCreate(..., function (err, user) {
-	 *           done(err, user);
-	 *         });
-	 *       }
-	 *     ));
-	 *
-	 * @param {Object} options
-	 * @param {Function} verify
-	 * @api public
-	 */
-	function Strategy(options, verify) {
-	  options = options || {};
-	  options.requestTokenURL = options.requestTokenURL || 'https://www.google.com/accounts/OAuthGetRequestToken';
-	  options.accessTokenURL = options.accessTokenURL || 'https://www.google.com/accounts/OAuthGetAccessToken';
-	  options.userAuthorizationURL = options.userAuthorizationURL || 'https://www.google.com/accounts/OAuthAuthorizeToken';
-	  options.sessionKey = options.sessionKey || 'oauth:google';
-
-	  OAuthStrategy.call(this, options, verify);
-	  this.name = 'google';
-	}
-
-	/**
-	 * Inherit from `OAuthStrategy`.
-	 */
-	util.inherits(Strategy, OAuthStrategy);
-
-	/**
-	 * Retrieve user profile from Google.
-	 *
-	 * This function constructs a normalized profile, with the following properties:
-	 *
-	 *   - `id`
-	 *   - `displayName`
-	 *
-	 * @param {String} token
-	 * @param {String} tokenSecret
-	 * @param {Object} params
-	 * @param {Function} done
-	 * @api protected
-	 */
-	Strategy.prototype.userProfile = function(token, tokenSecret, params, done) {
-	  this._oauth.get('https://www.google.com/m8/feeds/contacts/default/full?max-results=1&alt=json', token, tokenSecret, function (err, body, res) {
-	    if (err) { return done(new InternalOAuthError('failed to fetch user profile', err)); }
-	    
-	    try {
-	      var json = JSON.parse(body);
-	      
-	      var profile = { provider: 'google' };
-	      profile.id = json.feed.id['$t']
-	      profile.displayName = json.feed.author[0].name['$t'];
-	      profile.emails = [{ value: json.feed.author[0].email['$t'] }];
-	      
-	      profile._raw = body;
-	      profile._json = json;
-	      
-	      done(null, profile);
-	    } catch(e) {
-	      done(e);
-	    }
-	  });
-	}
-
-	/**
-	 * Return extra Google-specific parameters to be included in the request token
-	 * request.
-	 *
-	 * @param {Object} options
-	 * @return {Object}
-	 * @api protected
-	 */
-	Strategy.prototype.requestTokenParams = function(options) {
-	  var params = options || {};
-	  
-	  var scope = options.scope;
-	  if (scope) {
-	    if (Array.isArray(scope)) { scope = scope.join(' '); }
-	    params['scope'] = scope;
-	  }
-	  return params;
-	}
-
-
-	/**
-	 * Expose `Strategy`.
-	 */
-	module.exports = Strategy;
-
-
-/***/ },
-/* 20 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Module dependencies.
-	 */
-	var OAuthStrategy = __webpack_require__(21)
-	  , OAuth2Strategy = __webpack_require__(35)
-	  , InternalOAuthError = __webpack_require__(21).InternalOAuthError;
-
-
-	/**
-	 * Export constructors.
-	 */
-	exports.OAuthStrategy = OAuthStrategy;
-	exports.OAuth2Strategy = OAuth2Strategy;
-
-	/**
-	 * Export errors.
-	 */
-	exports.InternalOAuthError = InternalOAuthError;
-
-
-/***/ },
-/* 21 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Module dependencies.
-	 */
-	var Strategy = __webpack_require__(22)
-	  , InternalOAuthError = __webpack_require__(34);
-
-
-	/**
-	 * Expose `Strategy` directly from package.
-	 */
-	exports = module.exports = Strategy;
-
-	/**
-	 * Export constructors.
-	 */
-	exports.Strategy = Strategy;
-
-	/**
-	 * Export errors.
-	 */
-	exports.InternalOAuthError = InternalOAuthError;
-
-
-/***/ },
-/* 22 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Module dependencies.
-	 */
-	var passport = __webpack_require__(10)
-	  , url = __webpack_require__(23)
-	  , util = __webpack_require__(9)
-	  , utils = __webpack_require__(24)
-	  , OAuth = __webpack_require__(26).OAuth
-	  , InternalOAuthError = __webpack_require__(34);
-
-
-	/**
-	 * Creates an instance of `OAuthStrategy`.
-	 *
-	 * The OAuth authentication strategy authenticates requests using the OAuth
-	 * protocol.
-	 *
-	 * OAuth provides a facility for delegated authentication, whereby users can
-	 * authenticate using a third-party service such as Twitter.  Delegating in this
-	 * manner involves a sequence of events, including redirecting the user to the
-	 * third-party service for authorization.  Once authorization has been obtained,
-	 * the user is redirected back to the application and a token can be used to
-	 * obtain credentials.
-	 *
-	 * Applications must supply a `verify` callback, for which the function
-	 * signature is:
-	 *
-	 *     function(token, tokenSecret, profile, done) { ... }
-	 *
-	 * The verify callback is responsible for finding or creating the user, and
-	 * invoking `done` with the following arguments:
-	 *
-	 *     done(err, user, info);
-	 *
-	 * `user` should be set to `false` to indicate an authentication failure.
-	 * Additional `info` can optionally be passed as a third argument, typically
-	 * used to display informational messages.  If an exception occured, `err`
-	 * should be set.
-	 *
-	 * Options:
-	 *
-	 *   - `requestTokenURL`       URL used to obtain an unauthorized request token
-	 *   - `accessTokenURL`        URL used to exchange a user-authorized request token for an access token
-	 *   - `userAuthorizationURL`  URL used to obtain user authorization
-	 *   - `consumerKey`           identifies client to service provider
-	 *   - `consumerSecret`        secret used to establish ownership of the consumer key
-	 *   - `callbackURL`           URL to which the service provider will redirect the user after obtaining authorization
-	 *   - `passReqToCallback`     when `true`, `req` is the first argument to the verify callback (default: `false`)
-	 *
-	 * Examples:
-	 *
-	 *     passport.use(new OAuthStrategy({
-	 *         requestTokenURL: 'https://www.example.com/oauth/request_token',
-	 *         accessTokenURL: 'https://www.example.com/oauth/access_token',
-	 *         userAuthorizationURL: 'https://www.example.com/oauth/authorize',
-	 *         consumerKey: '123-456-789',
-	 *         consumerSecret: 'shhh-its-a-secret'
-	 *         callbackURL: 'https://www.example.net/auth/example/callback'
-	 *       },
-	 *       function(token, tokenSecret, profile, done) {
-	 *         User.findOrCreate(..., function (err, user) {
-	 *           done(err, user);
-	 *         });
-	 *       }
-	 *     ));
-	 *
-	 * @constructor
-	 * @param {Object} options
-	 * @param {Function} verify
-	 * @api public
-	 */
-	function OAuthStrategy(options, verify) {
-	  if (typeof options == 'function') {
-	    verify = options;
-	    options = undefined;
-	  }
-	  options = options || {};
-	  
-	  if (!verify) { throw new TypeError('OAuthStrategy requires a verify callback'); }
-	  if (!options.requestTokenURL) { throw new TypeError('OAuthStrategy requires a requestTokenURL option'); }
-	  if (!options.accessTokenURL) { throw new TypeError('OAuthStrategy requires a accessTokenURL option'); }
-	  if (!options.userAuthorizationURL) { throw new TypeError('OAuthStrategy requires a userAuthorizationURL option'); }
-	  if (!options.consumerKey) { throw new TypeError('OAuthStrategy requires a consumerKey option'); }
-	  if (options.consumerSecret === undefined) { throw new TypeError('OAuthStrategy requires a consumerSecret option'); }
-	  
-	  passport.Strategy.call(this);
-	  this.name = 'oauth';
-	  this._verify = verify;
-	  
-	  // NOTE: The _oauth property is considered "protected".  Subclasses are
-	  //       allowed to use it when making protected resource requests to retrieve
-	  //       the user profile.
-	  this._oauth = new OAuth(options.requestTokenURL, options.accessTokenURL,
-	                          options.consumerKey,  options.consumerSecret,
-	                          '1.0', null, options.signatureMethod || 'HMAC-SHA1',
-	                          null, options.customHeaders);
-	  
-	  this._userAuthorizationURL = options.userAuthorizationURL;
-	  this._callbackURL = options.callbackURL;
-	  this._key = options.sessionKey || 'oauth';
-	  this._trustProxy = options.proxy;
-	  this._passReqToCallback = options.passReqToCallback;
-	  this._skipUserProfile = (options.skipUserProfile === undefined) ? false : options.skipUserProfile;
-	}
-
-	/**
-	 * Inherit from `passport.Strategy`.
-	 */
-	util.inherits(OAuthStrategy, passport.Strategy);
-
-
-	/**
-	 * Authenticate request by delegating to a service provider using OAuth.
-	 *
-	 * @param {Object} req
-	 * @api protected
-	 */
-	OAuthStrategy.prototype.authenticate = function(req, options) {
-	  options = options || {};
-	  if (!req.session) { return this.error(new Error('OAuthStrategy requires session support. Did you forget app.use(express.session(...))?')); }
-	  
-	  var self = this;
-	  
-	  if (req.query && req.query.oauth_token) {
-	    // The request being authenticated contains an oauth_token parameter in the
-	    // query portion of the URL.  This indicates that the service provider has
-	    // redirected the user back to the application, after authenticating the
-	    // user and obtaining their authorization.
-	    //
-	    // The value of the oauth_token parameter is the request token.  Together
-	    // with knowledge of the token secret (stored in the session), the request
-	    // token can be exchanged for an access token and token secret.
-	    //
-	    // This access token and token secret, along with the optional ability to
-	    // fetch profile information from the service provider, is sufficient to
-	    // establish the identity of the user.
-	    
-	    // Bail if the session does not contain the request token and corresponding
-	    // secret.  If this happens, it is most likely caused by initiating OAuth
-	    // from a different host than that of the callback endpoint (for example:
-	    // initiating from 127.0.0.1 but handling callbacks at localhost).
-	    if (!req.session[self._key]) { return self.error(new Error('Failed to find request token in session')); }
-	    
-	    var oauthToken = req.query.oauth_token;
-	    var oauthVerifier = req.query.oauth_verifier || null;
-	    var oauthTokenSecret = req.session[self._key].oauth_token_secret;
-	    
-	    // NOTE: The oauth_verifier parameter will be supplied in the query portion
-	    //       of the redirect URL, if the server supports OAuth 1.0a.
-	    
-	    this._oauth.getOAuthAccessToken(oauthToken, oauthTokenSecret, oauthVerifier, function(err, token, tokenSecret, params) {
-	      if (err) { return self.error(self._createOAuthError('Failed to obtain access token', err)); }
-	      
-	      // The request token has been exchanged for an access token.  Since the
-	      // request token is a single-use token, that data can be removed from the
-	      // session.
-	      delete req.session[self._key].oauth_token;
-	      delete req.session[self._key].oauth_token_secret;
-	      if (Object.keys(req.session[self._key]).length === 0) {
-	        delete req.session[self._key];
-	      }
-	      
-	      self._loadUserProfile(token, tokenSecret, params, function(err, profile) {
-	        if (err) { return self.error(err); }
-	        
-	        function verified(err, user, info) {
-	          if (err) { return self.error(err); }
-	          if (!user) { return self.fail(info); }
-	          self.success(user, info);
-	        }
-	        
-	        try {
-	          if (self._passReqToCallback) {
-	            var arity = self._verify.length;
-	            if (arity == 6) {
-	              self._verify(req, token, tokenSecret, params, profile, verified);
-	            } else { // arity == 5
-	              self._verify(req, token, tokenSecret, profile, verified);
-	            }
-	          } else {
-	            var arity = self._verify.length;
-	            if (arity == 5) {
-	              self._verify(token, tokenSecret, params, profile, verified);
-	            } else { // arity == 4
-	              self._verify(token, tokenSecret, profile, verified);
-	            }
-	          }
-	        } catch (ex) {
-	          return self.error(ex);
-	        }
-	      });
-	    });
-	  } else {
-	    // In order to authenticate via OAuth, the application must obtain a request
-	    // token from the service provider and redirect the user to the service
-	    // provider to obtain their authorization.  After authorization has been
-	    // approved the user will be redirected back the application, at which point
-	    // the application can exchange the request token for an access token.
-	    //
-	    // In order to successfully exchange the request token, its corresponding
-	    // token secret needs to be known.  The token secret will be temporarily
-	    // stored in the session, so that it can be retrieved upon the user being
-	    // redirected back to the application.
-	    
-	    var params = this.requestTokenParams(options);
-	    var callbackURL = options.callbackURL || this._callbackURL;
-	    if (callbackURL) {
-	      var parsed = url.parse(callbackURL);
-	      if (!parsed.protocol) {
-	        // The callback URL is relative, resolve a fully qualified URL from the
-	        // URL of the originating request.
-	        callbackURL = url.resolve(utils.originalURL(req, { proxy: this._trustProxy }), callbackURL);
-	      }
-	    }
-	    params.oauth_callback = callbackURL;
-	    
-	    this._oauth.getOAuthRequestToken(params, function(err, token, tokenSecret, params) {
-	      if (err) { return self.error(self._createOAuthError('Failed to obtain request token', err)); }
-	      
-	      // NOTE: params will contain an oauth_callback_confirmed property set to
-	      //       true, if the server supports OAuth 1.0a.
-	      //       { oauth_callback_confirmed: 'true' }
-
-	      if (!req.session[self._key]) { req.session[self._key] = {}; }
-	      req.session[self._key].oauth_token = token;
-	      req.session[self._key].oauth_token_secret = tokenSecret;
-
-	      var parsed = url.parse(self._userAuthorizationURL, true);
-	      parsed.query.oauth_token = token;
-	      utils.merge(parsed.query, self.userAuthorizationParams(options));
-	      delete parsed.search;
-	      var location = url.format(parsed);
-	      self.redirect(location);
-	    });
-	  }
-	};
-
-	/**
-	 * Retrieve user profile from service provider.
-	 *
-	 * OAuth-based authentication strategies can overrride this function in order to
-	 * load the user's profile from the service provider.  This assists applications
-	 * (and users of those applications) in the initial registration process by
-	 * automatically submitting required information.
-	 *
-	 * @param {String} token
-	 * @param {String} tokenSecret
-	 * @param {Object} params
-	 * @param {Function} done
-	 * @api protected
-	 */
-	OAuthStrategy.prototype.userProfile = function(token, tokenSecret, params, done) {
-	  return done(null, {});
-	};
-
-	/**
-	 * Return extra parameters to be included in the request token request.
-	 *
-	 * Some OAuth providers require additional parameters to be included when
-	 * issuing a request token.  Since these parameters are not standardized by the
-	 * OAuth specification, OAuth-based authentication strategies can overrride this
-	 * function in order to populate these parameters as required by the provider.
-	 *
-	 * @param {Object} options
-	 * @return {Object}
-	 * @api protected
-	 */
-	OAuthStrategy.prototype.requestTokenParams = function(options) {
-	  return {};
-	};
-
-	/**
-	 * Return extra parameters to be included in the user authorization request.
-	 *
-	 * Some OAuth providers allow additional, non-standard parameters to be included
-	 * when requesting authorization.  Since these parameters are not standardized
-	 * by the OAuth specification, OAuth-based authentication strategies can
-	 * overrride this function in order to populate these parameters as required by
-	 * the provider.
-	 *
-	 * @param {Object} options
-	 * @return {Object}
-	 * @api protected
-	 */
-	OAuthStrategy.prototype.userAuthorizationParams = function(options) {
-	  return {};
-	};
-
-	/**
-	 * Parse error response from OAuth endpoint.
-	 *
-	 * OAuth-based authentication strategies can overrride this function in order to
-	 * parse error responses received from the request token and access token
-	 * endpoints, allowing the most informative message to be displayed.
-	 *
-	 * If this function is not overridden, a generic error will be thrown.
-	 *
-	 * @param {String} body
-	 * @param {Number} status
-	 * @return {Error}
-	 * @api protected
-	 */
-	OAuthStrategy.prototype.parseErrorResponse = function(body, status) {
-	  return null;
-	};
-
-	/**
-	 * Load user profile, contingent upon options.
-	 *
-	 * @param {String} accessToken
-	 * @param {Function} done
-	 * @api private
-	 */
-	OAuthStrategy.prototype._loadUserProfile = function(token, tokenSecret, params, done) {
-	  var self = this;
-	  
-	  function loadIt() {
-	    return self.userProfile(token, tokenSecret, params, done);
-	  }
-	  function skipIt() {
-	    return done(null);
-	  }
-	  
-	  if (typeof this._skipUserProfile == 'function' && this._skipUserProfile.length > 1) {
-	    // async
-	    this._skipUserProfile(token, tokenSecret, function(err, skip) {
-	      if (err) { return done(err); }
-	      if (!skip) { return loadIt(); }
-	      return skipIt();
-	    });
-	  } else {
-	    var skip = (typeof this._skipUserProfile == 'function') ? this._skipUserProfile() : this._skipUserProfile;
-	    if (!skip) { return loadIt(); }
-	    return skipIt();
-	  }
-	};
-
-	/**
-	 * Create an OAuth error.
-	 *
-	 * @param {String} message
-	 * @param {Object|Error} err
-	 * @api private
-	 */
-	OAuthStrategy.prototype._createOAuthError = function(message, err) {
-	  var e;
-	  if (err.statusCode && err.data) {
-	    try {
-	      e = this.parseErrorResponse(err.data, err.statusCode);
-	    } catch (_) {}
-	  }
-	  if (!e) { e = new InternalOAuthError(message, err); }
-	  return e;
-	};
-
-
-	/**
-	 * Expose `OAuthStrategy`.
-	 */
-	module.exports = OAuthStrategy;
-
-
-/***/ },
-/* 23 */
-/***/ function(module, exports) {
-
-	module.exports = require("url");
-
-/***/ },
-/* 24 */
-/***/ function(module, exports, __webpack_require__) {
-
-	exports.merge = __webpack_require__(25);
-
-	/**
-	 * Reconstructs the original URL of the request.
-	 *
-	 * This function builds a URL that corresponds the original URL requested by the
-	 * client, including the protocol (http or https) and host.
-	 *
-	 * If the request passed through any proxies that terminate SSL, the
-	 * `X-Forwarded-Proto` header is used to detect if the request was encrypted to
-	 * the proxy, assuming that the proxy has been flagged as trusted.
-	 *
-	 * @param {http.IncomingMessage} req
-	 * @param {Object} [options]
-	 * @return {String}
-	 * @api private
-	 */
-	exports.originalURL = function(req, options) {
-	  options = options || {};
-	  var app = req.app;
-	  if (app && app.get && app.get('trust proxy')) {
-	    options.proxy = true;
-	  }
-	  var trustProxy = options.proxy;
-	  
-	  var proto = (req.headers['x-forwarded-proto'] || '').toLowerCase()
-	    , tls = req.connection.encrypted || (trustProxy && 'https' == proto.split(/\s*,\s*/)[0])
-	    , host = (trustProxy && req.headers['x-forwarded-host']) || req.headers.host
-	    , protocol = tls ? 'https' : 'http'
-	    , path = req.url || '';
-	  return protocol + '://' + host + path;
-	};
-
-
-/***/ },
-/* 25 */
-/***/ function(module, exports) {
-
-	/**
-	 * Merge object b with object a.
-	 *
-	 *     var a = { foo: 'bar' }
-	 *       , b = { bar: 'baz' };
-	 *
-	 *     merge(a, b);
-	 *     // => { foo: 'bar', bar: 'baz' }
-	 *
-	 * @param {Object} a
-	 * @param {Object} b
-	 * @return {Object}
-	 * @api public
-	 */
-
-	exports = module.exports = function(a, b){
-	  if (a && b) {
-	    for (var key in b) {
-	      a[key] = b[key];
-	    }
-	  }
-	  return a;
-	};
-
-
-/***/ },
-/* 26 */
-/***/ function(module, exports, __webpack_require__) {
-
-	exports.OAuth = __webpack_require__(27).OAuth;
-	exports.OAuthEcho = __webpack_require__(27).OAuthEcho;
-	exports.OAuth2 = __webpack_require__(33).OAuth2;
-
-/***/ },
-/* 27 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var crypto= __webpack_require__(28),
-	    sha1= __webpack_require__(29),
-	    http= __webpack_require__(1),
-	    https= __webpack_require__(30),
-	    URL= __webpack_require__(23),
-	    querystring= __webpack_require__(31),
-	    OAuthUtils= __webpack_require__(32);
-
-	exports.OAuth= function(requestUrl, accessUrl, consumerKey, consumerSecret, version, authorize_callback, signatureMethod, nonceSize, customHeaders) {
-	  this._isEcho = false;
-
-	  this._requestUrl= requestUrl;
-	  this._accessUrl= accessUrl;
-	  this._consumerKey= consumerKey;
-	  this._consumerSecret= this._encodeData( consumerSecret );
-	  if (signatureMethod == "RSA-SHA1") {
-	    this._privateKey = consumerSecret;
-	  }
-	  this._version= version;
-	  if( authorize_callback === undefined ) {
-	    this._authorize_callback= "oob";
-	  }
-	  else {
-	    this._authorize_callback= authorize_callback;
-	  }
-
-	  if( signatureMethod != "PLAINTEXT" && signatureMethod != "HMAC-SHA1" && signatureMethod != "RSA-SHA1")
-	    throw new Error("Un-supported signature method: " + signatureMethod )
-	  this._signatureMethod= signatureMethod;
-	  this._nonceSize= nonceSize || 32;
-	  this._headers= customHeaders || {"Accept" : "*/*",
-	                                   "Connection" : "close",
-	                                   "User-Agent" : "Node authentication"}
-	  this._clientOptions= this._defaultClientOptions= {"requestTokenHttpMethod": "POST",
-	                                                    "accessTokenHttpMethod": "POST",
-	                                                    "followRedirects": true};
-	  this._oauthParameterSeperator = ",";
-	};
-
-	exports.OAuthEcho= function(realm, verify_credentials, consumerKey, consumerSecret, version, signatureMethod, nonceSize, customHeaders) {
-	  this._isEcho = true;
-
-	  this._realm= realm;
-	  this._verifyCredentials = verify_credentials;
-	  this._consumerKey= consumerKey;
-	  this._consumerSecret= this._encodeData( consumerSecret );
-	  if (signatureMethod == "RSA-SHA1") {
-	    this._privateKey = consumerSecret;
-	  }
-	  this._version= version;
-
-	  if( signatureMethod != "PLAINTEXT" && signatureMethod != "HMAC-SHA1" && signatureMethod != "RSA-SHA1")
-	    throw new Error("Un-supported signature method: " + signatureMethod );
-	  this._signatureMethod= signatureMethod;
-	  this._nonceSize= nonceSize || 32;
-	  this._headers= customHeaders || {"Accept" : "*/*",
-	                                   "Connection" : "close",
-	                                   "User-Agent" : "Node authentication"};
-	  this._oauthParameterSeperator = ",";
-	}
-
-	exports.OAuthEcho.prototype = exports.OAuth.prototype;
-
-	exports.OAuth.prototype._getTimestamp= function() {
-	  return Math.floor( (new Date()).getTime() / 1000 );
-	}
-
-	exports.OAuth.prototype._encodeData= function(toEncode){
-	 if( toEncode == null || toEncode == "" ) return ""
-	 else {
-	    var result= encodeURIComponent(toEncode);
-	    // Fix the mismatch between OAuth's  RFC3986's and Javascript's beliefs in what is right and wrong ;)
-	    return result.replace(/\!/g, "%21")
-	                 .replace(/\'/g, "%27")
-	                 .replace(/\(/g, "%28")
-	                 .replace(/\)/g, "%29")
-	                 .replace(/\*/g, "%2A");
-	 }
-	}
-
-	exports.OAuth.prototype._decodeData= function(toDecode) {
-	  if( toDecode != null ) {
-	    toDecode = toDecode.replace(/\+/g, " ");
-	  }
-	  return decodeURIComponent( toDecode);
-	}
-
-	exports.OAuth.prototype._getSignature= function(method, url, parameters, tokenSecret) {
-	  var signatureBase= this._createSignatureBase(method, url, parameters);
-	  return this._createSignature( signatureBase, tokenSecret );
-	}
-
-	exports.OAuth.prototype._normalizeUrl= function(url) {
-	  var parsedUrl= URL.parse(url, true)
-	   var port ="";
-	   if( parsedUrl.port ) {
-	     if( (parsedUrl.protocol == "http:" && parsedUrl.port != "80" ) ||
-	         (parsedUrl.protocol == "https:" && parsedUrl.port != "443") ) {
-	           port= ":" + parsedUrl.port;
-	         }
-	   }
-
-	  if( !parsedUrl.pathname  || parsedUrl.pathname == "" ) parsedUrl.pathname ="/";
-
-	  return parsedUrl.protocol + "//" + parsedUrl.hostname + port + parsedUrl.pathname;
-	}
-
-	// Is the parameter considered an OAuth parameter
-	exports.OAuth.prototype._isParameterNameAnOAuthParameter= function(parameter) {
-	  var m = parameter.match('^oauth_');
-	  if( m && ( m[0] === "oauth_" ) ) {
-	    return true;
-	  }
-	  else {
-	    return false;
-	  }
-	};
-
-	// build the OAuth request authorization header
-	exports.OAuth.prototype._buildAuthorizationHeaders= function(orderedParameters) {
-	  var authHeader="OAuth ";
-	  if( this._isEcho ) {
-	    authHeader += 'realm="' + this._realm + '",';
-	  }
-
-	  for( var i= 0 ; i < orderedParameters.length; i++) {
-	     // Whilst the all the parameters should be included within the signature, only the oauth_ arguments
-	     // should appear within the authorization header.
-	     if( this._isParameterNameAnOAuthParameter(orderedParameters[i][0]) ) {
-	      authHeader+= "" + this._encodeData(orderedParameters[i][0])+"=\""+ this._encodeData(orderedParameters[i][1])+"\""+ this._oauthParameterSeperator;
-	     }
-	  }
-
-	  authHeader= authHeader.substring(0, authHeader.length-this._oauthParameterSeperator.length);
-	  return authHeader;
-	}
-
-	// Takes an object literal that represents the arguments, and returns an array
-	// of argument/value pairs.
-	exports.OAuth.prototype._makeArrayOfArgumentsHash= function(argumentsHash) {
-	  var argument_pairs= [];
-	  for(var key in argumentsHash ) {
-	    if (argumentsHash.hasOwnProperty(key)) {
-	       var value= argumentsHash[key];
-	       if( Array.isArray(value) ) {
-	         for(var i=0;i<value.length;i++) {
-	           argument_pairs[argument_pairs.length]= [key, value[i]];
-	         }
-	       }
-	       else {
-	         argument_pairs[argument_pairs.length]= [key, value];
-	       }
-	    }
-	  }
-	  return argument_pairs;
-	}
-
-	// Sorts the encoded key value pairs by encoded name, then encoded value
-	exports.OAuth.prototype._sortRequestParams= function(argument_pairs) {
-	  // Sort by name, then value.
-	  argument_pairs.sort(function(a,b) {
-	      if ( a[0]== b[0] )  {
-	        return a[1] < b[1] ? -1 : 1;
-	      }
-	      else return a[0] < b[0] ? -1 : 1;
-	  });
-
-	  return argument_pairs;
-	}
-
-	exports.OAuth.prototype._normaliseRequestParams= function(args) {
-	  var argument_pairs= this._makeArrayOfArgumentsHash(args);
-	  // First encode them #3.4.1.3.2 .1
-	  for(var i=0;i<argument_pairs.length;i++) {
-	    argument_pairs[i][0]= this._encodeData( argument_pairs[i][0] );
-	    argument_pairs[i][1]= this._encodeData( argument_pairs[i][1] );
-	  }
-
-	  // Then sort them #3.4.1.3.2 .2
-	  argument_pairs= this._sortRequestParams( argument_pairs );
-
-	  // Then concatenate together #3.4.1.3.2 .3 & .4
-	  var args= "";
-	  for(var i=0;i<argument_pairs.length;i++) {
-	      args+= argument_pairs[i][0];
-	      args+= "="
-	      args+= argument_pairs[i][1];
-	      if( i < argument_pairs.length-1 ) args+= "&";
-	  }
-	  return args;
-	}
-
-	exports.OAuth.prototype._createSignatureBase= function(method, url, parameters) {
-	  url= this._encodeData( this._normalizeUrl(url) );
-	  parameters= this._encodeData( parameters );
-	  return method.toUpperCase() + "&" + url + "&" + parameters;
-	}
-
-	exports.OAuth.prototype._createSignature= function(signatureBase, tokenSecret) {
-	   if( tokenSecret === undefined ) var tokenSecret= "";
-	   else tokenSecret= this._encodeData( tokenSecret );
-	   // consumerSecret is already encoded
-	   var key= this._consumerSecret + "&" + tokenSecret;
-
-	   var hash= ""
-	   if( this._signatureMethod == "PLAINTEXT" ) {
-	     hash= key;
-	   }
-	   else if (this._signatureMethod == "RSA-SHA1") {
-	     key = this._privateKey || "";
-	     hash= crypto.createSign("RSA-SHA1").update(signatureBase).sign(key, 'base64');
-	   }
-	   else {
-	       if( crypto.Hmac ) {
-	         hash = crypto.createHmac("sha1", key).update(signatureBase).digest("base64");
-	       }
-	       else {
-	         hash= sha1.HMACSHA1(key, signatureBase);
-	       }
-	   }
-	   return hash;
-	}
-	exports.OAuth.prototype.NONCE_CHARS= ['a','b','c','d','e','f','g','h','i','j','k','l','m','n',
-	              'o','p','q','r','s','t','u','v','w','x','y','z','A','B',
-	              'C','D','E','F','G','H','I','J','K','L','M','N','O','P',
-	              'Q','R','S','T','U','V','W','X','Y','Z','0','1','2','3',
-	              '4','5','6','7','8','9'];
-
-	exports.OAuth.prototype._getNonce= function(nonceSize) {
-	   var result = [];
-	   var chars= this.NONCE_CHARS;
-	   var char_pos;
-	   var nonce_chars_length= chars.length;
-
-	   for (var i = 0; i < nonceSize; i++) {
-	       char_pos= Math.floor(Math.random() * nonce_chars_length);
-	       result[i]=  chars[char_pos];
-	   }
-	   return result.join('');
-	}
-
-	exports.OAuth.prototype._createClient= function( port, hostname, method, path, headers, sslEnabled ) {
-	  var options = {
-	    host: hostname,
-	    port: port,
-	    path: path,
-	    method: method,
-	    headers: headers
-	  };
-	  var httpModel;
-	  if( sslEnabled ) {
-	    httpModel= https;
-	  } else {
-	    httpModel= http;
-	  }
-	  return httpModel.request(options);
-	}
-
-	exports.OAuth.prototype._prepareParameters= function( oauth_token, oauth_token_secret, method, url, extra_params ) {
-	  var oauthParameters= {
-	      "oauth_timestamp":        this._getTimestamp(),
-	      "oauth_nonce":            this._getNonce(this._nonceSize),
-	      "oauth_version":          this._version,
-	      "oauth_signature_method": this._signatureMethod,
-	      "oauth_consumer_key":     this._consumerKey
-	  };
-
-	  if( oauth_token ) {
-	    oauthParameters["oauth_token"]= oauth_token;
-	  }
-
-	  var sig;
-	  if( this._isEcho ) {
-	    sig = this._getSignature( "GET",  this._verifyCredentials,  this._normaliseRequestParams(oauthParameters), oauth_token_secret);
-	  }
-	  else {
-	    if( extra_params ) {
-	      for( var key in extra_params ) {
-	        if (extra_params.hasOwnProperty(key)) oauthParameters[key]= extra_params[key];
-	      }
-	    }
-	    var parsedUrl= URL.parse( url, false );
-
-	    if( parsedUrl.query ) {
-	      var key2;
-	      var extraParameters= querystring.parse(parsedUrl.query);
-	      for(var key in extraParameters ) {
-	        var value= extraParameters[key];
-	          if( typeof value == "object" ){
-	            // TODO: This probably should be recursive
-	            for(key2 in value){
-	              oauthParameters[key + "[" + key2 + "]"] = value[key2];
-	            }
-	          } else {
-	            oauthParameters[key]= value;
-	          }
-	        }
-	    }
-
-	    sig = this._getSignature( method,  url,  this._normaliseRequestParams(oauthParameters), oauth_token_secret);
-	  }
-
-	  var orderedParameters= this._sortRequestParams( this._makeArrayOfArgumentsHash(oauthParameters) );
-	  orderedParameters[orderedParameters.length]= ["oauth_signature", sig];
-	  return orderedParameters;
-	}
-
-	exports.OAuth.prototype._performSecureRequest= function( oauth_token, oauth_token_secret, method, url, extra_params, post_body, post_content_type,  callback ) {
-	  var orderedParameters= this._prepareParameters(oauth_token, oauth_token_secret, method, url, extra_params);
-
-	  if( !post_content_type ) {
-	    post_content_type= "application/x-www-form-urlencoded";
-	  }
-	  var parsedUrl= URL.parse( url, false );
-	  if( parsedUrl.protocol == "http:" && !parsedUrl.port ) parsedUrl.port= 80;
-	  if( parsedUrl.protocol == "https:" && !parsedUrl.port ) parsedUrl.port= 443;
-
-	  var headers= {};
-	  var authorization = this._buildAuthorizationHeaders(orderedParameters);
-	  if ( this._isEcho ) {
-	    headers["X-Verify-Credentials-Authorization"]= authorization;
-	  }
-	  else {
-	    headers["Authorization"]= authorization;
-	  }
-
-	  headers["Host"] = parsedUrl.host
-
-	  for( var key in this._headers ) {
-	    if (this._headers.hasOwnProperty(key)) {
-	      headers[key]= this._headers[key];
-	    }
-	  }
-
-	  // Filter out any passed extra_params that are really to do with OAuth
-	  for(var key in extra_params) {
-	    if( this._isParameterNameAnOAuthParameter( key ) ) {
-	      delete extra_params[key];
-	    }
-	  }
-
-	  if( (method == "POST" || method == "PUT")  && ( post_body == null && extra_params != null) ) {
-	    // Fix the mismatch between the output of querystring.stringify() and this._encodeData()
-	    post_body= querystring.stringify(extra_params)
-	                       .replace(/\!/g, "%21")
-	                       .replace(/\'/g, "%27")
-	                       .replace(/\(/g, "%28")
-	                       .replace(/\)/g, "%29")
-	                       .replace(/\*/g, "%2A");
-	  }
-
-	  if( post_body ) {
-	      if ( Buffer.isBuffer(post_body) ) {
-	          headers["Content-length"]= post_body.length;
-	      } else {
-	          headers["Content-length"]= Buffer.byteLength(post_body);
-	      }
-	  } else {
-	      headers["Content-length"]= 0;
-	  }
-
-	  headers["Content-Type"]= post_content_type;
-
-	  var path;
-	  if( !parsedUrl.pathname  || parsedUrl.pathname == "" ) parsedUrl.pathname ="/";
-	  if( parsedUrl.query ) path= parsedUrl.pathname + "?"+ parsedUrl.query ;
-	  else path= parsedUrl.pathname;
-
-	  var request;
-	  if( parsedUrl.protocol == "https:" ) {
-	    request= this._createClient(parsedUrl.port, parsedUrl.hostname, method, path, headers, true);
-	  }
-	  else {
-	    request= this._createClient(parsedUrl.port, parsedUrl.hostname, method, path, headers);
-	  }
-
-	  var clientOptions = this._clientOptions;
-	  if( callback ) {
-	    var data="";
-	    var self= this;
-
-	    // Some hosts *cough* google appear to close the connection early / send no content-length header
-	    // allow this behaviour.
-	    var allowEarlyClose= OAuthUtils.isAnEarlyCloseHost( parsedUrl.hostname );
-	    var callbackCalled= false;
-	    var passBackControl = function( response ) {
-	      if(!callbackCalled) {
-	        callbackCalled= true;
-	        if ( response.statusCode >= 200 && response.statusCode <= 299 ) {
-	          callback(null, data, response);
-	        } else {
-	          // Follow 301 or 302 redirects with Location HTTP header
-	          if((response.statusCode == 301 || response.statusCode == 302) && clientOptions.followRedirects && response.headers && response.headers.location) {
-	            self._performSecureRequest( oauth_token, oauth_token_secret, method, response.headers.location, extra_params, post_body, post_content_type,  callback);
-	          }
-	          else {
-	            callback({ statusCode: response.statusCode, data: data }, data, response);
-	          }
-	        }
-	      }
-	    }
-
-	    request.on('response', function (response) {
-	      response.setEncoding('utf8');
-	      response.on('data', function (chunk) {
-	        data+=chunk;
-	      });
-	      response.on('end', function () {
-	        passBackControl( response );
-	      });
-	      response.on('close', function () {
-	        if( allowEarlyClose ) {
-	          passBackControl( response );
-	        }
-	      });
-	    });
-
-	    request.on("error", function(err) {
-	      if(!callbackCalled) {
-	        callbackCalled= true;
-	        callback( err )
-	      }
-	    });
-
-	    if( (method == "POST" || method =="PUT") && post_body != null && post_body != "" ) {
-	      request.write(post_body);
-	    }
-	    request.end();
-	  }
-	  else {
-	    if( (method == "POST" || method =="PUT") && post_body != null && post_body != "" ) {
-	      request.write(post_body);
-	    }
-	    return request;
-	  }
-
-	  return;
-	}
-
-	exports.OAuth.prototype.setClientOptions= function(options) {
-	  var key,
-	      mergedOptions= {},
-	      hasOwnProperty= Object.prototype.hasOwnProperty;
-
-	  for( key in this._defaultClientOptions ) {
-	    if( !hasOwnProperty.call(options, key) ) {
-	      mergedOptions[key]= this._defaultClientOptions[key];
-	    } else {
-	      mergedOptions[key]= options[key];
-	    }
-	  }
-
-	  this._clientOptions= mergedOptions;
-	};
-
-	exports.OAuth.prototype.getOAuthAccessToken= function(oauth_token, oauth_token_secret, oauth_verifier,  callback) {
-	  var extraParams= {};
-	  if( typeof oauth_verifier == "function" ) {
-	    callback= oauth_verifier;
-	  } else {
-	    extraParams.oauth_verifier= oauth_verifier;
-	  }
-
-	   this._performSecureRequest( oauth_token, oauth_token_secret, this._clientOptions.accessTokenHttpMethod, this._accessUrl, extraParams, null, null, function(error, data, response) {
-	         if( error ) callback(error);
-	         else {
-	           var results= querystring.parse( data );
-	           var oauth_access_token= results["oauth_token"];
-	           delete results["oauth_token"];
-	           var oauth_access_token_secret= results["oauth_token_secret"];
-	           delete results["oauth_token_secret"];
-	           callback(null, oauth_access_token, oauth_access_token_secret, results );
-	         }
-	   })
-	}
-
-	// Deprecated
-	exports.OAuth.prototype.getProtectedResource= function(url, method, oauth_token, oauth_token_secret, callback) {
-	  this._performSecureRequest( oauth_token, oauth_token_secret, method, url, null, "", null, callback );
-	}
-
-	exports.OAuth.prototype.delete= function(url, oauth_token, oauth_token_secret, callback) {
-	  return this._performSecureRequest( oauth_token, oauth_token_secret, "DELETE", url, null, "", null, callback );
-	}
-
-	exports.OAuth.prototype.get= function(url, oauth_token, oauth_token_secret, callback) {
-	  return this._performSecureRequest( oauth_token, oauth_token_secret, "GET", url, null, "", null, callback );
-	}
-
-	exports.OAuth.prototype._putOrPost= function(method, url, oauth_token, oauth_token_secret, post_body, post_content_type, callback) {
-	  var extra_params= null;
-	  if( typeof post_content_type == "function" ) {
-	    callback= post_content_type;
-	    post_content_type= null;
-	  }
-	  if ( typeof post_body != "string" && !Buffer.isBuffer(post_body) ) {
-	    post_content_type= "application/x-www-form-urlencoded"
-	    extra_params= post_body;
-	    post_body= null;
-	  }
-	  return this._performSecureRequest( oauth_token, oauth_token_secret, method, url, extra_params, post_body, post_content_type, callback );
-	}
-
-
-	exports.OAuth.prototype.put= function(url, oauth_token, oauth_token_secret, post_body, post_content_type, callback) {
-	  return this._putOrPost("PUT", url, oauth_token, oauth_token_secret, post_body, post_content_type, callback);
-	}
-
-	exports.OAuth.prototype.post= function(url, oauth_token, oauth_token_secret, post_body, post_content_type, callback) {
-	  return this._putOrPost("POST", url, oauth_token, oauth_token_secret, post_body, post_content_type, callback);
-	}
-
-	/**
-	 * Gets a request token from the OAuth provider and passes that information back
-	 * to the calling code.
-	 *
-	 * The callback should expect a function of the following form:
-	 *
-	 * function(err, token, token_secret, parsedQueryString) {}
-	 *
-	 * This method has optional parameters so can be called in the following 2 ways:
-	 *
-	 * 1) Primary use case: Does a basic request with no extra parameters
-	 *  getOAuthRequestToken( callbackFunction )
-	 *
-	 * 2) As above but allows for provision of extra parameters to be sent as part of the query to the server.
-	 *  getOAuthRequestToken( extraParams, callbackFunction )
-	 *
-	 * N.B. This method will HTTP POST verbs by default, if you wish to override this behaviour you will
-	 * need to provide a requestTokenHttpMethod option when creating the client.
-	 *
-	 **/
-	exports.OAuth.prototype.getOAuthRequestToken= function( extraParams, callback ) {
-	   if( typeof extraParams == "function" ){
-	     callback = extraParams;
-	     extraParams = {};
-	   }
-	  // Callbacks are 1.0A related
-	  if( this._authorize_callback ) {
-	    extraParams["oauth_callback"]= this._authorize_callback;
-	  }
-	  this._performSecureRequest( null, null, this._clientOptions.requestTokenHttpMethod, this._requestUrl, extraParams, null, null, function(error, data, response) {
-	    if( error ) callback(error);
-	    else {
-	      var results= querystring.parse(data);
-
-	      var oauth_token= results["oauth_token"];
-	      var oauth_token_secret= results["oauth_token_secret"];
-	      delete results["oauth_token"];
-	      delete results["oauth_token_secret"];
-	      callback(null, oauth_token, oauth_token_secret,  results );
-	    }
-	  });
-	}
-
-	exports.OAuth.prototype.signUrl= function(url, oauth_token, oauth_token_secret, method) {
-
-	  if( method === undefined ) {
-	    var method= "GET";
-	  }
-
-	  var orderedParameters= this._prepareParameters(oauth_token, oauth_token_secret, method, url, {});
-	  var parsedUrl= URL.parse( url, false );
-
-	  var query="";
-	  for( var i= 0 ; i < orderedParameters.length; i++) {
-	    query+= orderedParameters[i][0]+"="+ this._encodeData(orderedParameters[i][1]) + "&";
-	  }
-	  query= query.substring(0, query.length-1);
-
-	  return parsedUrl.protocol + "//"+ parsedUrl.host + parsedUrl.pathname + "?" + query;
-	};
-
-	exports.OAuth.prototype.authHeader= function(url, oauth_token, oauth_token_secret, method) {
-	  if( method === undefined ) {
-	    var method= "GET";
-	  }
-
-	  var orderedParameters= this._prepareParameters(oauth_token, oauth_token_secret, method, url, {});
-	  return this._buildAuthorizationHeaders(orderedParameters);
-	};
-
-
-/***/ },
-/* 28 */
-/***/ function(module, exports) {
-
-	module.exports = require("crypto");
-
-/***/ },
-/* 29 */
-/***/ function(module, exports) {
-
-	/*
-	 * A JavaScript implementation of the Secure Hash Algorithm, SHA-1, as defined
-	 * in FIPS 180-1
-	 * Version 2.2 Copyright Paul Johnston 2000 - 2009.
-	 * Other contributors: Greg Holt, Andrew Kepert, Ydnar, Lostinet
-	 * Distributed under the BSD License
-	 * See http://pajhome.org.uk/crypt/md5 for details.
-	 */
-
-	/*
-	 * Configurable variables. You may need to tweak these to be compatible with
-	 * the server-side, but the defaults work in most cases.
-	 */
-	var hexcase = 1;  /* hex output format. 0 - lowercase; 1 - uppercase        */
-	var b64pad  = "="; /* base-64 pad character. "=" for strict RFC compliance   */
-
-	/*
-	 * These are the functions you'll usually want to call
-	 * They take string arguments and return either hex or base-64 encoded strings
-	 */
-	function hex_sha1(s)    { return rstr2hex(rstr_sha1(str2rstr_utf8(s))); }
-	function b64_sha1(s)    { return rstr2b64(rstr_sha1(str2rstr_utf8(s))); }
-	function any_sha1(s, e) { return rstr2any(rstr_sha1(str2rstr_utf8(s)), e); }
-	function hex_hmac_sha1(k, d)
-	  { return rstr2hex(rstr_hmac_sha1(str2rstr_utf8(k), str2rstr_utf8(d))); }
-	function b64_hmac_sha1(k, d)
-	  { return rstr2b64(rstr_hmac_sha1(str2rstr_utf8(k), str2rstr_utf8(d))); }
-	function any_hmac_sha1(k, d, e)
-	  { return rstr2any(rstr_hmac_sha1(str2rstr_utf8(k), str2rstr_utf8(d)), e); }
-
-	/*
-	 * Perform a simple self-test to see if the VM is working
-	 */
-	function sha1_vm_test()
-	{
-	  return hex_sha1("abc").toLowerCase() == "a9993e364706816aba3e25717850c26c9cd0d89d";
-	}
-
-	/*
-	 * Calculate the SHA1 of a raw string
-	 */
-	function rstr_sha1(s)
-	{
-	  return binb2rstr(binb_sha1(rstr2binb(s), s.length * 8));
-	}
-
-	/*
-	 * Calculate the HMAC-SHA1 of a key and some data (raw strings)
-	 */
-	function rstr_hmac_sha1(key, data)
-	{
-	  var bkey = rstr2binb(key);
-	  if(bkey.length > 16) bkey = binb_sha1(bkey, key.length * 8);
-
-	  var ipad = Array(16), opad = Array(16);
-	  for(var i = 0; i < 16; i++)
-	  {
-	    ipad[i] = bkey[i] ^ 0x36363636;
-	    opad[i] = bkey[i] ^ 0x5C5C5C5C;
-	  }
-
-	  var hash = binb_sha1(ipad.concat(rstr2binb(data)), 512 + data.length * 8);
-	  return binb2rstr(binb_sha1(opad.concat(hash), 512 + 160));
-	}
-
-	/*
-	 * Convert a raw string to a hex string
-	 */
-	function rstr2hex(input)
-	{
-	  try { hexcase } catch(e) { hexcase=0; }
-	  var hex_tab = hexcase ? "0123456789ABCDEF" : "0123456789abcdef";
-	  var output = "";
-	  var x;
-	  for(var i = 0; i < input.length; i++)
-	  {
-	    x = input.charCodeAt(i);
-	    output += hex_tab.charAt((x >>> 4) & 0x0F)
-	           +  hex_tab.charAt( x        & 0x0F);
-	  }
-	  return output;
-	}
-
-	/*
-	 * Convert a raw string to a base-64 string
-	 */
-	function rstr2b64(input)
-	{
-	  try { b64pad } catch(e) { b64pad=''; }
-	  var tab = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-	  var output = "";
-	  var len = input.length;
-	  for(var i = 0; i < len; i += 3)
-	  {
-	    var triplet = (input.charCodeAt(i) << 16)
-	                | (i + 1 < len ? input.charCodeAt(i+1) << 8 : 0)
-	                | (i + 2 < len ? input.charCodeAt(i+2)      : 0);
-	    for(var j = 0; j < 4; j++)
-	    {
-	      if(i * 8 + j * 6 > input.length * 8) output += b64pad;
-	      else output += tab.charAt((triplet >>> 6*(3-j)) & 0x3F);
-	    }
-	  }
-	  return output;
-	}
-
-	/*
-	 * Convert a raw string to an arbitrary string encoding
-	 */
-	function rstr2any(input, encoding)
-	{
-	  var divisor = encoding.length;
-	  var remainders = Array();
-	  var i, q, x, quotient;
-
-	  /* Convert to an array of 16-bit big-endian values, forming the dividend */
-	  var dividend = Array(Math.ceil(input.length / 2));
-	  for(i = 0; i < dividend.length; i++)
-	  {
-	    dividend[i] = (input.charCodeAt(i * 2) << 8) | input.charCodeAt(i * 2 + 1);
-	  }
-
-	  /*
-	   * Repeatedly perform a long division. The binary array forms the dividend,
-	   * the length of the encoding is the divisor. Once computed, the quotient
-	   * forms the dividend for the next step. We stop when the dividend is zero.
-	   * All remainders are stored for later use.
-	   */
-	  while(dividend.length > 0)
-	  {
-	    quotient = Array();
-	    x = 0;
-	    for(i = 0; i < dividend.length; i++)
-	    {
-	      x = (x << 16) + dividend[i];
-	      q = Math.floor(x / divisor);
-	      x -= q * divisor;
-	      if(quotient.length > 0 || q > 0)
-	        quotient[quotient.length] = q;
-	    }
-	    remainders[remainders.length] = x;
-	    dividend = quotient;
-	  }
-
-	  /* Convert the remainders to the output string */
-	  var output = "";
-	  for(i = remainders.length - 1; i >= 0; i--)
-	    output += encoding.charAt(remainders[i]);
-
-	  /* Append leading zero equivalents */
-	  var full_length = Math.ceil(input.length * 8 /
-	                                    (Math.log(encoding.length) / Math.log(2)))
-	  for(i = output.length; i < full_length; i++)
-	    output = encoding[0] + output;
-
-	  return output;
-	}
-
-	/*
-	 * Encode a string as utf-8.
-	 * For efficiency, this assumes the input is valid utf-16.
-	 */
-	function str2rstr_utf8(input)
-	{
-	  var output = "";
-	  var i = -1;
-	  var x, y;
-
-	  while(++i < input.length)
-	  {
-	    /* Decode utf-16 surrogate pairs */
-	    x = input.charCodeAt(i);
-	    y = i + 1 < input.length ? input.charCodeAt(i + 1) : 0;
-	    if(0xD800 <= x && x <= 0xDBFF && 0xDC00 <= y && y <= 0xDFFF)
-	    {
-	      x = 0x10000 + ((x & 0x03FF) << 10) + (y & 0x03FF);
-	      i++;
-	    }
-
-	    /* Encode output as utf-8 */
-	    if(x <= 0x7F)
-	      output += String.fromCharCode(x);
-	    else if(x <= 0x7FF)
-	      output += String.fromCharCode(0xC0 | ((x >>> 6 ) & 0x1F),
-	                                    0x80 | ( x         & 0x3F));
-	    else if(x <= 0xFFFF)
-	      output += String.fromCharCode(0xE0 | ((x >>> 12) & 0x0F),
-	                                    0x80 | ((x >>> 6 ) & 0x3F),
-	                                    0x80 | ( x         & 0x3F));
-	    else if(x <= 0x1FFFFF)
-	      output += String.fromCharCode(0xF0 | ((x >>> 18) & 0x07),
-	                                    0x80 | ((x >>> 12) & 0x3F),
-	                                    0x80 | ((x >>> 6 ) & 0x3F),
-	                                    0x80 | ( x         & 0x3F));
-	  }
-	  return output;
-	}
-
-	/*
-	 * Encode a string as utf-16
-	 */
-	function str2rstr_utf16le(input)
-	{
-	  var output = "";
-	  for(var i = 0; i < input.length; i++)
-	    output += String.fromCharCode( input.charCodeAt(i)        & 0xFF,
-	                                  (input.charCodeAt(i) >>> 8) & 0xFF);
-	  return output;
-	}
-
-	function str2rstr_utf16be(input)
-	{
-	  var output = "";
-	  for(var i = 0; i < input.length; i++)
-	    output += String.fromCharCode((input.charCodeAt(i) >>> 8) & 0xFF,
-	                                   input.charCodeAt(i)        & 0xFF);
-	  return output;
-	}
-
-	/*
-	 * Convert a raw string to an array of big-endian words
-	 * Characters >255 have their high-byte silently ignored.
-	 */
-	function rstr2binb(input)
-	{
-	  var output = Array(input.length >> 2);
-	  for(var i = 0; i < output.length; i++)
-	    output[i] = 0;
-	  for(var i = 0; i < input.length * 8; i += 8)
-	    output[i>>5] |= (input.charCodeAt(i / 8) & 0xFF) << (24 - i % 32);
-	  return output;
-	}
-
-	/*
-	 * Convert an array of big-endian words to a string
-	 */
-	function binb2rstr(input)
-	{
-	  var output = "";
-	  for(var i = 0; i < input.length * 32; i += 8)
-	    output += String.fromCharCode((input[i>>5] >>> (24 - i % 32)) & 0xFF);
-	  return output;
-	}
-
-	/*
-	 * Calculate the SHA-1 of an array of big-endian words, and a bit length
-	 */
-	function binb_sha1(x, len)
-	{
-	  /* append padding */
-	  x[len >> 5] |= 0x80 << (24 - len % 32);
-	  x[((len + 64 >> 9) << 4) + 15] = len;
-
-	  var w = Array(80);
-	  var a =  1732584193;
-	  var b = -271733879;
-	  var c = -1732584194;
-	  var d =  271733878;
-	  var e = -1009589776;
-
-	  for(var i = 0; i < x.length; i += 16)
-	  {
-	    var olda = a;
-	    var oldb = b;
-	    var oldc = c;
-	    var oldd = d;
-	    var olde = e;
-
-	    for(var j = 0; j < 80; j++)
-	    {
-	      if(j < 16) w[j] = x[i + j];
-	      else w[j] = bit_rol(w[j-3] ^ w[j-8] ^ w[j-14] ^ w[j-16], 1);
-	      var t = safe_add(safe_add(bit_rol(a, 5), sha1_ft(j, b, c, d)),
-	                       safe_add(safe_add(e, w[j]), sha1_kt(j)));
-	      e = d;
-	      d = c;
-	      c = bit_rol(b, 30);
-	      b = a;
-	      a = t;
-	    }
-
-	    a = safe_add(a, olda);
-	    b = safe_add(b, oldb);
-	    c = safe_add(c, oldc);
-	    d = safe_add(d, oldd);
-	    e = safe_add(e, olde);
-	  }
-	  return Array(a, b, c, d, e);
-
-	}
-
-	/*
-	 * Perform the appropriate triplet combination function for the current
-	 * iteration
-	 */
-	function sha1_ft(t, b, c, d)
-	{
-	  if(t < 20) return (b & c) | ((~b) & d);
-	  if(t < 40) return b ^ c ^ d;
-	  if(t < 60) return (b & c) | (b & d) | (c & d);
-	  return b ^ c ^ d;
-	}
-
-	/*
-	 * Determine the appropriate additive constant for the current iteration
-	 */
-	function sha1_kt(t)
-	{
-	  return (t < 20) ?  1518500249 : (t < 40) ?  1859775393 :
-	         (t < 60) ? -1894007588 : -899497514;
-	}
-
-	/*
-	 * Add integers, wrapping at 2^32. This uses 16-bit operations internally
-	 * to work around bugs in some JS interpreters.
-	 */
-	function safe_add(x, y)
-	{
-	  var lsw = (x & 0xFFFF) + (y & 0xFFFF);
-	  var msw = (x >> 16) + (y >> 16) + (lsw >> 16);
-	  return (msw << 16) | (lsw & 0xFFFF);
-	}
-
-	/*
-	 * Bitwise rotate a 32-bit number to the left.
-	 */
-	function bit_rol(num, cnt)
-	{
-	  return (num << cnt) | (num >>> (32 - cnt));
-	}
-
-	exports.HMACSHA1= function(key, data) {
-	  return b64_hmac_sha1(key, data);
-	}
-
-/***/ },
-/* 30 */
-/***/ function(module, exports) {
-
-	module.exports = require("https");
-
-/***/ },
-/* 31 */
-/***/ function(module, exports) {
-
-	module.exports = require("querystring");
-
-/***/ },
-/* 32 */
-/***/ function(module, exports) {
-
-	// Returns true if this is a host that closes *before* it ends?!?!
-	module.exports.isAnEarlyCloseHost= function( hostName ) {
-	  return hostName && hostName.match(".*google(apis)?.com$")
-	}
-
-/***/ },
-/* 33 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var querystring= __webpack_require__(31),
-	    crypto= __webpack_require__(28),
-	    https= __webpack_require__(30),
-	    http= __webpack_require__(1),
-	    URL= __webpack_require__(23),
-	    OAuthUtils= __webpack_require__(32);
-
-	exports.OAuth2= function(clientId, clientSecret, baseSite, authorizePath, accessTokenPath, customHeaders) {
-	  this._clientId= clientId;
-	  this._clientSecret= clientSecret;
-	  this._baseSite= baseSite;
-	  this._authorizeUrl= authorizePath || "/oauth/authorize";
-	  this._accessTokenUrl= accessTokenPath || "/oauth/access_token";
-	  this._accessTokenName= "access_token";
-	  this._authMethod= "Bearer";
-	  this._customHeaders = customHeaders || {};
-	  this._useAuthorizationHeaderForGET= false;
-	}
-
-	// This 'hack' method is required for sites that don't use
-	// 'access_token' as the name of the access token (for requests).
-	// ( http://tools.ietf.org/html/draft-ietf-oauth-v2-16#section-7 )
-	// it isn't clear what the correct value should be atm, so allowing
-	// for specific (temporary?) override for now.
-	exports.OAuth2.prototype.setAccessTokenName= function ( name ) {
-	  this._accessTokenName= name;
-	}
-
-	// Sets the authorization method for Authorization header.
-	// e.g. Authorization: Bearer <token>  # "Bearer" is the authorization method.
-	exports.OAuth2.prototype.setAuthMethod = function ( authMethod ) {
-	  this._authMethod = authMethod;
-	};
-
-
-	// If you use the OAuth2 exposed 'get' method (and don't construct your own _request call )
-	// this will specify whether to use an 'Authorize' header instead of passing the access_token as a query parameter
-	exports.OAuth2.prototype.useAuthorizationHeaderforGET = function(useIt) {
-	  this._useAuthorizationHeaderForGET= useIt;
-	}
-
-	exports.OAuth2.prototype._getAccessTokenUrl= function() {
-	  return this._baseSite + this._accessTokenUrl; /* + "?" + querystring.stringify(params); */
-	}
-
-	// Build the authorization header. In particular, build the part after the colon.
-	// e.g. Authorization: Bearer <token>  # Build "Bearer <token>"
-	exports.OAuth2.prototype.buildAuthHeader= function(token) {
-	  return this._authMethod + ' ' + token;
-	};
-
-	exports.OAuth2.prototype._chooseHttpLibrary= function( parsedUrl ) {
-	  var http_library= https;
-	  // As this is OAUth2, we *assume* https unless told explicitly otherwise.
-	  if( parsedUrl.protocol != "https:" ) {
-	    http_library= http;
-	  }
-	  return http_library;
-	};
-
-	exports.OAuth2.prototype._request= function(method, url, headers, post_body, access_token, callback) {
-
-	  var parsedUrl= URL.parse( url, true );
-	  if( parsedUrl.protocol == "https:" && !parsedUrl.port ) {
-	    parsedUrl.port= 443;
-	  }
-
-	  var http_library= this._chooseHttpLibrary( parsedUrl );
-
-
-	  var realHeaders= {};
-	  for( var key in this._customHeaders ) {
-	    realHeaders[key]= this._customHeaders[key];
-	  }
-	  if( headers ) {
-	    for(var key in headers) {
-	      realHeaders[key] = headers[key];
-	    }
-	  }
-	  realHeaders['Host']= parsedUrl.host;
-
-	  if (!realHeaders['User-Agent']) {
-	    realHeaders['User-Agent'] = 'Node-oauth';
-	  }
-
-	  if( post_body ) {
-	      if ( Buffer.isBuffer(post_body) ) {
-	          realHeaders["Content-Length"]= post_body.length;
-	      } else {
-	          realHeaders["Content-Length"]= Buffer.byteLength(post_body);
-	      }
-	  } else {
-	      realHeaders["Content-length"]= 0;
-	  }
-
-	  if( access_token && !('Authorization' in realHeaders)) {
-	    if( ! parsedUrl.query ) parsedUrl.query= {};
-	    parsedUrl.query[this._accessTokenName]= access_token;
-	  }
-
-	  var queryStr= querystring.stringify(parsedUrl.query);
-	  if( queryStr ) queryStr=  "?" + queryStr;
-	  var options = {
-	    host:parsedUrl.hostname,
-	    port: parsedUrl.port,
-	    path: parsedUrl.pathname + queryStr,
-	    method: method,
-	    headers: realHeaders
-	  };
-
-	  this._executeRequest( http_library, options, post_body, callback );
-	}
-
-	exports.OAuth2.prototype._executeRequest= function( http_library, options, post_body, callback ) {
-	  // Some hosts *cough* google appear to close the connection early / send no content-length header
-	  // allow this behaviour.
-	  var allowEarlyClose= OAuthUtils.isAnEarlyCloseHost(options.host);
-	  var callbackCalled= false;
-	  function passBackControl( response, result ) {
-	    if(!callbackCalled) {
-	      callbackCalled=true;
-	      if( !(response.statusCode >= 200 && response.statusCode <= 299) && (response.statusCode != 301) && (response.statusCode != 302) ) {
-	        callback({ statusCode: response.statusCode, data: result });
-	      } else {
-	        callback(null, result, response);
-	      }
-	    }
-	  }
-
-	  var result= "";
-
-	  var request = http_library.request(options);
-	  request.on('response', function (response) {
-	    response.on("data", function (chunk) {
-	      result+= chunk
-	    });
-	    response.on("close", function (err) {
-	      if( allowEarlyClose ) {
-	        passBackControl( response, result );
-	      }
-	    });
-	    response.addListener("end", function () {
-	      passBackControl( response, result );
-	    });
-	  });
-	  request.on('error', function(e) {
-	    callbackCalled= true;
-	    callback(e);
-	  });
-
-	  if( (options.method == 'POST' || options.method == 'PUT') && post_body ) {
-	     request.write(post_body);
-	  }
-	  request.end();
-	}
-
-	exports.OAuth2.prototype.getAuthorizeUrl= function( params ) {
-	  var params= params || {};
-	  params['client_id'] = this._clientId;
-	  return this._baseSite + this._authorizeUrl + "?" + querystring.stringify(params);
-	}
-
-	exports.OAuth2.prototype.getOAuthAccessToken= function(code, params, callback) {
-	  var params= params || {};
-	  params['client_id'] = this._clientId;
-	  params['client_secret'] = this._clientSecret;
-	  var codeParam = (params.grant_type === 'refresh_token') ? 'refresh_token' : 'code';
-	  params[codeParam]= code;
-
-	  var post_data= querystring.stringify( params );
-	  var post_headers= {
-	       'Content-Type': 'application/x-www-form-urlencoded'
-	   };
-
-
-	  this._request("POST", this._getAccessTokenUrl(), post_headers, post_data, null, function(error, data, response) {
-	    if( error )  callback(error);
-	    else {
-	      var results;
-	      try {
-	        // As of http://tools.ietf.org/html/draft-ietf-oauth-v2-07
-	        // responses should be in JSON
-	        results= JSON.parse( data );
-	      }
-	      catch(e) {
-	        // .... However both Facebook + Github currently use rev05 of the spec
-	        // and neither seem to specify a content-type correctly in their response headers :(
-	        // clients of these services will suffer a *minor* performance cost of the exception
-	        // being thrown
-	        results= querystring.parse( data );
-	      }
-	      var access_token= results["access_token"];
-	      var refresh_token= results["refresh_token"];
-	      delete results["refresh_token"];
-	      callback(null, access_token, refresh_token, results); // callback results =-=
-	    }
-	  });
-	}
-
-	// Deprecated
-	exports.OAuth2.prototype.getProtectedResource= function(url, access_token, callback) {
-	  this._request("GET", url, {}, "", access_token, callback );
-	}
-
-	exports.OAuth2.prototype.get= function(url, access_token, callback) {
-	  if( this._useAuthorizationHeaderForGET ) {
-	    var headers= {'Authorization': this.buildAuthHeader(access_token) }
-	    access_token= null;
-	  }
-	  else {
-	    headers= {};
-	  }
-	  this._request("GET", url, headers, "", access_token, callback );
-	}
-
-
-/***/ },
-/* 34 */
-/***/ function(module, exports) {
-
-	/**
-	 * `InternalOAuthError` error.
-	 *
-	 * InternalOAuthError wraps errors generated by node-oauth.  By wrapping these
-	 * objects, error messages can be formatted in a manner that aids in debugging
-	 * OAuth issues.
-	 *
-	 * @constructor
-	 * @param {String} [message]
-	 * @param {Object|Error} [err]
-	 * @api public
-	 */
-	function InternalOAuthError(message, err) {
-	  Error.call(this);
-	  Error.captureStackTrace(this, arguments.callee);
-	  this.name = 'InternalOAuthError';
-	  this.message = message;
-	  this.oauthError = err;
-	}
-
-	/**
-	 * Inherit from `Error`.
-	 */
-	InternalOAuthError.prototype.__proto__ = Error.prototype;
-
-	/**
-	 * Returns a string representing the error.
-	 *
-	 * @return {String}
-	 * @api public
-	 */
-	InternalOAuthError.prototype.toString = function() {
-	  var m = this.name;
-	  if (this.message) { m += ': ' + this.message; }
-	  if (this.oauthError) {
-	    if (this.oauthError instanceof Error) {
-	      m = this.oauthError.toString();
-	    } else if (this.oauthError.statusCode && this.oauthError.data) {
-	      m += ' (status: ' + this.oauthError.statusCode + ' data: ' + this.oauthError.data + ')';
-	    }
-	  }
-	  return m;
-	};
-
-
-	/**
-	 * Expose `InternalOAuthError`.
-	 */
-	module.exports = InternalOAuthError;
-
-
-/***/ },
-/* 35 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Module dependencies.
-	 */
-	var Strategy = __webpack_require__(36)
-	  , AuthorizationError = __webpack_require__(39)
-	  , TokenError = __webpack_require__(40)
-	  , InternalOAuthError = __webpack_require__(41);
-
-
-	/**
-	 * Expose `Strategy` directly from package.
-	 */
-	exports = module.exports = Strategy;
-
-	/**
-	 * Export constructors.
-	 */
-	exports.Strategy = Strategy;
-
-	/**
-	 * Export errors.
-	 */
-	exports.AuthorizationError = AuthorizationError;
-	exports.TokenError = TokenError;
-	exports.InternalOAuthError = InternalOAuthError;
-
-
-/***/ },
-/* 36 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Module dependencies.
-	 */
-	var passport = __webpack_require__(10)
-	  , url = __webpack_require__(23)
-	  , uid = __webpack_require__(37)
-	  , util = __webpack_require__(9)
-	  , utils = __webpack_require__(38)
-	  , OAuth2 = __webpack_require__(26).OAuth2
-	  , AuthorizationError = __webpack_require__(39)
-	  , TokenError = __webpack_require__(40)
-	  , InternalOAuthError = __webpack_require__(41);
-
-
-	/**
-	 * Creates an instance of `OAuth2Strategy`.
-	 *
-	 * The OAuth 2.0 authentication strategy authenticates requests using the OAuth
-	 * 2.0 framework.
-	 *
-	 * OAuth 2.0 provides a facility for delegated authentication, whereby users can
-	 * authenticate using a third-party service such as Facebook.  Delegating in
-	 * this manner involves a sequence of events, including redirecting the user to
-	 * the third-party service for authorization.  Once authorization has been
-	 * granted, the user is redirected back to the application and an authorization
-	 * code can be used to obtain credentials.
-	 *
-	 * Applications must supply a `verify` callback, for which the function
-	 * signature is:
-	 *
-	 *     function(accessToken, refreshToken, profile, done) { ... }
-	 *
-	 * The verify callback is responsible for finding or creating the user, and
-	 * invoking `done` with the following arguments:
-	 *
-	 *     done(err, user, info);
-	 *
-	 * `user` should be set to `false` to indicate an authentication failure.
-	 * Additional `info` can optionally be passed as a third argument, typically
-	 * used to display informational messages.  If an exception occured, `err`
-	 * should be set.
-	 *
-	 * Options:
-	 *
-	 *   - `authorizationURL`  URL used to obtain an authorization grant
-	 *   - `tokenURL`          URL used to obtain an access token
-	 *   - `clientID`          identifies client to service provider
-	 *   - `clientSecret`      secret used to establish ownership of the client identifer
-	 *   - `callbackURL`       URL to which the service provider will redirect the user after obtaining authorization
-	 *   - `passReqToCallback` when `true`, `req` is the first argument to the verify callback (default: `false`)
-	 *
-	 * Examples:
-	 *
-	 *     passport.use(new OAuth2Strategy({
-	 *         authorizationURL: 'https://www.example.com/oauth2/authorize',
-	 *         tokenURL: 'https://www.example.com/oauth2/token',
-	 *         clientID: '123-456-789',
-	 *         clientSecret: 'shhh-its-a-secret'
-	 *         callbackURL: 'https://www.example.net/auth/example/callback'
-	 *       },
-	 *       function(accessToken, refreshToken, profile, done) {
-	 *         User.findOrCreate(..., function (err, user) {
-	 *           done(err, user);
-	 *         });
-	 *       }
-	 *     ));
-	 *
-	 * @constructor
-	 * @param {Object} options
-	 * @param {Function} verify
-	 * @api public
-	 */
-	function OAuth2Strategy(options, verify) {
-	  if (typeof options == 'function') {
-	    verify = options;
-	    options = undefined;
-	  }
-	  options = options || {};
-	  
-	  if (!verify) { throw new TypeError('OAuth2Strategy requires a verify callback'); }
-	  if (!options.authorizationURL) { throw new TypeError('OAuth2Strategy requires a authorizationURL option'); }
-	  if (!options.tokenURL) { throw new TypeError('OAuth2Strategy requires a tokenURL option'); }
-	  if (!options.clientID) { throw new TypeError('OAuth2Strategy requires a clientID option'); }
-	  if (!options.clientSecret) { throw new TypeError('OAuth2Strategy requires a clientSecret option'); }
-	  
-	  passport.Strategy.call(this);
-	  this.name = 'oauth2';
-	  this._verify = verify;
-
-	  // NOTE: The _oauth2 property is considered "protected".  Subclasses are
-	  //       allowed to use it when making protected resource requests to retrieve
-	  //       the user profile.
-	  this._oauth2 = new OAuth2(options.clientID,  options.clientSecret,
-	      '', options.authorizationURL, options.tokenURL, options.customHeaders);
-
-	  this._callbackURL = options.callbackURL;
-	  this._scope = options.scope;
-	  this._scopeSeparator = options.scopeSeparator || ' ';
-	  this._state = options.state;
-	  this._key = options.sessionKey || ('oauth2:' + url.parse(options.authorizationURL).hostname);
-	  this._trustProxy = options.proxy;
-	  this._passReqToCallback = options.passReqToCallback;
-	  this._skipUserProfile = (options.skipUserProfile === undefined) ? false : options.skipUserProfile;
-	}
-
-	/**
-	 * Inherit from `passport.Strategy`.
-	 */
-	util.inherits(OAuth2Strategy, passport.Strategy);
-
-
-	/**
-	 * Authenticate request by delegating to a service provider using OAuth 2.0.
-	 *
-	 * @param {Object} req
-	 * @api protected
-	 */
-	OAuth2Strategy.prototype.authenticate = function(req, options) {
-	  options = options || {};
-	  var self = this;
-	  
-	  if (req.query && req.query.error) {
-	    if (req.query.error == 'access_denied') {
-	      return this.fail({ message: req.query.error_description });
-	    } else {
-	      return this.error(new AuthorizationError(req.query.error_description, req.query.error, req.query.error_uri));
-	    }
-	  }
-	  
-	  var callbackURL = options.callbackURL || this._callbackURL;
-	  if (callbackURL) {
-	    var parsed = url.parse(callbackURL);
-	    if (!parsed.protocol) {
-	      // The callback URL is relative, resolve a fully qualified URL from the
-	      // URL of the originating request.
-	      callbackURL = url.resolve(utils.originalURL(req, { proxy: this._trustProxy }), callbackURL);
-	    }
-	  }
-	  
-	  if (req.query && req.query.code) {
-	    var code = req.query.code;
-	    
-	    if (this._state) {
-	      if (!req.session) { return this.error(new Error('OAuth2Strategy requires session support when using state. Did you forget app.use(express.session(...))?')); }
-	      
-	      var key = this._key;
-	      if (!req.session[key]) {
-	        return this.fail({ message: 'Unable to verify authorization request state.' }, 403);
-	      }
-	      var state = req.session[key].state;
-	      if (!state) {
-	        return this.fail({ message: 'Unable to verify authorization request state.' }, 403);
-	      }
-	      
-	      delete req.session[key].state;
-	      if (Object.keys(req.session[key]).length === 0) {
-	        delete req.session[key];
-	      }
-	      
-	      if (state !== req.query.state) {
-	        return this.fail({ message: 'Invalid authorization request state.' }, 403);
-	      }
-	    }
-
-	    var params = this.tokenParams(options);
-	    params.grant_type = 'authorization_code';
-	    params.redirect_uri = callbackURL;
-
-	    this._oauth2.getOAuthAccessToken(code, params,
-	      function(err, accessToken, refreshToken, params) {
-	        if (err) { return self.error(self._createOAuthError('Failed to obtain access token', err)); }
-	        
-	        self._loadUserProfile(accessToken, function(err, profile) {
-	          if (err) { return self.error(err); }
-	          
-	          function verified(err, user, info) {
-	            if (err) { return self.error(err); }
-	            if (!user) { return self.fail(info); }
-	            self.success(user, info);
-	          }
-	          
-	          try {
-	            if (self._passReqToCallback) {
-	              var arity = self._verify.length;
-	              if (arity == 6) {
-	                self._verify(req, accessToken, refreshToken, params, profile, verified);
-	              } else { // arity == 5
-	                self._verify(req, accessToken, refreshToken, profile, verified);
-	              }
-	            } else {
-	              var arity = self._verify.length;
-	              if (arity == 5) {
-	                self._verify(accessToken, refreshToken, params, profile, verified);
-	              } else { // arity == 4
-	                self._verify(accessToken, refreshToken, profile, verified);
-	              }
-	            }
-	          } catch (ex) {
-	            return self.error(ex);
-	          }
-	        });
-	      }
-	    );
-	  } else {
-	    var params = this.authorizationParams(options);
-	    params.response_type = 'code';
-	    params.redirect_uri = callbackURL;
-	    var scope = options.scope || this._scope;
-	    if (scope) {
-	      if (Array.isArray(scope)) { scope = scope.join(this._scopeSeparator); }
-	      params.scope = scope;
-	    }
-	    var state = options.state;
-	    if (state) {
-	      params.state = state;
-	    } else if (this._state) {
-	      if (!req.session) { return this.error(new Error('OAuth2Strategy requires session support when using state. Did you forget app.use(express.session(...))?')); }
-	      
-	      var key = this._key;
-	      state = uid(24);
-	      if (!req.session[key]) { req.session[key] = {}; }
-	      req.session[key].state = state;
-	      params.state = state;
-	    }
-	    
-	    var location = this._oauth2.getAuthorizeUrl(params);
-	    this.redirect(location);
-	  }
-	};
-
-	/**
-	 * Retrieve user profile from service provider.
-	 *
-	 * OAuth 2.0-based authentication strategies can overrride this function in
-	 * order to load the user's profile from the service provider.  This assists
-	 * applications (and users of those applications) in the initial registration
-	 * process by automatically submitting required information.
-	 *
-	 * @param {String} accessToken
-	 * @param {Function} done
-	 * @api protected
-	 */
-	OAuth2Strategy.prototype.userProfile = function(accessToken, done) {
-	  return done(null, {});
-	};
-
-	/**
-	 * Return extra parameters to be included in the authorization request.
-	 *
-	 * Some OAuth 2.0 providers allow additional, non-standard parameters to be
-	 * included when requesting authorization.  Since these parameters are not
-	 * standardized by the OAuth 2.0 specification, OAuth 2.0-based authentication
-	 * strategies can overrride this function in order to populate these parameters
-	 * as required by the provider.
-	 *
-	 * @param {Object} options
-	 * @return {Object}
-	 * @api protected
-	 */
-	OAuth2Strategy.prototype.authorizationParams = function(options) {
-	  return {};
-	};
-
-	/**
-	 * Return extra parameters to be included in the token request.
-	 *
-	 * Some OAuth 2.0 providers allow additional, non-standard parameters to be
-	 * included when requesting an access token.  Since these parameters are not
-	 * standardized by the OAuth 2.0 specification, OAuth 2.0-based authentication
-	 * strategies can overrride this function in order to populate these parameters
-	 * as required by the provider.
-	 *
-	 * @return {Object}
-	 * @api protected
-	 */
-	OAuth2Strategy.prototype.tokenParams = function(options) {
-	  return {};
-	};
-
-	/**
-	 * Parse error response from OAuth 2.0 endpoint.
-	 *
-	 * OAuth 2.0-based authentication strategies can overrride this function in
-	 * order to parse error responses received from the token endpoint, allowing the
-	 * most informative message to be displayed.
-	 *
-	 * If this function is not overridden, the body will be parsed in accordance
-	 * with RFC 6749, section 5.2.
-	 *
-	 * @param {String} body
-	 * @param {Number} status
-	 * @return {Error}
-	 * @api protected
-	 */
-	OAuth2Strategy.prototype.parseErrorResponse = function(body, status) {
-	  var json = JSON.parse(body);
-	  if (json.error) {
-	    return new TokenError(json.error_description, json.error, json.error_uri);
-	  }
-	  return null;
-	};
-
-	/**
-	 * Load user profile, contingent upon options.
-	 *
-	 * @param {String} accessToken
-	 * @param {Function} done
-	 * @api private
-	 */
-	OAuth2Strategy.prototype._loadUserProfile = function(accessToken, done) {
-	  var self = this;
-	  
-	  function loadIt() {
-	    return self.userProfile(accessToken, done);
-	  }
-	  function skipIt() {
-	    return done(null);
-	  }
-	  
-	  if (typeof this._skipUserProfile == 'function' && this._skipUserProfile.length > 1) {
-	    // async
-	    this._skipUserProfile(accessToken, function(err, skip) {
-	      if (err) { return done(err); }
-	      if (!skip) { return loadIt(); }
-	      return skipIt();
-	    });
-	  } else {
-	    var skip = (typeof this._skipUserProfile == 'function') ? this._skipUserProfile() : this._skipUserProfile;
-	    if (!skip) { return loadIt(); }
-	    return skipIt();
-	  }
-	};
-
-	/**
-	 * Create an OAuth error.
-	 *
-	 * @param {String} message
-	 * @param {Object|Error} err
-	 * @api private
-	 */
-	OAuth2Strategy.prototype._createOAuthError = function(message, err) {
-	  var e;
-	  if (err.statusCode && err.data) {
-	    try {
-	      e = this.parseErrorResponse(err.data, err.statusCode);
-	    } catch (_) {}
-	  }
-	  if (!e) { e = new InternalOAuthError(message, err); }
-	  return e;
-	};
-
-
-	/**
-	 * Expose `OAuth2Strategy`.
-	 */
-	module.exports = OAuth2Strategy;
-
-
-/***/ },
-/* 37 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Module dependencies
-	 */
-
-	var crypto = __webpack_require__(28);
-
-	/**
-	 * 62 characters in the ascii range that can be used in URLs without special
-	 * encoding.
-	 */
-	var UIDCHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-	/**
-	 * Make a Buffer into a string ready for use in URLs
-	 *
-	 * @param {String}
-	 * @returns {String}
-	 * @api private
-	 */
-	function tostr(bytes) {
-	  var chars, r, i;
-
-	  r = [];
-	  for (i = 0; i < bytes.length; i++) {
-	    r.push(UIDCHARS[bytes[i] % UIDCHARS.length]);
-	  }
-
-	  return r.join('');
-	}
-
-	/**
-	 * Generate an Unique Id
-	 *
-	 * @param {Number} length  The number of chars of the uid
-	 * @param {Number} cb (optional)  Callback for async uid generation
-	 * @api public
-	 */
-
-	function uid(length, cb) {
-
-	  if (typeof cb === 'undefined') {
-	    return tostr(crypto.pseudoRandomBytes(length));
-	  } else {
-	    crypto.pseudoRandomBytes(length, function(err, bytes) {
-	       if (err) return cb(err);
-	       cb(null, tostr(bytes));
-	    })
-	  }
-	}
-
-	/**
-	 * Exports
-	 */
-
-	module.exports = uid;
-
-
-/***/ },
-/* 38 */
-/***/ function(module, exports) {
-
-	/**
-	 * Reconstructs the original URL of the request.
-	 *
-	 * This function builds a URL that corresponds the original URL requested by the
-	 * client, including the protocol (http or https) and host.
-	 *
-	 * If the request passed through any proxies that terminate SSL, the
-	 * `X-Forwarded-Proto` header is used to detect if the request was encrypted to
-	 * the proxy, assuming that the proxy has been flagged as trusted.
-	 *
-	 * @param {http.IncomingMessage} req
-	 * @param {Object} [options]
-	 * @return {String}
-	 * @api private
-	 */
-	exports.originalURL = function(req, options) {
-	  options = options || {};
-	  var app = req.app;
-	  if (app && app.get && app.get('trust proxy')) {
-	    options.proxy = true;
-	  }
-	  var trustProxy = options.proxy;
-	  
-	  var proto = (req.headers['x-forwarded-proto'] || '').toLowerCase()
-	    , tls = req.connection.encrypted || (trustProxy && 'https' == proto.split(/\s*,\s*/)[0])
-	    , host = (trustProxy && req.headers['x-forwarded-host']) || req.headers.host
-	    , protocol = tls ? 'https' : 'http'
-	    , path = req.url || '';
-	  return protocol + '://' + host + path;
-	};
-
-
-/***/ },
-/* 39 */
-/***/ function(module, exports) {
-
-	/**
-	 * `AuthorizationError` error.
-	 *
-	 * AuthorizationError represents an error in response to an authorization
-	 * request.  For details, refer to RFC 6749, section 4.1.2.1.
-	 *
-	 * References:
-	 *   - [The OAuth 2.0 Authorization Framework](http://tools.ietf.org/html/rfc6749)
-	 *
-	 * @constructor
-	 * @param {String} [message]
-	 * @param {String} [code]
-	 * @param {String} [uri]
-	 * @param {Number} [status]
-	 * @api public
-	 */
-	function AuthorizationError(message, code, uri, status) {
-	  if (!status) {
-	    switch (code) {
-	      case 'access_denied': status = 403; break;
-	      case 'server_error': status = 502; break;
-	      case 'temporarily_unavailable': status = 503; break;
-	    }
-	  }
-	  
-	  Error.call(this);
-	  Error.captureStackTrace(this, arguments.callee);
-	  this.name = 'AuthorizationError';
-	  this.message = message;
-	  this.code = code || 'server_error';
-	  this.uri = uri;
-	  this.status = status || 500;
-	}
-
-	/**
-	 * Inherit from `Error`.
-	 */
-	AuthorizationError.prototype.__proto__ = Error.prototype;
-
-
-	/**
-	 * Expose `AuthorizationError`.
-	 */
-	module.exports = AuthorizationError;
-
-
-/***/ },
-/* 40 */
-/***/ function(module, exports) {
-
-	/**
-	 * `TokenError` error.
-	 *
-	 * TokenError represents an error received from a token endpoint.  For details,
-	 * refer to RFC 6749, section 5.2.
-	 *
-	 * References:
-	 *   - [The OAuth 2.0 Authorization Framework](http://tools.ietf.org/html/rfc6749)
-	 *
-	 * @constructor
-	 * @param {String} [message]
-	 * @param {String} [code]
-	 * @param {String} [uri]
-	 * @param {Number} [status]
-	 * @api public
-	 */
-	function TokenError(message, code, uri, status) {
-	  Error.call(this);
-	  Error.captureStackTrace(this, arguments.callee);
-	  this.name = 'TokenError';
-	  this.message = message;
-	  this.code = code || 'invalid_request';
-	  this.uri = uri;
-	  this.status = status || 500;
-	}
-
-	/**
-	 * Inherit from `Error`.
-	 */
-	TokenError.prototype.__proto__ = Error.prototype;
-
-
-	/**
-	 * Expose `TokenError`.
-	 */
-	module.exports = TokenError;
-
-
-/***/ },
-/* 41 */
-/***/ function(module, exports) {
-
-	/**
-	 * `InternalOAuthError` error.
-	 *
-	 * InternalOAuthError wraps errors generated by node-oauth.  By wrapping these
-	 * objects, error messages can be formatted in a manner that aids in debugging
-	 * OAuth issues.
-	 *
-	 * @constructor
-	 * @param {String} [message]
-	 * @param {Object|Error} [err]
-	 * @api public
-	 */
-	function InternalOAuthError(message, err) {
-	  Error.call(this);
-	  Error.captureStackTrace(this, arguments.callee);
-	  this.name = 'InternalOAuthError';
-	  this.message = message;
-	  this.oauthError = err;
-	}
-
-	/**
-	 * Inherit from `Error`.
-	 */
-	InternalOAuthError.prototype.__proto__ = Error.prototype;
-
-	/**
-	 * Returns a string representing the error.
-	 *
-	 * @return {String}
-	 * @api public
-	 */
-	InternalOAuthError.prototype.toString = function() {
-	  var m = this.name;
-	  if (this.message) { m += ': ' + this.message; }
-	  if (this.oauthError) {
-	    if (this.oauthError instanceof Error) {
-	      m = this.oauthError.toString();
-	    } else if (this.oauthError.statusCode && this.oauthError.data) {
-	      m += ' (status: ' + this.oauthError.statusCode + ' data: ' + this.oauthError.data + ')';
-	    }
-	  }
-	  return m;
-	};
-
-
-	/**
-	 * Expose `InternalOAuthError`.
-	 */
-	module.exports = InternalOAuthError;
-
-
-/***/ },
-/* 42 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Module dependencies.
-	 */
-	var util = __webpack_require__(9)
-	  , OAuth2Strategy = __webpack_require__(20).OAuth2Strategy
-	  , InternalOAuthError = __webpack_require__(20).InternalOAuthError;
-
-	var DEPRECATED_SCOPES = {
-	  'https://www.googleapis.com/auth/userinfo.profile': 'profile',
-	  'https://www.googleapis.com/auth/userinfo.email': 'email',
-	};
-
-	/**
-	 * `Strategy` constructor.
-	 *
-	 * The Google authentication strategy authenticates requests by delegating to
-	 * Google using the OAuth 2.0 protocol.
-	 *
-	 * Applications must supply a `verify` callback which accepts an `accessToken`,
-	 * `refreshToken` and service-specific `profile`, and then calls the `done`
-	 * callback supplying a `user`, which should be set to `false` if the
-	 * credentials are not valid.  If an exception occured, `err` should be set.
-	 *
-	 * Options:
-	 *   - `clientID`      your Google application's client id
-	 *   - `clientSecret`  your Google application's client secret
-	 *   - `callbackURL`   URL to which Google will redirect the user after granting authorization
-	 *
-	 * Examples:
-	 *
-	 *     passport.use(new GoogleStrategy({
-	 *         clientID: '123-456-789',
-	 *         clientSecret: 'shhh-its-a-secret'
-	 *         callbackURL: 'https://www.example.net/auth/google/callback'
-	 *       },
-	 *       function(accessToken, refreshToken, profile, done) {
-	 *         User.findOrCreate(..., function (err, user) {
-	 *           done(err, user);
-	 *         });
-	 *       }
-	 *     ));
-	 *
-	 * @param {Object} options
-	 * @param {Function} verify
-	 * @api public
-	 */
-	function Strategy(options, verify) {
-	  options = options || {};
-	  options.authorizationURL = options.authorizationURL || 'https://accounts.google.com/o/oauth2/auth';
-	  options.tokenURL = options.tokenURL || 'https://accounts.google.com/o/oauth2/token';
-
-	  OAuth2Strategy.call(this, options, verify);
-	  this.name = 'google';
-	  
-	  //warn deprecated scopes
-	  if (this._scope) {
-	    var scopes = Array.isArray(this._scope) ? this._scope : [ this._scope ];
-	    scopes.forEach(function(scope) {
-	      var alt = DEPRECATED_SCOPES[scope];
-	      if (!alt) return;
-	      console.warn(scope + ' is deprecated. Switch to ' + alt);
-	    });
-	  }
-	}
-
-	/**
-	 * Inherit from `OAuth2Strategy`.
-	 */
-	util.inherits(Strategy, OAuth2Strategy);
-
-
-	/**
-	 * Retrieve user profile from Google.
-	 *
-	 * This function constructs a normalized profile, with the following properties:
-	 *
-	 *   - `provider`         always set to `google`
-	 *   - `id`
-	 *   - `username`
-	 *   - `displayName`
-	 *
-	 * @param {String} accessToken
-	 * @param {Function} done
-	 * @api protected
-	 */
-	Strategy.prototype.userProfile = function(accessToken, done) {
-	  this._oauth2.get('https://www.googleapis.com/plus/v1/people/me', accessToken, function (err, body, res) {
-	    if (err) { return done(new InternalOAuthError('failed to fetch user profile', err)); }
-
-	    try {
-	      var json = JSON.parse(body)
-	        , i, len;
-
-	      var profile = { provider: 'google' };
-	      profile.id = json.id;
-	      profile.displayName = json.displayName;
-	      if (json.name) {
-	        profile.name = { familyName: json.name.familyName,
-	                         givenName: json.name.givenName };
-	      }
-	      if (json.emails) {
-	        profile.emails = [];
-	        for (i = 0, len = json.emails.length; i < len; ++i) {
-	          profile.emails.push({ value: json.emails[i].value, type: json.emails[i].type })
-	        }
-	      }
-	      if (json.image) {
-	        profile.photos = [{ value: json.image.url }];
-	      }
-	      profile.gender = json.gender;
-	      
-	      profile._raw = body;
-	      profile._json = json;
-
-	      done(null, profile);
-	    } catch(e) {
-	      done(e);
-	    }
-	  });
-	}
-
-	/**
-	 * Return extra Google-specific parameters to be included in the authorization
-	 * request.
-	 *
-	 * @param {Object} options
-	 * @return {Object}
-	 * @api protected
-	 */
-	Strategy.prototype.authorizationParams = function(options) {
-	  var params = {};
-	  if (options.accessType) {
-	    params['access_type'] = options.accessType;
-	  }
-	  if (options.approvalPrompt) {
-	    params['approval_prompt'] = options.approvalPrompt;
-	  }
-	  if (options.prompt) {
-	    // This parameter is undocumented in Google's official documentation.
-	    // However, it was detailed by Breno de Medeiros (who works at Google) in
-	    // this Stack Overflow answer:
-	    //  http://stackoverflow.com/questions/14384354/force-google-account-chooser/14393492#14393492
-	    params['prompt'] = options.prompt;
-	  }
-	  if (options.loginHint) {
-	    // This parameter is derived from OpenID Connect, and supported by Google's
-	    // OAuth 2.0 endpoint.
-	    //   https://github.com/jaredhanson/passport-google-oauth/pull/8
-	    //   https://bitbucket.org/openid/connect/commits/970a95b83add
-	    params['login_hint'] = options.loginHint;
-	  }
-	  if (options.userID) {
-	    // Undocumented, but supported by Google's OAuth 2.0 endpoint.  Appears to
-	    // be equivalent to `login_hint`.
-	    params['user_id'] = options.userID;
-	  }
-	  if (options.hostedDomain || options.hd) {
-	    // This parameter is derived from Google's OAuth 1.0 endpoint, and (although
-	    // undocumented) is supported by Google's OAuth 2.0 endpoint was well.
-	    //   https://developers.google.com/accounts/docs/OAuth_ref
-	    params['hd'] = options.hostedDomain || options.hd;
-	  }
-	  if (options.display) {
-	    // Specify what kind of display consent screen to display to users.
-	    //   https://developers.google.com/accounts/docs/OpenIDConnect#authenticationuriparameters
-	    params['display'] = options.display;
-	  }
-	  if (options.requestVisibleActions) {
-	    // Space separated list of allowed app actions
-	    // as documented at:
-	    //  https://developers.google.com/+/web/app-activities/#writing_an_app_activity_using_the_google_apis_client_libraries
-	    //  https://developers.google.com/+/api/moment-types/
-	    params['request_visible_actions'] = options.requestVisibleActions;
-	  }
-	  if (options.openIDRealm) {
-	    // This parameter is needed when migrating users from Google's OpenID 2.0 to OAuth 2.0
-	    //   https://developers.google.com/accounts/docs/OpenID?hl=ja#adjust-uri
-	    params['openid.realm'] = options.openIDRealm;
-	  }
-	  return params;
-	}
-
-
-	/**
-	 * Expose `Strategy`.
-	 */
-	module.exports = Strategy;
-
-
-/***/ },
-/* 43 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(module, __dirname) {/*
-	 * pkginfo.js: Top-level include for the pkginfo module
-	 *
-	 * (C) 2011, Charlie Robbins
-	 *
-	 */
-	 
-	var fs = __webpack_require__(44),
-	    path = __webpack_require__(45);
-
-	//
-	// ### function pkginfo ([options, 'property', 'property' ..])
-	// #### @pmodule {Module} Parent module to read from.
-	// #### @options {Object|Array|string} **Optional** Options used when exposing properties.
-	// #### @arguments {string...} **Optional** Specified properties to expose.
-	// Exposes properties from the package.json file for the parent module on 
-	// it's exports. Valid usage:
-	//
-	// `require('pkginfo')()`
-	//
-	// `require('pkginfo')('version', 'author');`
-	//
-	// `require('pkginfo')(['version', 'author']);`
-	//
-	// `require('pkginfo')({ include: ['version', 'author'] });`
-	//
-	var pkginfo = module.exports = function (pmodule, options) {
-	  var args = [].slice.call(arguments, 2).filter(function (arg) {
-	    return typeof arg === 'string';
-	  });
-	  
-	  //
-	  // **Parse variable arguments**
-	  //
-	  if (Array.isArray(options)) {
-	    //
-	    // If the options passed in is an Array assume that
-	    // it is the Array of properties to expose from the
-	    // on the package.json file on the parent module.
-	    //
-	    options = { include: options };
-	  }
-	  else if (typeof options === 'string') {
-	    //
-	    // Otherwise if the first argument is a string, then
-	    // assume that it is the first property to expose from
-	    // the package.json file on the parent module.
-	    //
-	    options = { include: [options] };
-	  }
-	  
-	  //
-	  // **Setup default options**
-	  //
-	  options = options || {};
-	  
-	  // ensure that includes have been defined
-	  options.include = options.include || [];
-	  
-	  if (args.length > 0) {
-	    //
-	    // If additional string arguments have been passed in
-	    // then add them to the properties to expose on the 
-	    // parent module. 
-	    //
-	    options.include = options.include.concat(args);
-	  }
-	  
-	  var pkg = pkginfo.read(pmodule, options.dir).package;
-	  Object.keys(pkg).forEach(function (key) {
-	    if (options.include.length > 0 && !~options.include.indexOf(key)) {
-	      return;
-	    }
-	    
-	    if (!pmodule.exports[key]) {
-	      pmodule.exports[key] = pkg[key];
-	    }
-	  });
-	  
-	  return pkginfo;
-	};
-
-	//
-	// ### function find (dir)
-	// #### @pmodule {Module} Parent module to read from.
-	// #### @dir {string} **Optional** Directory to start search from.
-	// Searches up the directory tree from `dir` until it finds a directory
-	// which contains a `package.json` file. 
-	//
-	pkginfo.find = function (pmodule, dir) {
-	  if (! dir) {
-	    dir = path.dirname(pmodule.filename);
-	  }
-	  
-	  var files = fs.readdirSync(dir);
-	  
-	  if (~files.indexOf('package.json')) {
-	    return path.join(dir, 'package.json');
-	  }
-	  
-	  if (dir === '/') {
-	    throw new Error('Could not find package.json up from: ' + dir);
-	  }
-	  else if (!dir || dir === '.') {
-	    throw new Error('Cannot find package.json from unspecified directory');
-	  }
-	  
-	  return pkginfo.find(pmodule, path.dirname(dir));
-	};
-
-	//
-	// ### function read (pmodule, dir)
-	// #### @pmodule {Module} Parent module to read from.
-	// #### @dir {string} **Optional** Directory to start search from.
-	// Searches up the directory tree from `dir` until it finds a directory
-	// which contains a `package.json` file and returns the package information.
-	//
-	pkginfo.read = function (pmodule, dir) { 
-	  dir = pkginfo.find(pmodule, dir);
-	  
-	  var data = fs.readFileSync(dir).toString();
-	      
-	  return {
-	    dir: dir, 
-	    package: JSON.parse(data)
-	  };
-	};
-
-	//
-	// Call `pkginfo` on this module and expose version.
-	//
-	pkginfo(module, {
-	  dir: __dirname,
-	  include: ['version'],
-	  target: pkginfo
-	});
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(18)(module), "/"))
-
-/***/ },
-/* 44 */
-/***/ function(module, exports) {
-
-	module.exports = require("fs");
-
-/***/ },
-/* 45 */
-/***/ function(module, exports) {
-
-	module.exports = require("path");
-
-/***/ },
-/* 46 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var jws = __webpack_require__(47);
-	var ms = __webpack_require__(61);
-	var timespan = __webpack_require__(62);
-	var xtend = __webpack_require__(63);
+	var jws = __webpack_require__(19);
+	var ms = __webpack_require__(34);
+	var timespan = __webpack_require__(35);
+	var xtend = __webpack_require__(36);
 
 	var JWT = module.exports;
 
-	var JsonWebTokenError = JWT.JsonWebTokenError = __webpack_require__(64);
-	var NotBeforeError = module.exports.NotBeforeError = __webpack_require__(65);
-	var TokenExpiredError = JWT.TokenExpiredError = __webpack_require__(66);
+	var JsonWebTokenError = JWT.JsonWebTokenError = __webpack_require__(37);
+	var NotBeforeError = module.exports.NotBeforeError = __webpack_require__(38);
+	var TokenExpiredError = JWT.TokenExpiredError = __webpack_require__(39);
 
 	JWT.decode = function (jwt, options) {
 	  options = options || {};
@@ -4654,12 +1785,12 @@
 
 
 /***/ },
-/* 47 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global exports*/
-	const SignStream = __webpack_require__(48);
-	const VerifyStream = __webpack_require__(60);
+	const SignStream = __webpack_require__(20);
+	const VerifyStream = __webpack_require__(33);
 
 	const ALGORITHMS = [
 	  'HS256', 'HS384', 'HS512',
@@ -4681,15 +1812,15 @@
 
 
 /***/ },
-/* 48 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global module*/
-	const base64url = __webpack_require__(49);
-	const DataStream = __webpack_require__(50);
-	const jwa = __webpack_require__(53);
-	const Stream = __webpack_require__(52);
-	const toString = __webpack_require__(59);
+	const base64url = __webpack_require__(21);
+	const DataStream = __webpack_require__(22);
+	const jwa = __webpack_require__(25);
+	const Stream = __webpack_require__(24);
+	const toString = __webpack_require__(32);
 	const util = __webpack_require__(9);
 
 	function jwsSecuredInput(header, payload, encoding) {
@@ -4756,7 +1887,7 @@
 
 
 /***/ },
-/* 49 */
+/* 21 */
 /***/ function(module, exports) {
 
 	function fromBase64(base64string) {
@@ -4816,12 +1947,12 @@
 
 
 /***/ },
-/* 50 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global module, process*/
-	const Buffer = __webpack_require__(51).Buffer;
-	const Stream = __webpack_require__(52);
+	const Buffer = __webpack_require__(23).Buffer;
+	const Stream = __webpack_require__(24);
 	const util = __webpack_require__(9);
 
 	function DataStream(data) {
@@ -4877,25 +2008,25 @@
 
 
 /***/ },
-/* 51 */
+/* 23 */
 /***/ function(module, exports) {
 
 	module.exports = require("buffer");
 
 /***/ },
-/* 52 */
+/* 24 */
 /***/ function(module, exports) {
 
 	module.exports = require("stream");
 
 /***/ },
-/* 53 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
-	const bufferEqual = __webpack_require__(54);
-	const base64url = __webpack_require__(55);
+	const bufferEqual = __webpack_require__(26);
+	const base64url = __webpack_require__(27);
 	const crypto = __webpack_require__(28);
-	const formatEcdsa = __webpack_require__(56);
+	const formatEcdsa = __webpack_require__(29);
 	const util = __webpack_require__(9);
 
 	const MSG_INVALID_ALGORITHM = '"%s" is not a valid algorithm.\n  Supported algorithms are:\n  "HS256", "HS384", "HS512", "RS256", "RS384", "RS512" and "none".'
@@ -5019,13 +2150,13 @@
 
 
 /***/ },
-/* 54 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*jshint node:true */
 	'use strict';
-	var Buffer = __webpack_require__(51).Buffer; // browserify
-	var SlowBuffer = __webpack_require__(51).SlowBuffer;
+	var Buffer = __webpack_require__(23).Buffer; // browserify
+	var SlowBuffer = __webpack_require__(23).SlowBuffer;
 
 	module.exports = bufferEq;
 
@@ -5066,7 +2197,7 @@
 
 
 /***/ },
-/* 55 */
+/* 27 */
 /***/ function(module, exports) {
 
 	function fromBase64(base64string) {
@@ -5125,14 +2256,20 @@
 
 
 /***/ },
-/* 56 */
+/* 28 */
+/***/ function(module, exports) {
+
+	module.exports = require("crypto");
+
+/***/ },
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var base64Url = __webpack_require__(57).escape;
+	var base64Url = __webpack_require__(30).escape;
 
-	var getParamBytesForAlg = __webpack_require__(58);
+	var getParamBytesForAlg = __webpack_require__(31);
 
 	var MAX_OCTET = 0x80,
 		CLASS_UNIVERSAL = 0,
@@ -5314,7 +2451,7 @@
 
 
 /***/ },
-/* 57 */
+/* 30 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -5344,7 +2481,7 @@
 
 
 /***/ },
-/* 58 */
+/* 31 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -5373,11 +2510,11 @@
 
 
 /***/ },
-/* 59 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global module*/
-	const Buffer = __webpack_require__(51).Buffer;
+	const Buffer = __webpack_require__(23).Buffer;
 
 	module.exports = function toString(obj) {
 	  if (typeof obj === 'string')
@@ -5389,15 +2526,15 @@
 
 
 /***/ },
-/* 60 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global module*/
-	const base64url = __webpack_require__(49);
-	const DataStream = __webpack_require__(50);
-	const jwa = __webpack_require__(53);
-	const Stream = __webpack_require__(52);
-	const toString = __webpack_require__(59);
+	const base64url = __webpack_require__(21);
+	const DataStream = __webpack_require__(22);
+	const jwa = __webpack_require__(25);
+	const Stream = __webpack_require__(24);
+	const toString = __webpack_require__(32);
 	const util = __webpack_require__(9);
 	const JWS_REGEX = /^[a-zA-Z0-9\-_]+?\.[a-zA-Z0-9\-_]+?\.([a-zA-Z0-9\-_]+)?$/;
 
@@ -5515,7 +2652,7 @@
 
 
 /***/ },
-/* 61 */
+/* 34 */
 /***/ function(module, exports) {
 
 	/**
@@ -5646,10 +2783,10 @@
 
 
 /***/ },
-/* 62 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var ms = __webpack_require__(61);
+	var ms = __webpack_require__(34);
 
 	module.exports = function (time) {
 	  var timestamp = Math.floor(Date.now() / 1000);
@@ -5669,7 +2806,7 @@
 	};
 
 /***/ },
-/* 63 */
+/* 36 */
 /***/ function(module, exports) {
 
 	module.exports = extend
@@ -5694,7 +2831,7 @@
 
 
 /***/ },
-/* 64 */
+/* 37 */
 /***/ function(module, exports) {
 
 	var JsonWebTokenError = function (message, error) {
@@ -5711,10 +2848,10 @@
 	module.exports = JsonWebTokenError;
 
 /***/ },
-/* 65 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var JsonWebTokenError = __webpack_require__(64);
+	var JsonWebTokenError = __webpack_require__(37);
 
 	var NotBeforeError = function (message, date) {
 	  JsonWebTokenError.call(this, message);
@@ -5729,10 +2866,10 @@
 	module.exports = NotBeforeError;
 
 /***/ },
-/* 66 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var JsonWebTokenError = __webpack_require__(64);
+	var JsonWebTokenError = __webpack_require__(37);
 
 	var TokenExpiredError = function (message, expiredAt) {
 	  JsonWebTokenError.call(this, message);
@@ -5747,7 +2884,7 @@
 	module.exports = TokenExpiredError;
 
 /***/ },
-/* 67 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*!
@@ -5765,14 +2902,14 @@
 	 * @private
 	 */
 
-	var Route = __webpack_require__(68);
-	var Layer = __webpack_require__(74);
-	var methods = __webpack_require__(76);
-	var mixin = __webpack_require__(25);
-	var debug = __webpack_require__(69)('express:router');
-	var deprecate = __webpack_require__(77)('express');
-	var flatten = __webpack_require__(73);
-	var parseUrl = __webpack_require__(83);
+	var Route = __webpack_require__(41);
+	var Layer = __webpack_require__(48);
+	var methods = __webpack_require__(50);
+	var mixin = __webpack_require__(51);
+	var debug = __webpack_require__(42)('express:router');
+	var deprecate = __webpack_require__(52)('express');
+	var flatten = __webpack_require__(47);
+	var parseUrl = __webpack_require__(59);
 
 	/**
 	 * Module variables.
@@ -6398,7 +3535,7 @@
 
 
 /***/ },
-/* 68 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*!
@@ -6416,10 +3553,10 @@
 	 * @private
 	 */
 
-	var debug = __webpack_require__(69)('express:router:route');
-	var flatten = __webpack_require__(73);
-	var Layer = __webpack_require__(74);
-	var methods = __webpack_require__(76);
+	var debug = __webpack_require__(42)('express:router:route');
+	var flatten = __webpack_require__(47);
+	var Layer = __webpack_require__(48);
+	var methods = __webpack_require__(50);
 
 	/**
 	 * Module variables.
@@ -6614,7 +3751,7 @@
 
 
 /***/ },
-/* 69 */
+/* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -6622,7 +3759,7 @@
 	 * Module dependencies.
 	 */
 
-	var tty = __webpack_require__(70);
+	var tty = __webpack_require__(43);
 	var util = __webpack_require__(9);
 
 	/**
@@ -6631,7 +3768,7 @@
 	 * Expose `debug()` as the module.
 	 */
 
-	exports = module.exports = __webpack_require__(71);
+	exports = module.exports = __webpack_require__(44);
 	exports.log = log;
 	exports.formatArgs = formatArgs;
 	exports.save = save;
@@ -6779,14 +3916,14 @@
 	      break;
 
 	    case 'FILE':
-	      var fs = __webpack_require__(44);
+	      var fs = __webpack_require__(45);
 	      stream = new fs.SyncWriteStream(fd, { autoClose: false });
 	      stream._type = 'fs';
 	      break;
 
 	    case 'PIPE':
 	    case 'TCP':
-	      var net = __webpack_require__(72);
+	      var net = __webpack_require__(46);
 	      stream = new net.Socket({
 	        fd: fd,
 	        readable: false,
@@ -6829,13 +3966,13 @@
 
 
 /***/ },
-/* 70 */
+/* 43 */
 /***/ function(module, exports) {
 
 	module.exports = require("tty");
 
 /***/ },
-/* 71 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -6851,7 +3988,7 @@
 	exports.disable = disable;
 	exports.enable = enable;
 	exports.enabled = enabled;
-	exports.humanize = __webpack_require__(61);
+	exports.humanize = __webpack_require__(34);
 
 	/**
 	 * The currently active debug mode names, and names to skip.
@@ -7038,13 +4175,19 @@
 
 
 /***/ },
-/* 72 */
+/* 45 */
+/***/ function(module, exports) {
+
+	module.exports = require("fs");
+
+/***/ },
+/* 46 */
 /***/ function(module, exports) {
 
 	module.exports = require("net");
 
 /***/ },
-/* 73 */
+/* 47 */
 /***/ function(module, exports) {
 
 	'use strict'
@@ -7114,7 +4257,7 @@
 
 
 /***/ },
-/* 74 */
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*!
@@ -7132,8 +4275,8 @@
 	 * @private
 	 */
 
-	var pathRegexp = __webpack_require__(75);
-	var debug = __webpack_require__(69)('express:router:layer');
+	var pathRegexp = __webpack_require__(49);
+	var debug = __webpack_require__(42)('express:router:layer');
 
 	/**
 	 * Module variables.
@@ -7296,7 +4439,7 @@
 
 
 /***/ },
-/* 75 */
+/* 49 */
 /***/ function(module, exports) {
 
 	/**
@@ -7431,7 +4574,7 @@
 
 
 /***/ },
-/* 76 */
+/* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*!
@@ -7506,7 +4649,36 @@
 
 
 /***/ },
-/* 77 */
+/* 51 */
+/***/ function(module, exports) {
+
+	/**
+	 * Merge object b with object a.
+	 *
+	 *     var a = { foo: 'bar' }
+	 *       , b = { bar: 'baz' };
+	 *
+	 *     merge(a, b);
+	 *     // => { foo: 'bar', bar: 'baz' }
+	 *
+	 * @param {Object} a
+	 * @param {Object} b
+	 * @return {Object}
+	 * @api public
+	 */
+
+	exports = module.exports = function(a, b){
+	  if (a && b) {
+	    for (var key in b) {
+	      a[key] = b[key];
+	    }
+	  }
+	  return a;
+	};
+
+
+/***/ },
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*!
@@ -7519,9 +4691,9 @@
 	 * Module dependencies.
 	 */
 
-	var callSiteToString = __webpack_require__(78).callSiteToString
-	var eventListenerCount = __webpack_require__(78).eventListenerCount
-	var relative = __webpack_require__(45).relative
+	var callSiteToString = __webpack_require__(53).callSiteToString
+	var eventListenerCount = __webpack_require__(53).eventListenerCount
+	var relative = __webpack_require__(58).relative
 
 	/**
 	 * Module exports.
@@ -8033,7 +5205,7 @@
 
 
 /***/ },
-/* 78 */
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*!
@@ -8049,8 +5221,8 @@
 	 * @private
 	 */
 
-	var Buffer = __webpack_require__(51)
-	var EventEmitter = __webpack_require__(79).EventEmitter
+	var Buffer = __webpack_require__(23)
+	var EventEmitter = __webpack_require__(54).EventEmitter
 
 	/**
 	 * Module exports.
@@ -8058,7 +5230,7 @@
 	 */
 
 	lazyProperty(module.exports, 'bufferConcat', function bufferConcat() {
-	  return Buffer.concat || __webpack_require__(80)
+	  return Buffer.concat || __webpack_require__(55)
 	})
 
 	lazyProperty(module.exports, 'callSiteToString', function callSiteToString() {
@@ -8082,11 +5254,11 @@
 	  Error.prepareStackTrace = prep
 	  Error.stackTraceLimit = limit
 
-	  return stack[0].toString ? toString : __webpack_require__(81)
+	  return stack[0].toString ? toString : __webpack_require__(56)
 	})
 
 	lazyProperty(module.exports, 'eventListenerCount', function eventListenerCount() {
-	  return EventEmitter.listenerCount || __webpack_require__(82)
+	  return EventEmitter.listenerCount || __webpack_require__(57)
 	})
 
 	/**
@@ -8123,13 +5295,13 @@
 
 
 /***/ },
-/* 79 */
+/* 54 */
 /***/ function(module, exports) {
 
 	module.exports = require("events");
 
 /***/ },
-/* 80 */
+/* 55 */
 /***/ function(module, exports) {
 
 	/*!
@@ -8170,7 +5342,7 @@
 
 
 /***/ },
-/* 81 */
+/* 56 */
 /***/ function(module, exports) {
 
 	/*!
@@ -8279,7 +5451,7 @@
 
 
 /***/ },
-/* 82 */
+/* 57 */
 /***/ function(module, exports) {
 
 	/*!
@@ -8307,7 +5479,13 @@
 
 
 /***/ },
-/* 83 */
+/* 58 */
+/***/ function(module, exports) {
+
+	module.exports = require("path");
+
+/***/ },
+/* 59 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*!
@@ -8323,7 +5501,7 @@
 	 * Module dependencies.
 	 */
 
-	var url = __webpack_require__(23)
+	var url = __webpack_require__(60)
 	var parse = url.parse
 	var Url = url.Url
 
@@ -8451,7 +5629,13 @@
 
 
 /***/ },
-/* 84 */
+/* 60 */
+/***/ function(module, exports) {
+
+	module.exports = require("url");
+
+/***/ },
+/* 61 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -8465,7 +5649,7 @@
 	var CALLBACK_PATH = exports.CALLBACK_PATH = '/auth/callback/google';
 
 /***/ },
-/* 85 */
+/* 62 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8478,29 +5662,29 @@
 
 	var _express2 = _interopRequireDefault(_express);
 
-	var _item = __webpack_require__(86);
+	var _item = __webpack_require__(63);
 
-	var _jsonorhtml = __webpack_require__(141);
+	var _jsonorhtml = __webpack_require__(120);
 
 	var _jsonorhtml2 = _interopRequireDefault(_jsonorhtml);
 
-	var _serveapp = __webpack_require__(143);
+	var _serveapp = __webpack_require__(122);
 
 	var _serveapp2 = _interopRequireDefault(_serveapp);
 
-	var _item2 = __webpack_require__(144);
+	var _item2 = __webpack_require__(123);
 
 	var _item3 = _interopRequireDefault(_item2);
 
-	var _itemImages = __webpack_require__(146);
+	var _itemImages = __webpack_require__(125);
 
 	var _itemImages2 = _interopRequireDefault(_itemImages);
 
-	var _request = __webpack_require__(154);
+	var _request = __webpack_require__(133);
 
 	var _request2 = _interopRequireDefault(_request);
 
-	var _user = __webpack_require__(156);
+	var _user = __webpack_require__(135);
 
 	var _user2 = _interopRequireDefault(_user);
 
@@ -8528,7 +5712,7 @@
 	exports.default = router;
 
 /***/ },
-/* 86 */
+/* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8541,13 +5725,13 @@
 	exports.getItem = getItem;
 	exports.putItem = putItem;
 
-	var _revalidator = __webpack_require__(87);
+	var _revalidator = __webpack_require__(64);
 
-	var _validator = __webpack_require__(88);
+	var _validator = __webpack_require__(66);
 
 	var _validator2 = _interopRequireDefault(_validator);
 
-	var _rethinkdb = __webpack_require__(89);
+	var _rethinkdb = __webpack_require__(67);
 
 	var _rethinkdb2 = _interopRequireDefault(_rethinkdb);
 
@@ -8644,7 +5828,7 @@
 	}
 
 /***/ },
-/* 87 */
+/* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {(function (exports) {
@@ -9111,10 +6295,26 @@
 
 	})(typeof module === 'object' && module && module.exports ? module.exports : window);
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(18)(module)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(65)(module)))
 
 /***/ },
-/* 88 */
+/* 65 */
+/***/ function(module, exports) {
+
+	module.exports = function(module) {
+		if(!module.webpackPolyfill) {
+			module.deprecate = function() {};
+			module.paths = [];
+			// module.parent = undefined by default
+			module.children = [];
+			module.webpackPolyfill = 1;
+		}
+		return module;
+	}
+
+
+/***/ },
+/* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*!
@@ -9259,7 +6459,7 @@
 	            if (false) {
 	                return;
 	            }
-	            depd = __webpack_require__(77)('validator');
+	            depd = __webpack_require__(52)('validator');
 	        }
 	        depd(msg);
 	    };
@@ -10071,39 +7271,47 @@
 
 
 /***/ },
-/* 89 */
+/* 67 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+		value: true
 	});
 
-	var _rethinkdbdash = __webpack_require__(90);
+	var _rethinkdbdash = __webpack_require__(68);
 
 	var _rethinkdbdash2 = _interopRequireDefault(_rethinkdbdash);
 
+	var _config = __webpack_require__(119);
+
+	var _config2 = _interopRequireDefault(_config);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var r = (0, _rethinkdbdash2.default)({ cursor: true, db: 'junk' });
+	var r = (0, _rethinkdbdash2.default)({
+		host: _config2.default.rethinkHost,
+		cursor: true,
+		db: 'junk'
+	});
 
 	exports.default = function () {
-	  return r;
+		return r;
 	};
 
 /***/ },
-/* 90 */
+/* 68 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Promise = __webpack_require__(91);
+	var Promise = __webpack_require__(69);
 
-	var helper = __webpack_require__(127);
-	var Connection = __webpack_require__(129);
-	var Term = __webpack_require__(135);
-	var Error = __webpack_require__(131);
-	var PoolMaster = __webpack_require__(138);
-	var termTypes = __webpack_require__(128).Term.TermType;
+	var helper = __webpack_require__(105);
+	var Connection = __webpack_require__(107);
+	var Term = __webpack_require__(113);
+	var Error = __webpack_require__(109);
+	var PoolMaster = __webpack_require__(116);
+	var termTypes = __webpack_require__(106).Term.TermType;
 
 	function r(options) {
 	  var self = this;
@@ -10639,7 +7847,7 @@
 
 
 /***/ },
-/* 91 */
+/* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -10650,13 +7858,13 @@
 	    catch (e) {}
 	    return bluebird;
 	}
-	var bluebird = __webpack_require__(92)();
+	var bluebird = __webpack_require__(70)();
 	bluebird.noConflict = noConflict;
 	module.exports = bluebird;
 
 
 /***/ },
-/* 92 */
+/* 70 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -10672,7 +7880,7 @@
 	};
 	function Proxyable() {}
 	var UNDEFINED_BINDING = {};
-	var util = __webpack_require__(93);
+	var util = __webpack_require__(71);
 
 	var getDomain;
 	if (util.isNode) {
@@ -10688,11 +7896,11 @@
 	}
 	util.notEnumerableProp(Promise, "_getDomain", getDomain);
 
-	var es5 = __webpack_require__(94);
-	var Async = __webpack_require__(95);
+	var es5 = __webpack_require__(72);
+	var Async = __webpack_require__(73);
 	var async = new Async();
 	es5.defineProperty(Promise, "_async", {value: async});
-	var errors = __webpack_require__(98);
+	var errors = __webpack_require__(76);
 	var TypeError = Promise.TypeError = errors.TypeError;
 	Promise.RangeError = errors.RangeError;
 	var CancellationError = Promise.CancellationError = errors.CancellationError;
@@ -10703,19 +7911,19 @@
 	var INTERNAL = function(){};
 	var APPLY = {};
 	var NEXT_FILTER = {};
-	var tryConvertToPromise = __webpack_require__(99)(Promise, INTERNAL);
+	var tryConvertToPromise = __webpack_require__(77)(Promise, INTERNAL);
 	var PromiseArray =
-	    __webpack_require__(100)(Promise, INTERNAL,
+	    __webpack_require__(78)(Promise, INTERNAL,
 	                               tryConvertToPromise, apiRejection, Proxyable);
-	var Context = __webpack_require__(101)(Promise);
+	var Context = __webpack_require__(79)(Promise);
 	 /*jshint unused:false*/
 	var createContext = Context.create;
-	var debug = __webpack_require__(102)(Promise, Context);
+	var debug = __webpack_require__(80)(Promise, Context);
 	var CapturedTrace = debug.CapturedTrace;
 	var PassThroughHandlerContext =
-	    __webpack_require__(103)(Promise, tryConvertToPromise);
-	var catchFilter = __webpack_require__(104)(NEXT_FILTER);
-	var nodebackForPromise = __webpack_require__(105);
+	    __webpack_require__(81)(Promise, tryConvertToPromise);
+	var catchFilter = __webpack_require__(82)(NEXT_FILTER);
+	var nodebackForPromise = __webpack_require__(83);
 	var errorObj = util.errorObj;
 	var tryCatch = util.tryCatch;
 	function check(self, executor) {
@@ -11368,30 +8576,30 @@
 	                       "_makeSelfResolutionError",
 	                       makeSelfResolutionError);
 
-	__webpack_require__(106)(Promise, INTERNAL, tryConvertToPromise, apiRejection,
+	__webpack_require__(84)(Promise, INTERNAL, tryConvertToPromise, apiRejection,
 	    debug);
-	__webpack_require__(107)(Promise, INTERNAL, tryConvertToPromise, debug);
-	__webpack_require__(108)(Promise, PromiseArray, apiRejection, debug);
-	__webpack_require__(109)(Promise);
-	__webpack_require__(110)(Promise);
-	__webpack_require__(111)(
+	__webpack_require__(85)(Promise, INTERNAL, tryConvertToPromise, debug);
+	__webpack_require__(86)(Promise, PromiseArray, apiRejection, debug);
+	__webpack_require__(87)(Promise);
+	__webpack_require__(88)(Promise);
+	__webpack_require__(89)(
 	    Promise, PromiseArray, tryConvertToPromise, INTERNAL, debug);
 	Promise.Promise = Promise;
-	__webpack_require__(112)(Promise, PromiseArray, apiRejection, tryConvertToPromise, INTERNAL, debug);
-	__webpack_require__(113)(Promise, apiRejection, tryConvertToPromise, createContext, INTERNAL, debug);
-	__webpack_require__(114)(Promise, INTERNAL, debug);
-	__webpack_require__(115)(Promise, apiRejection, INTERNAL, tryConvertToPromise, Proxyable, debug);
-	__webpack_require__(116)(Promise);
-	__webpack_require__(117)(Promise);
-	__webpack_require__(118)(Promise, PromiseArray, tryConvertToPromise, apiRejection);
-	__webpack_require__(119)(Promise, INTERNAL, tryConvertToPromise, apiRejection);
-	__webpack_require__(120)(Promise, PromiseArray, apiRejection, tryConvertToPromise, INTERNAL, debug);
-	__webpack_require__(121)(Promise, PromiseArray, debug);
-	__webpack_require__(122)(Promise, PromiseArray, apiRejection);
-	__webpack_require__(123)(Promise, INTERNAL);
-	__webpack_require__(124)(Promise);
-	__webpack_require__(125)(Promise, INTERNAL);
-	__webpack_require__(126)(Promise, INTERNAL);
+	__webpack_require__(90)(Promise, PromiseArray, apiRejection, tryConvertToPromise, INTERNAL, debug);
+	__webpack_require__(91)(Promise, apiRejection, tryConvertToPromise, createContext, INTERNAL, debug);
+	__webpack_require__(92)(Promise, INTERNAL, debug);
+	__webpack_require__(93)(Promise, apiRejection, INTERNAL, tryConvertToPromise, Proxyable, debug);
+	__webpack_require__(94)(Promise);
+	__webpack_require__(95)(Promise);
+	__webpack_require__(96)(Promise, PromiseArray, tryConvertToPromise, apiRejection);
+	__webpack_require__(97)(Promise, INTERNAL, tryConvertToPromise, apiRejection);
+	__webpack_require__(98)(Promise, PromiseArray, apiRejection, tryConvertToPromise, INTERNAL, debug);
+	__webpack_require__(99)(Promise, PromiseArray, debug);
+	__webpack_require__(100)(Promise, PromiseArray, apiRejection);
+	__webpack_require__(101)(Promise, INTERNAL);
+	__webpack_require__(102)(Promise);
+	__webpack_require__(103)(Promise, INTERNAL);
+	__webpack_require__(104)(Promise, INTERNAL);
 	                                                         
 	    util.toFastProperties(Promise);                                          
 	    util.toFastProperties(Promise.prototype);                                
@@ -11419,11 +8627,11 @@
 
 
 /***/ },
-/* 93 */
+/* 71 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var es5 = __webpack_require__(94);
+	var es5 = __webpack_require__(72);
 	var canEvaluate = typeof navigator == "undefined";
 
 	var errorObj = {e: {}};
@@ -11769,7 +8977,7 @@
 
 
 /***/ },
-/* 94 */
+/* 72 */
 /***/ function(module, exports) {
 
 	var isES5 = (function(){
@@ -11855,15 +9063,15 @@
 
 
 /***/ },
-/* 95 */
+/* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	var firstLineError;
 	try {throw new Error(); } catch (e) {firstLineError = e;}
-	var schedule = __webpack_require__(96);
-	var Queue = __webpack_require__(97);
-	var util = __webpack_require__(93);
+	var schedule = __webpack_require__(74);
+	var Queue = __webpack_require__(75);
+	var util = __webpack_require__(71);
 
 	function Async() {
 	    this._isTickUsed = false;
@@ -12014,11 +9222,11 @@
 
 
 /***/ },
-/* 96 */
+/* 74 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var util = __webpack_require__(93);
+	var util = __webpack_require__(71);
 	var schedule;
 	var noAsyncScheduler = function() {
 	    throw new Error("No async scheduler available\u000a\u000a    See http://goo.gl/MqrFmX\u000a");
@@ -12074,7 +9282,7 @@
 
 
 /***/ },
-/* 97 */
+/* 75 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -12170,13 +9378,13 @@
 
 
 /***/ },
-/* 98 */
+/* 76 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var es5 = __webpack_require__(94);
+	var es5 = __webpack_require__(72);
 	var Objectfreeze = es5.freeze;
-	var util = __webpack_require__(93);
+	var util = __webpack_require__(71);
 	var inherits = util.inherits;
 	var notEnumerableProp = util.notEnumerableProp;
 
@@ -12287,12 +9495,12 @@
 
 
 /***/ },
-/* 99 */
+/* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	module.exports = function(Promise, INTERNAL) {
-	var util = __webpack_require__(93);
+	var util = __webpack_require__(71);
 	var errorObj = util.errorObj;
 	var isObject = util.isObject;
 
@@ -12375,13 +9583,13 @@
 
 
 /***/ },
-/* 100 */
+/* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	module.exports = function(Promise, INTERNAL, tryConvertToPromise,
 	    apiRejection, Proxyable) {
-	var util = __webpack_require__(93);
+	var util = __webpack_require__(71);
 	var isArray = util.isArray;
 
 	function toResolutionValue(val) {
@@ -12565,7 +9773,7 @@
 
 
 /***/ },
-/* 101 */
+/* 79 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -12640,15 +9848,15 @@
 
 
 /***/ },
-/* 102 */
+/* 80 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	module.exports = function(Promise, Context) {
 	var getDomain = Promise._getDomain;
 	var async = Promise._async;
-	var Warning = __webpack_require__(98).Warning;
-	var util = __webpack_require__(93);
+	var Warning = __webpack_require__(76).Warning;
+	var util = __webpack_require__(71);
 	var canAttachTrace = util.canAttachTrace;
 	var unhandledRejectionHandled;
 	var possiblyUnhandledRejection;
@@ -13470,12 +10678,12 @@
 
 
 /***/ },
-/* 103 */
+/* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	module.exports = function(Promise, tryConvertToPromise) {
-	var util = __webpack_require__(93);
+	var util = __webpack_require__(71);
 	var CancellationError = Promise.CancellationError;
 	var errorObj = util.errorObj;
 
@@ -13583,13 +10791,13 @@
 
 
 /***/ },
-/* 104 */
+/* 82 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	module.exports = function(NEXT_FILTER) {
-	var util = __webpack_require__(93);
-	var getKeys = __webpack_require__(94).keys;
+	var util = __webpack_require__(71);
+	var getKeys = __webpack_require__(72).keys;
 	var tryCatch = util.tryCatch;
 	var errorObj = util.errorObj;
 
@@ -13631,15 +10839,15 @@
 
 
 /***/ },
-/* 105 */
+/* 83 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var util = __webpack_require__(93);
+	var util = __webpack_require__(71);
 	var maybeWrapAsError = util.maybeWrapAsError;
-	var errors = __webpack_require__(98);
+	var errors = __webpack_require__(76);
 	var OperationalError = errors.OperationalError;
-	var es5 = __webpack_require__(94);
+	var es5 = __webpack_require__(72);
 
 	function isUntypedError(obj) {
 	    return obj instanceof Error &&
@@ -13688,13 +10896,13 @@
 
 
 /***/ },
-/* 106 */
+/* 84 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	module.exports =
 	function(Promise, INTERNAL, tryConvertToPromise, apiRejection, debug) {
-	var util = __webpack_require__(93);
+	var util = __webpack_require__(71);
 	var tryCatch = util.tryCatch;
 
 	Promise.method = function (fn) {
@@ -13749,7 +10957,7 @@
 
 
 /***/ },
-/* 107 */
+/* 85 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -13822,12 +11030,12 @@
 
 
 /***/ },
-/* 108 */
+/* 86 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	module.exports = function(Promise, PromiseArray, apiRejection, debug) {
-	var util = __webpack_require__(93);
+	var util = __webpack_require__(71);
 	var tryCatch = util.tryCatch;
 	var errorObj = util.errorObj;
 	var async = Promise._async;
@@ -13953,7 +11161,7 @@
 
 
 /***/ },
-/* 109 */
+/* 87 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -14005,7 +11213,7 @@
 
 
 /***/ },
-/* 110 */
+/* 88 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -14107,13 +11315,13 @@
 
 
 /***/ },
-/* 111 */
+/* 89 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	module.exports =
 	function(Promise, PromiseArray, tryConvertToPromise, INTERNAL) {
-	var util = __webpack_require__(93);
+	var util = __webpack_require__(71);
 	var canEvaluate = util.canEvaluate;
 	var tryCatch = util.tryCatch;
 	var errorObj = util.errorObj;
@@ -14262,7 +11470,7 @@
 
 
 /***/ },
-/* 112 */
+/* 90 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -14273,7 +11481,7 @@
 	                          INTERNAL,
 	                          debug) {
 	var getDomain = Promise._getDomain;
-	var util = __webpack_require__(93);
+	var util = __webpack_require__(71);
 	var tryCatch = util.tryCatch;
 	var errorObj = util.errorObj;
 	var EMPTY_ARRAY = [];
@@ -14419,15 +11627,15 @@
 
 
 /***/ },
-/* 113 */
+/* 91 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	module.exports = function (Promise, apiRejection, tryConvertToPromise,
 	    createContext, INTERNAL, debug) {
-	    var util = __webpack_require__(93);
-	    var TypeError = __webpack_require__(98).TypeError;
-	    var inherits = __webpack_require__(93).inherits;
+	    var util = __webpack_require__(71);
+	    var TypeError = __webpack_require__(76).TypeError;
+	    var inherits = __webpack_require__(71).inherits;
 	    var errorObj = util.errorObj;
 	    var tryCatch = util.tryCatch;
 
@@ -14650,12 +11858,12 @@
 
 
 /***/ },
-/* 114 */
+/* 92 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	module.exports = function(Promise, INTERNAL, debug) {
-	var util = __webpack_require__(93);
+	var util = __webpack_require__(71);
 	var TimeoutError = Promise.TimeoutError;
 
 	var afterTimeout = function (promise, message, parent) {
@@ -14732,7 +11940,7 @@
 
 
 /***/ },
-/* 115 */
+/* 93 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -14742,9 +11950,9 @@
 	                          tryConvertToPromise,
 	                          Proxyable,
 	                          debug) {
-	var errors = __webpack_require__(98);
+	var errors = __webpack_require__(76);
 	var TypeError = errors.TypeError;
-	var util = __webpack_require__(93);
+	var util = __webpack_require__(71);
 	var errorObj = util.errorObj;
 	var tryCatch = util.tryCatch;
 	var yieldHandlers = [];
@@ -14942,12 +12150,12 @@
 
 
 /***/ },
-/* 116 */
+/* 94 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	module.exports = function(Promise) {
-	var util = __webpack_require__(93);
+	var util = __webpack_require__(71);
 	var async = Promise._async;
 	var tryCatch = util.tryCatch;
 	var errorObj = util.errorObj;
@@ -15006,7 +12214,7 @@
 
 
 /***/ },
-/* 117 */
+/* 95 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -15018,7 +12226,7 @@
 	}
 
 	module.exports = function(Promise) {
-	var util = __webpack_require__(93);
+	var util = __webpack_require__(71);
 	var canEvaluate = util.canEvaluate;
 	var isIdentifier = util.isIdentifier;
 
@@ -15135,15 +12343,15 @@
 
 
 /***/ },
-/* 118 */
+/* 96 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	module.exports = function(
 	    Promise, PromiseArray, tryConvertToPromise, apiRejection) {
-	var util = __webpack_require__(93);
+	var util = __webpack_require__(71);
 	var isObject = util.isObject;
-	var es5 = __webpack_require__(94);
+	var es5 = __webpack_require__(72);
 	var Es6Map;
 	if (typeof Map === "function") Es6Map = Map;
 
@@ -15259,13 +12467,13 @@
 
 
 /***/ },
-/* 119 */
+/* 97 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	module.exports = function(
 	    Promise, INTERNAL, tryConvertToPromise, apiRejection) {
-	var util = __webpack_require__(93);
+	var util = __webpack_require__(71);
 
 	var raceLater = function (promise) {
 	    return promise.then(function(array) {
@@ -15314,7 +12522,7 @@
 
 
 /***/ },
-/* 120 */
+/* 98 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -15325,7 +12533,7 @@
 	                          INTERNAL,
 	                          debug) {
 	var getDomain = Promise._getDomain;
-	var util = __webpack_require__(93);
+	var util = __webpack_require__(71);
 	var tryCatch = util.tryCatch;
 
 	function ReductionPromiseArray(promises, fn, initialValue, _each) {
@@ -15482,14 +12690,14 @@
 
 
 /***/ },
-/* 121 */
+/* 99 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	module.exports =
 	    function(Promise, PromiseArray, debug) {
 	var PromiseInspection = Promise.PromiseInspection;
-	var util = __webpack_require__(93);
+	var util = __webpack_require__(71);
 
 	function SettledPromiseArray(values) {
 	    this.constructor$(values);
@@ -15531,15 +12739,15 @@
 
 
 /***/ },
-/* 122 */
+/* 100 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	module.exports =
 	function(Promise, PromiseArray, apiRejection) {
-	var util = __webpack_require__(93);
-	var RangeError = __webpack_require__(98).RangeError;
-	var AggregateError = __webpack_require__(98).AggregateError;
+	var util = __webpack_require__(71);
+	var RangeError = __webpack_require__(76).RangeError;
+	var AggregateError = __webpack_require__(76).AggregateError;
 	var isArray = util.isArray;
 	var CANCELLATION = {};
 
@@ -15685,18 +12893,18 @@
 
 
 /***/ },
-/* 123 */
+/* 101 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	module.exports = function(Promise, INTERNAL) {
 	var THIS = {};
-	var util = __webpack_require__(93);
-	var nodebackForPromise = __webpack_require__(105);
+	var util = __webpack_require__(71);
+	var nodebackForPromise = __webpack_require__(83);
 	var withAppended = util.withAppended;
 	var maybeWrapAsError = util.maybeWrapAsError;
 	var canEvaluate = util.canEvaluate;
-	var TypeError = __webpack_require__(98).TypeError;
+	var TypeError = __webpack_require__(76).TypeError;
 	var defaultSuffix = "Async";
 	var defaultPromisified = {__isPromisified__: true};
 	var noCopyProps = [
@@ -16005,7 +13213,7 @@
 
 
 /***/ },
-/* 124 */
+/* 102 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -16032,7 +13240,7 @@
 
 
 /***/ },
-/* 125 */
+/* 103 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -16067,7 +13275,7 @@
 
 
 /***/ },
-/* 126 */
+/* 104 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -16085,13 +13293,13 @@
 
 
 /***/ },
-/* 127 */
+/* 105 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var protodef = __webpack_require__(128);
+	var protodef = __webpack_require__(106);
 	var termTypes = protodef.Term.TermType;
 	var datumTypes = protodef.Datum.DatumType;
-	var net = __webpack_require__(72);
+	var net = __webpack_require__(46);
 
 
 	function createLogger(poolMaster, silent) {
@@ -16266,7 +13474,7 @@
 
 
 /***/ },
-/* 128 */
+/* 106 */
 /***/ function(module, exports) {
 
 	// DO NOT EDIT
@@ -16539,22 +13747,22 @@
 
 
 /***/ },
-/* 129 */
+/* 107 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var net = __webpack_require__(72);
-	var tls = __webpack_require__(130);
-	var Promise = __webpack_require__(91);
-	var events = __webpack_require__(79);
+	var net = __webpack_require__(46);
+	var tls = __webpack_require__(108);
+	var Promise = __webpack_require__(69);
+	var events = __webpack_require__(54);
 	var util = __webpack_require__(9);
 
-	var helper = __webpack_require__(127);
-	var Err = __webpack_require__(131);
-	var Cursor = __webpack_require__(132);
-	var ReadableStream = __webpack_require__(133);
-	var Metadata = __webpack_require__(134);
+	var helper = __webpack_require__(105);
+	var Err = __webpack_require__(109);
+	var Cursor = __webpack_require__(110);
+	var ReadableStream = __webpack_require__(111);
+	var Metadata = __webpack_require__(112);
 
-	var protodef = __webpack_require__(128);
+	var protodef = __webpack_require__(106);
 	var responseTypes = protodef.Response.ResponseType;
 
 	function Connection(r, options, resolve, reject) {
@@ -17241,21 +14449,21 @@
 
 
 /***/ },
-/* 130 */
+/* 108 */
 /***/ function(module, exports) {
 
 	module.exports = require("tls");
 
 /***/ },
-/* 131 */
+/* 109 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var helper = __webpack_require__(127);
+	var helper = __webpack_require__(105);
 	var INDENT = 4;
 	var LIMIT = 80;
 	var IS_OPERATIONAL = 'isOperational';
 
-	var protodef = __webpack_require__(128);
+	var protodef = __webpack_require__(106);
 	var responseTypes = protodef.Response.ResponseType;
 	var protoErrorType = protodef.Response.ErrorType;
 	var termTypes = protodef.Term.TermType;
@@ -18311,13 +15519,13 @@
 
 
 /***/ },
-/* 132 */
+/* 110 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Promise = __webpack_require__(91);
-	var Err = __webpack_require__(131);
-	var helper = __webpack_require__(127);
-	var EventEmitter = __webpack_require__(79).EventEmitter;
+	var Promise = __webpack_require__(69);
+	var Err = __webpack_require__(109);
+	var helper = __webpack_require__(105);
+	var EventEmitter = __webpack_require__(54).EventEmitter;
 
 	function Cursor(connection, token, options, type) {
 	  this.connection = connection;
@@ -18677,11 +15885,11 @@
 
 
 /***/ },
-/* 133 */
+/* 111 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Readable = __webpack_require__(52).Readable;
-	var Cursor = __webpack_require__(132);
+	var Readable = __webpack_require__(24).Readable;
+	var Cursor = __webpack_require__(110);
 	var util = __webpack_require__(9);
 
 	// Experimental, but should work fine.
@@ -18834,7 +16042,7 @@
 
 
 /***/ },
-/* 134 */
+/* 112 */
 /***/ function(module, exports) {
 
 	// Metadata we keep per query
@@ -18872,18 +16080,18 @@
 
 
 /***/ },
-/* 135 */
+/* 113 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Promise = __webpack_require__(91);
-	var protodef = __webpack_require__(128);
+	var Promise = __webpack_require__(69);
+	var protodef = __webpack_require__(106);
 	var termTypes = protodef.Term.TermType;
 
-	var Error = __webpack_require__(131);
-	var helper = __webpack_require__(127);
-	var ReadableStream = __webpack_require__(133);
-	var WritableStream = __webpack_require__(136);
-	var TransformStream = __webpack_require__(137);
+	var Error = __webpack_require__(109);
+	var helper = __webpack_require__(105);
+	var ReadableStream = __webpack_require__(111);
+	var WritableStream = __webpack_require__(114);
+	var TransformStream = __webpack_require__(115);
 
 	function Term(r, value, error) {
 	  var self = this;
@@ -21906,11 +19114,11 @@
 
 
 /***/ },
-/* 136 */
+/* 114 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Writable = __webpack_require__(52).Writable;
-	var Cursor = __webpack_require__(132);
+	var Writable = __webpack_require__(24).Writable;
+	var Cursor = __webpack_require__(110);
 	var util = __webpack_require__(9);
 
 	// Experimental, but should work fine.
@@ -22042,11 +19250,11 @@
 
 
 /***/ },
-/* 137 */
+/* 115 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Transform = __webpack_require__(52).Transform;
-	var Cursor = __webpack_require__(132);
+	var Transform = __webpack_require__(24).Transform;
+	var Cursor = __webpack_require__(110);
 	var util = __webpack_require__(9);
 
 	// Experimental, but should work fine.
@@ -22254,16 +19462,16 @@
 
 
 /***/ },
-/* 138 */
+/* 116 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var util = __webpack_require__(9);
-	var events = __webpack_require__(79);
-	var Promise = __webpack_require__(91);
-	var Dequeue = __webpack_require__(139);
-	var Pool = __webpack_require__(140);
-	var helper = __webpack_require__(127);
-	var Err = __webpack_require__(131);
+	var events = __webpack_require__(54);
+	var Promise = __webpack_require__(69);
+	var Dequeue = __webpack_require__(117);
+	var Pool = __webpack_require__(118);
+	var helper = __webpack_require__(105);
+	var Err = __webpack_require__(109);
 	var UNKNOWN_POOLS = 'unknownPools';
 	var SEPARATOR = 'feedSeparator';
 	function PoolMaster(r, options) {
@@ -22801,7 +20009,7 @@
 
 
 /***/ },
-/* 139 */
+/* 117 */
 /***/ function(module, exports) {
 
 	// Implement a dequeue with a circular buffer
@@ -22957,14 +20165,14 @@
 
 
 /***/ },
-/* 140 */
+/* 118 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Promise = __webpack_require__(91);
-	var Dequeue = __webpack_require__(139);
-	var helper = __webpack_require__(127);
-	var Err = __webpack_require__(131);
-	var events = __webpack_require__(79);
+	var Promise = __webpack_require__(69);
+	var Dequeue = __webpack_require__(117);
+	var helper = __webpack_require__(105);
+	var Err = __webpack_require__(109);
+	var events = __webpack_require__(54);
 	var util = __webpack_require__(9);
 
 	function Pool(r, options) {
@@ -23367,7 +20575,32 @@
 
 
 /***/ },
-/* 141 */
+/* 119 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	var dev = process.env.NODE_ENV !== 'production';
+
+	var config = {
+		rethinkHost: 'localhost',
+		dev: dev
+	};
+
+	// Production
+	if (!dev) {
+		config = {
+			rethinkHost: 'rethinkdb'
+		};
+	}
+
+	exports.default = config;
+
+/***/ },
+/* 120 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23377,7 +20610,7 @@
 	});
 	exports.default = jsonOrHtml;
 
-	var _httpAccept = __webpack_require__(142);
+	var _httpAccept = __webpack_require__(121);
 
 	var _httpAccept2 = _interopRequireDefault(_httpAccept);
 
@@ -23397,7 +20630,7 @@
 	}
 
 /***/ },
-/* 142 */
+/* 121 */
 /***/ function(module, exports) {
 
 	// Generated by CoffeeScript 1.6.2
@@ -23730,7 +20963,7 @@
 
 
 /***/ },
-/* 143 */
+/* 122 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -23740,11 +20973,11 @@
 	});
 	exports.default = serveApp;
 	function serveApp(req, res) {
-	    res.sendFile('index.html', { root: 'public' });
+	    res.sendFile('index.html', { root: 'dist/public' });
 	}
 
 /***/ },
-/* 144 */
+/* 123 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23753,19 +20986,19 @@
 	    value: true
 	});
 
-	var _bodyParser = __webpack_require__(145);
+	var _bodyParser = __webpack_require__(124);
 
 	var _bodyParser2 = _interopRequireDefault(_bodyParser);
 
-	var _item = __webpack_require__(86);
+	var _item = __webpack_require__(63);
 
 	var _middleware = __webpack_require__(4);
 
-	var _jsonorhtml = __webpack_require__(141);
+	var _jsonorhtml = __webpack_require__(120);
 
 	var _jsonorhtml2 = _interopRequireDefault(_jsonorhtml);
 
-	var _serveapp = __webpack_require__(143);
+	var _serveapp = __webpack_require__(122);
 
 	var _serveapp2 = _interopRequireDefault(_serveapp);
 
@@ -23801,13 +21034,13 @@
 	};
 
 /***/ },
-/* 145 */
+/* 124 */
 /***/ function(module, exports) {
 
-	module.exports = body-parser;
+	module.exports = require("body-parser");
 
 /***/ },
-/* 146 */
+/* 125 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23818,17 +21051,17 @@
 	    value: true
 	});
 
-	var _sharp = __webpack_require__(147);
+	var _sharp = __webpack_require__(126);
 
 	var _sharp2 = _interopRequireDefault(_sharp);
 
-	var _fs = __webpack_require__(44);
+	var _fs = __webpack_require__(45);
 
 	var _fs2 = _interopRequireDefault(_fs);
 
-	var _multiparty = __webpack_require__(148);
+	var _multiparty = __webpack_require__(127);
 
-	var _image = __webpack_require__(153);
+	var _image = __webpack_require__(132);
 
 	var _middleware = __webpack_require__(4);
 
@@ -23932,23 +21165,23 @@
 	}
 
 /***/ },
-/* 147 */
+/* 126 */
 /***/ function(module, exports) {
 
-	module.exports = sharp;
+	module.exports = require("sharp");
 
 /***/ },
-/* 148 */
+/* 127 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var stream = __webpack_require__(52);
+	var stream = __webpack_require__(24);
 	var util = __webpack_require__(9);
-	var fs = __webpack_require__(44);
+	var fs = __webpack_require__(45);
 	var crypto = __webpack_require__(28);
-	var path = __webpack_require__(45);
-	var os = __webpack_require__(149);
-	var StringDecoder = __webpack_require__(150).StringDecoder;
-	var fdSlicer = __webpack_require__(151);
+	var path = __webpack_require__(58);
+	var os = __webpack_require__(128);
+	var StringDecoder = __webpack_require__(129).StringDecoder;
+	var fdSlicer = __webpack_require__(130);
 
 	var START = 0;
 	var START_BOUNDARY = 1;
@@ -24754,29 +21987,29 @@
 
 
 /***/ },
-/* 149 */
+/* 128 */
 /***/ function(module, exports) {
 
 	module.exports = require("os");
 
 /***/ },
-/* 150 */
+/* 129 */
 /***/ function(module, exports) {
 
 	module.exports = require("string_decoder");
 
 /***/ },
-/* 151 */
+/* 130 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var fs = __webpack_require__(44);
+	var fs = __webpack_require__(45);
 	var util = __webpack_require__(9);
-	var stream = __webpack_require__(52);
+	var stream = __webpack_require__(24);
 	var Readable = stream.Readable;
 	var Writable = stream.Writable;
 	var PassThrough = stream.PassThrough;
-	var Pend = __webpack_require__(152);
-	var EventEmitter = __webpack_require__(79).EventEmitter;
+	var Pend = __webpack_require__(131);
+	var EventEmitter = __webpack_require__(54).EventEmitter;
 
 	exports.createFromBuffer = createFromBuffer;
 	exports.createFromFd = createFromFd;
@@ -25049,7 +22282,7 @@
 
 
 /***/ },
-/* 152 */
+/* 131 */
 /***/ function(module, exports) {
 
 	module.exports = Pend;
@@ -25110,7 +22343,7 @@
 
 
 /***/ },
-/* 153 */
+/* 132 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25122,13 +22355,13 @@
 	exports.getImageOriginal = getImageOriginal;
 	exports.getImageSmall = getImageSmall;
 
-	var _revalidator = __webpack_require__(87);
+	var _revalidator = __webpack_require__(64);
 
-	var _validator = __webpack_require__(88);
+	var _validator = __webpack_require__(66);
 
 	var _validator2 = _interopRequireDefault(_validator);
 
-	var _rethinkdb = __webpack_require__(89);
+	var _rethinkdb = __webpack_require__(67);
 
 	var _rethinkdb2 = _interopRequireDefault(_rethinkdb);
 
@@ -25207,7 +22440,7 @@
 	}
 
 /***/ },
-/* 154 */
+/* 133 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25216,13 +22449,13 @@
 	    value: true
 	});
 
-	var _bodyParser = __webpack_require__(145);
+	var _bodyParser = __webpack_require__(124);
 
 	var _bodyParser2 = _interopRequireDefault(_bodyParser);
 
 	var _middleware = __webpack_require__(4);
 
-	var _request = __webpack_require__(155);
+	var _request = __webpack_require__(134);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -25284,7 +22517,7 @@
 	};
 
 /***/ },
-/* 155 */
+/* 134 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25300,11 +22533,11 @@
 	exports.acceptRequest = acceptRequest;
 	exports.unacceptRequest = unacceptRequest;
 
-	var _rethinkdb = __webpack_require__(89);
+	var _rethinkdb = __webpack_require__(67);
 
 	var _rethinkdb2 = _interopRequireDefault(_rethinkdb);
 
-	var _item = __webpack_require__(86);
+	var _item = __webpack_require__(63);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -25398,7 +22631,7 @@
 	}
 
 /***/ },
-/* 156 */
+/* 135 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25409,7 +22642,7 @@
 
 	var _middleware = __webpack_require__(4);
 
-	var _request = __webpack_require__(155);
+	var _request = __webpack_require__(134);
 
 	exports.default = function (router) {
 	    // Show all the requests made by the user
@@ -25431,7 +22664,7 @@
 	};
 
 /***/ },
-/* 157 */
+/* 136 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25441,17 +22674,17 @@
 	});
 	exports.getOrCreateUser = getOrCreateUser;
 
-	var _revalidator = __webpack_require__(87);
+	var _revalidator = __webpack_require__(64);
 
-	var _validator = __webpack_require__(88);
+	var _validator = __webpack_require__(66);
 
 	var _validator2 = _interopRequireDefault(_validator);
 
-	var _uuidv = __webpack_require__(158);
+	var _uuidv = __webpack_require__(137);
 
 	var _uuidv2 = _interopRequireDefault(_uuidv);
 
-	var _rethinkdb = __webpack_require__(89);
+	var _rethinkdb = __webpack_require__(67);
 
 	var _rethinkdb2 = _interopRequireDefault(_rethinkdb);
 
@@ -25479,7 +22712,7 @@
 	}
 
 /***/ },
-/* 158 */
+/* 137 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -25505,4 +22738,4 @@
 
 
 /***/ }
-/******/ ]);
+/******/ ])));
