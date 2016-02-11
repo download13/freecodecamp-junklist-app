@@ -1,7 +1,8 @@
-import getR from './rethinkdb';
-const r = getR();
-
+import rethinkdb from './rethinkdb';
 import {getItem} from './item';
+
+
+const r = rethinkdb();
 
 
 export function getItemRequestsFromUser(userId) {
@@ -50,7 +51,7 @@ export function createItemRequest(userId, itemId) {
             throw 'Database error';
         }
     );
-    
+
 }
 
 export function removeItemRequest(userId, itemId) {
@@ -70,7 +71,7 @@ export function acceptRequest(userId, requestId) {
         if(request.itemOwner !== userId) {
             throw 'You do not own the item concerned'
         }
-        
+
         return r.table('requests').getAll(request.item, {index: 'item'}).filter(r.row('id').ne(requestId)).update({accepted: false}).run()
         .then(() => {
             return r.table('requests').get(requestId).update({accepted: true}).run()
