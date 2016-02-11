@@ -5,7 +5,7 @@ import config from '../../config';
 const r = rethinkdbdash({
 	host: config.rethinkHost,
 	cursor: true,
-	db: 'junk'
+	db: config.rethinkDatabase
 });
 
 export default () => r;
