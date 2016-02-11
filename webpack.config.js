@@ -55,5 +55,27 @@ module.exports = [
             'body-parser',
             'passport-google-oauth'
         ]
+    },
+    {
+        entry: './server/store/setup.js',
+        output: {
+            path: __dirname + '/dist',
+            filename: 'db-setup.js',
+            libraryTarget: 'commonjs'
+        },
+        module: {
+            loaders: [
+                {
+                    test: /\.js$/,
+                    loader: 'babel-loader',
+                    exclude: /node_modules/,
+                    query: {
+                        presets: ['babel-preset-es2015'],
+                        plugins: ['babel-plugin-transform-object-rest-spread']
+                    }
+                }
+            ]
+        },
+        target: 'node'
     }
 ];
