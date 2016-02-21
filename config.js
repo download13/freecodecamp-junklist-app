@@ -9,6 +9,7 @@ let config = {
 // Production
 if(!dev) {
 	config = {
+		...config,
 		rethinkHost: 'rethinkdb',
 		rethinkDatabase: 'junklist'
 	}
