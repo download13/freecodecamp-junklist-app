@@ -1,40 +1,52 @@
-import rethinkdbdash from 'rethinkdbdash';
+import rethinkdb from './rethinkdb';
+import config from '../../config';
+import mockdata from './MOCK_DATA.json';
+
+const r = rethinkdb();
 
 
-const r = rethinkdbdash({db: 'junk'});
+function ig(promise, handler) {
+	const r = promise
+	.then(
+        () => null,
+        err => {
+            if(err.stack.indexOf('already exists') === -1) {
+                throw err;
+            }
+        }
+    );
 
-const nop = () => {};
-
-function either(promise, handler) {
-    return promise.then(handler, handler);
+    if(handler) {
+        return r.then(handler);
+    }
+    return r;
 }
 
 export function setupDatabase() {
-    return either(r.dbCreate('junk').run(), () => {
-        return Promise.all([
-            either(r.tableCreate('users', {primaryKey: 'email'}).run(), () => Promise.all([
-                either(r.table('users').indexCreate('id').run(), nop)
-            ])),
-            //r.table('items').delete().run();
-            either(r.tableCreate('items').run(), () => Promise.all([
-                r.table('items').indexCreate('timeAdded').run().then(nop, nop),
-                either(r.table('items').indexCreate('owner').run(), nop),
-                r.table('items').insert(require('./MOCK_DATA.json')).run().then(nop, nop)
-            ])),
-            either(r.tableCreate('item_images').run(), nop),
-            either(r.tableCreate('requests').run(), () => Promise.all([
-                either(r.table('requests').indexCreate('requester').run(), nop),
-                either(r.table('requests').indexCreate('itemOwner').run(), nop),
-                either(r.table('requests').indexCreate('item').run(), nop)
-            ]))
-        ]);
-    });
+	return ig(r.dbCreate(config.rethinkDatabase).run(), () => {
+		return Promise.all([
+			ig(r.tableCreate('users', {primaryKey: 'email'}).run()).then(() => Promise.all([
+				ig(r.table('users').indexCreate('id').run())
+			])),
+			ig(r.tableCreate('items').run()).then(() => Promise.all([
+				ig(r.table('items').indexCreate('timeAdded').run()),
+				ig(r.table('items').indexCreate('owner').run()),
+				ig(r.table('items').insert(mockdata, {conflict: 'replace'}).run())
+			])),
+			ig(r.tableCreate('item_images').run()),
+			ig(r.tableCreate('requests').run()).then(() => Promise.all([
+				ig(r.table('requests').indexCreate('requester').run()),
+				ig(r.table('requests').indexCreate('itemOwner').run()),
+				ig(r.table('requests').indexCreate('item').run())
+			]))
+		]);
+	});
 }
 
 
 if(require.main === module) {
-    setupDatabase().then(() => {
-        console.log('Done');
-        r.getPoolMaster().drain();
-    });
+	setupDatabase().then(() => {
+		console.log('Done');
+		r.getPoolMaster().drain();
+	});
 }
