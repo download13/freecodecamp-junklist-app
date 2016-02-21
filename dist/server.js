@@ -7293,7 +7293,7 @@
 	var r = (0, _rethinkdbdash2.default)({
 		host: _config2.default.rethinkHost,
 		cursor: true,
-		db: 'junk'
+		db: _config2.default.rethinkDatabase
 	});
 
 	exports.default = function () {
@@ -20580,6 +20580,8 @@
 
 	'use strict';
 
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
@@ -20587,14 +20589,16 @@
 
 	var config = {
 		rethinkHost: 'localhost',
+		rethinkDatabase: 'junklist_test',
 		dev: dev
 	};
 
 	// Production
 	if (!dev) {
-		config = {
-			rethinkHost: 'rethinkdb'
-		};
+		config = _extends({}, config, {
+			rethinkHost: 'rethinkdb',
+			rethinkDatabase: 'junklist'
+		});
 	}
 
 	exports.default = config;
